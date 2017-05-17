@@ -29,7 +29,7 @@ Similarity score based on size and color similarity of each pair of
   points in provided dataframes.
 }
 \description{
-Distance matric with optional user input for specifying how much the bin
+Distance metric with optional user input for specifying how much the bin
  size similarity and color similarity should be weighted when pairing
  clusters from different color cluster sets. (For example, if
  \code{sizeWeight} = 1 and \code{colorWeight} = 0, two clusters of identical
