@@ -9,7 +9,7 @@ Description: Loads and displays images, selectively masks specified background
   chi-squared or Wasserstein distances), and clusters images by object color 
   similarity. Originally written for use with organism coloration (reef fish color
   diversity, butterfly mimicry, etc), but easily applicable for any image set.
-Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d
+Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d, plotly
 Depends: R (>= 3.3.2)
 License: GPL-3
 Encoding: UTF-8
@@ -17,6 +17,5 @@ LazyData: true
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown,
-    testthat,
-    plotly
+    testthat
 VignetteBuilder: knitr
