@@ -9,7 +9,7 @@ Description: Loads and displays images, selectively masks specified background
   chi-squared or Wasserstein distances), and clusters images by object color 
   similarity. Originally written for use with organism coloration (reef fish color
   diversity, butterfly mimicry, etc), but easily applicable for any image set.
-Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist
+Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d
 Depends: R (>= 3.3.2)
 License: GPL-3
 Encoding: UTF-8
