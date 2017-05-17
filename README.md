@@ -12,12 +12,12 @@ To install the current version (largely untested) version of `colordistance` in 
 
 2. Install `colordistance` *without* vignettes (long-form documentation) to save time and space or *with* vignettes for offline access to help documents.
 
-  ```{r}
-  # Without vignettes
-  devtools::install_github("hiweller/colordistance")
+    ```R
+    # Without vignettes
+    devtools::install_github("hiweller/colordistance")
   
-  # With vignettes
-  devtools::install_github("hiweller/colordistance", build_vignettes=TRUE)
-  ```
+    # With vignettes
+    devtools::install_github("hiweller/colordistance", build_vignettes=TRUE)
+    ```
  3. If you chose to install vignettes, you can access help documents by running `help(package="colordistance")` or `vignette("colordistance-introduction")`.
 
