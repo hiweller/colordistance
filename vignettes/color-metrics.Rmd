@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+* [Introduction to `colordistance`](introduction-vignette.html)
+* [Pixel Binning Methods](binning-methods.html)
+* Color Distance Metrics
+
 ## Introduction
 
 The last step in calculating a color distance matrix for a set of images is to choose a method for measuring the distance between sets of color clusters, whether they were computed using color histograms or k-means clustering. The clusters summarize two important pieces of information about an object: the colors present in the image, and the relative proportion of each color in the image. To measure the color similarity of two objects, a distance metric should take both of these features into account.
