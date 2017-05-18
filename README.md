@@ -1,12 +1,18 @@
 # colordistance
 
-The aim of `colordistance` is to provide functions for quantifying the differences between colorful objects.
+**Purpose**: Functions for quantifying the differences between colorful objects.
+
+**Requirements**: R >= 3.3.2
+
+**Author**: [Hannah Weller](https://scholar.google.com/citations?user=rjI5wpEAAAAJ&hl=en)
+
+**Contact**: hannahiweller@gmail.com
 
 ## Installation
 
 `colordistance` is still in development, and you can track it at https://github.com/hiweller/colordistance. 
 
-To install the current version (largely untested) version of `colordistance` in R:
+To install the current (largely untested) version of `colordistance` in R:
 
 1. Install the [`devtools`](https://github.com/hadley/devtools) package (`install.packages("devtools")`).
 
