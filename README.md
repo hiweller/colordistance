@@ -49,7 +49,7 @@ To get started with `colordistance`, you'll need:
 
 2. R version 3.3.2 or later.
 
-3. Estimates for the upper and lower RGB bounds for your background color. R reads in images on a 0--1 scale (so pure red would be [1, 0, 0], green would be [0, 1, 0], blue would be [0, 0, 1], and so on). Background masking is rarely perfect, so you'll need to specify an upper and lower threshold for the background cutoff - around 0.2 usually does it. So if your background is white, your lower threshold would be [0.8, 0.8, 0.8] and your upper would be [1, 1, 1]. The default background color for `colordistance` is bright green, [0, 1, 0].
+3. Estimates for the upper and lower RGB bounds for your background color. R reads in pixels channels with a 0-1 intensity range instead of the typical 0-255 (so pure red would be [1, 0, 0], green would be [0, 1, 0], blue would be [0, 0, 1], and so on). Background masking is rarely perfect, so you'll need to specify an upper and lower threshold for the background cutoff - around 0.2 usually does it. So if your background is white, your lower threshold would be [0.8, 0.8, 0.8] and your upper would be [1, 1, 1]. The default background color for `colordistance` is bright green, [0, 1, 0].
 
 To run an analysis with all the default settings (bright green background masking, RGB color histograms with 3 bins per channel, and earth mover's distance for color distance metric -- see documentation), just run:
 
