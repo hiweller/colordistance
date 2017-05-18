@@ -1,6 +1,6 @@
-# colordistance
+# colordistance 0.0.0.9000
 
-**Purpose**: Functions for quantifying the differences between colorful objects.
+**Purpose**: R package with functions for quantifying the differences between colorful objects.
 
 **Requirements**: R >= 3.3.2
 
@@ -26,4 +26,3 @@ To install the current (largely untested) version of `colordistance` in R:
     devtools::install_github("hiweller/colordistance", build_vignettes=TRUE)
     ```
  3. If you chose to install vignettes, you can access help documents by running `help(package="colordistance")` or `vignette("colordistance-introduction")`.
-
