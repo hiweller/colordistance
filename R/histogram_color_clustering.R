@@ -102,7 +102,7 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
   # each default cluster color is the center of the bin
   # I know this line is confusing
   # Don't worry about that
-    if (!as.vec & is.null(defaultClusters)) {
+    if (is.null(defaultClusters)) {
         defaultClusters <- as.matrix(expand.grid(lapply(breaks, function(i) sapply(c(1:(length(i) - 1)), function(j) mean(c(i[j], i[j + 1]))))))
 
         # Set clusters as defaultClusters - values only overwritten if there are
@@ -179,6 +179,10 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
       title <- strsplit(tail(strsplit(image$path, "/")[[1]], 1), "[.]")[[1]][1]
       }
     barplot(as.vector(pixelBins), col=colExp, main=title)
+  }
+
+  if (as.vec) {
+    clusters <- clusters$Pct
   }
 
   return(clusters)
