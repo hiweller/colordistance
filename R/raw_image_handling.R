@@ -14,6 +14,7 @@
 #' imDir <- getImagePaths("Heliconius/")
 #' imDir <- getImagePaths("some/nonexistent/directory")
 #' imDir <- getImagePaths("./")
+#' @export
 getImagePaths <- function(path) {
   # Make sure input is both a string and a valid folder path
   if (!is.character(path)) {

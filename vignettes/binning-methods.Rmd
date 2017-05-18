@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   fig.align="center"
 )
 ```
-* [Introduction to `colordistance`](introduction-vignette.html)
+* [Introduction to `colordistance`](colordistance-introduction.html)
 * Pixel Binning Methods
 * [Color Distance Metrics](color-metrics.html)
 
