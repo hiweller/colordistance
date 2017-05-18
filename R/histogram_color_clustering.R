@@ -78,12 +78,6 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
     pix <- image$filtered.rgb.2d
     }
 
-  # Normalize pixels if flagged
-  if (normPix) {
-    pix <- t(apply(pix, 1, function(x) x / sum(x)))
-    message("Using pixel ratios instead of absolute values")
-  }
-
   # Create vector of bins
   if (length(bins)==1 | length(bins)==3) {
     if (length(bins)==1) {
@@ -156,11 +150,13 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
     Pct <- as.vector(xtabs(~ ., binnedImage))
     clusters$Pct <- Pct/max(sum(Pct))
 
+  }
+
+  if (!as.vec & normPix) {
     # Normalize cluster coordinates if flagged
     if (normPix) {
-      clusters <- t(apply(clusters, 1, function(x) x[1:3]/sum(x[1:3])))
+      clusters <- cbind(t(apply(clusters, 1, function(x) x[1:3]/sum(x[1:3]))), clusters$Pct)
     }
-
   }
 
   # Plot if flagged
