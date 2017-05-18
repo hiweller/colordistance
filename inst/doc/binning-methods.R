@@ -86,24 +86,24 @@ hist03 <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=c(8,
 # Get histograms for a set of images
 histMulti <- colordistance::getHistList("Heliconius/", bins=2, plotting=F, lower=lower, upper=upper)
 
-## ---- fig.width=4, fig.height=5------------------------------------------
-lower <- rep(0.8, 3)
-upper <- rep(1, 3)
-
-# Use defaults
-kmeans01 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, lower=lower, upper=upper)
-kmeansDF <- colordistance::extractClusters(kmeans01)
-
-# Use a larger sample size
-kmeans02 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, sampleSize = 30000, lower=lower, upper=upper)
-kmeansDF2 <- colordistance::extractClusters(kmeans02)
-
-# Don't return clusters as a dataframe
-colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=15, plotting=F, returnClust=F, lower=lower, upper=upper)
-
-# For whole dataset
-kmeans03 <- colordistance::getKMeansList("Heliconius/", n=3, plotting=F, lower=lower, upper=upper)
-kmeansList <- colordistance::extractClusters(kmeans03)
+## ---- fig.width=4, fig.height=5, eval=F----------------------------------
+#  lower <- rep(0.8, 3)
+#  upper <- rep(1, 3)
+#  
+#  # Use defaults
+#  kmeans01 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, lower=lower, upper=upper)
+#  kmeansDF <- colordistance::extractClusters(kmeans01)
+#  
+#  # Use a larger sample size
+#  kmeans02 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, sampleSize = 30000, lower=lower, upper=upper)
+#  kmeansDF2 <- colordistance::extractClusters(kmeans02)
+#  
+#  # Don't return clusters as a dataframe
+#  colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=15, plotting=F, returnClust=F, lower=lower, upper=upper)
+#  
+#  # For whole dataset
+#  kmeans03 <- colordistance::getKMeansList("Heliconius/", n=3, plotting=F, lower=lower, upper=upper)
+#  kmeansList <- colordistance::extractClusters(kmeans03)
 
 ## ------------------------------------------------------------------------
 # If we use the same number of clusters for both the histogram and k-means methods, how different do the clusters look?

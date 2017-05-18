@@ -135,7 +135,7 @@ Unless you have a compelling reason to use k-means instead of the color histogra
 
 The k-means method is implemented using either `getKmeanColors()` or `getKMeansList()`, and dataframes compatible with the analysis functions in `colordistance` are extracted using `extractClusters()`.
 
-Where the histogram method will always use the same set of bins for an image regardless of its content, k-means uses [k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) (go figure), which aims to choose a provided number of clusters for a dataset which minimizes the sum of the distances between datapoints and their assigned clusters. So if we had an image of the French flag and used k-means to find 3 clusters, it would return a white cluster, a red cluster, and a blue cluster, each of which contained $\frac{1}{3}$ of the pixels in the image. If we wanted to get those same clusters back using the histogram method, we'd have to use a larger number of clusters overall, most of which would be empty -- and we might have to manually guess where to put the boundaries for the bins.
+Where the histogram method will always use the same set of bins for an image regardless of its content, k-means uses [k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering), which aims to choose a provided number of clusters for a dataset which minimizes the sum of the distances between datapoints and their assigned clusters. So if we had an image of the French flag and used k-means to find 3 clusters, it would return a white cluster, a red cluster, and a blue cluster, each of which contained $\frac{1}{3}$ of the pixels in the image. If we wanted to get those same clusters back using the histogram method, we'd have to use a larger number of clusters overall, most of which would be empty -- and we might have to manually guess where to put the boundaries for the bins.
 
 The input for the k-means functions are therefore slightly simpler, because rather than specify bins for each channel, the most important variable is just the number of clusters, `n`:
 
@@ -201,7 +201,7 @@ colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, uppe
 
 * *Requires same number of clusters for every image.* If images in a dataset have a wide range of color complexity, it can be difficult to choose the right number of clusters -- too many, and simpler images will have their colors divided up into extremely similar but still separate clusters; too few, and details in more complex images will be obscured.
 
-* *Slow.* k-means clustering is iterative and usually working with thousands of data points to perform a fit, while color histograms just have to count how many pixels fall into certain regions, no fit required. k-means binning usually takes much longer than color histograms, which can make a big difference if you're working with a large set of images or high-resolution images.
+* *Slow.* k-means clustering is iterative and usually working with thousands of data points to perform a fit, while color histograms just have to count how many pixels fall into certain regions, no fit required. K-means binning usually takes much longer than color histograms, which can make a big difference if you're working with a large set of images or high-resolution images.
 
 ## Choosing a binning method & parameters
 
@@ -232,7 +232,7 @@ histMulti <- colordistance::getHistList("Heliconius/", bins=2, plotting=F, lower
 ```
 
 **K-means method**
-```{r, fig.width=4, fig.height=5}
+```{r, fig.width=4, fig.height=5, eval=F}
 lower <- rep(0.8, 3)
 upper <- rep(1, 3)
 
