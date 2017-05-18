@@ -54,7 +54,7 @@ To get started with `colordistance`, you'll need:
 To run an analysis with all the default settings (bright green background masking, RGB color histograms with 3 bins per channel, and earth mover's distance for color distance metric -- see documentation), just run:
 
 ```R
-colordistance::imageClusterPipeline("path/to/images/folder", lower=c())
+colordistance::imageClusterPipeline("path/to/images/folder")
 ```
 
 You'll get a blue and yellow heatmap with a cluster dendrogram and labels taken from the image names. Yellow cells correspond to *dissimilar* images; blue cells correspond to more *similar* images. If those scores don't look right, try changing the number of bins (`bins` argument), the distance metric (`distanceMethod` argument), and making sure you're masking out the right background color.
