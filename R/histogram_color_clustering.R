@@ -156,9 +156,9 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
     Pct <- as.vector(xtabs(~ ., binnedImage))
     clusters$Pct <- Pct/max(sum(Pct))
 
-    # Vectorize if flagged
-    if (as.vec) {
-      clusters <- as.vector(clusters$Pct)
+    # Normalize cluster coordinates if flagged
+    if (normPix) {
+      clusters <- t(apply(clusters, 1, function(x) x[1:3]/sum(x[1:3])))
     }
 
   }
