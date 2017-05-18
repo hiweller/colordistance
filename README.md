@@ -1,5 +1,7 @@
 # colordistance 0.0.0.9000
 
+[test](colordistance/colordistance-introduction.html )
+
 **Purpose**: R package with functions for quantifying the differences between colorful objects.
 
 **Requirements**: R >= 3.3.2
