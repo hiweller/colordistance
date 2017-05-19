@@ -207,7 +207,7 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
     # Use specified method
     # In each case, for every pair defined above, calculate distance metric and insert into distance matrix cell
     if (method=="emd") {
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- EMDistance(obj[[x[1]]], obj[[x[2]]]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance::EMDistance(obj[[x[1]]], obj[[x[2]]]))
     } else if (method=="chisq") {
 
       # Throw a warning if reordering with just chisq method
@@ -215,15 +215,15 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
         warning("Setting ordering = T for 'chisq' method not recommended (comparisons may not be valid)")
         }
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- chisqDistance(obj[[x[1]]][, 4], obj[[x[2]]][, 4]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance::chisqDistance(obj[[x[1]]][, 4], obj[[x[2]]][, 4]))
 
     } else if (method=="color.dist") {
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colorDistance(obj[[x[1]]], obj[[x[2]]]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance::colorDistance(obj[[x[1]]], obj[[x[2]]]))
 
     } else if (method=="weighted.pairs") {
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- weightedPairsDistance(obj[[x[1]]], obj[[x[2]]], ordering=ordering, colorWeight=colorWeight, sizeWeight=sizeWeight))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance::weightedPairsDistance(obj[[x[1]]], obj[[x[2]]], ordering=ordering, colorWeight=colorWeight, sizeWeight=sizeWeight))
 
     } else {
       stop("Comparison method must be one of 'emd', 'chisq', 'color.dist' or 'weighted.pairs'")
@@ -235,7 +235,7 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
   distMat[upper.tri(distMat)] <- t(distMat)[upper.tri(distMat)]
 
   if (plotting) {
-    heatmapColorDistance(distMat)
+    colordistance::heatmapColorDistance(distMat)
   }
 
   return(distMat)
