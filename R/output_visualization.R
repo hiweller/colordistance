@@ -57,7 +57,7 @@ plotClusters <- function(clusterList, hsv=F, p="all", pausing=T) {
       pl <- plotly::plot_ly(clusterList[[i]], x=~clusterList[[i]][, 1], y=~clusterList[[i]][, 2], z=~clusterList[[i]][, 3], size=~clusterList[[i]][, 4], color=~clusterList[[i]][, 4]) %>% plotly::add_markers(color=I(colExp), size=~clusterList[[i]][, 4], sizes=c(10, 5000)) %>% plotly::layout(scene=scene, title=names(clusterList)[i])
       print(pl)
       if (pausing) {
-        colordistance::pause()
+        colordistance:::pause()
         }
     }
   } else {
