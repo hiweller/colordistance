@@ -208,7 +208,6 @@ extractClusters <- function(getKMeansListObject, ordering=T, normalize=F) {
     endList <- data.frame(R=getKMeansListObject$centers[, 1], G=getKMeansListObject$centers[, 2], B=getKMeansListObject$centers[, 3], Pct=getKMeansListObject$size/sum(getKMeansListObject$size))
   }
 
-
   # Same with normalization
   if (normalize) {
     endList <- normalizeRGB(endList)

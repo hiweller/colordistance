@@ -95,7 +95,7 @@
 #' @export
 imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="emd", lower=c(0, 140/255, 0), upper=c(60/255, 1, 60/255), histBins=3, kmeansBins=27, binAvg=T, normPix=F, plotBins=F, pausing=T, hsv=F, bounds=c(0, 1), sampleSize=20000, iter.max=50, nstart=5, imgType=F, ordering="default", sizeWeight=0.5, colorWeight=0.5, plotHeatmap=T, returnDistanceMatrix=T, saveTree=F, saveDistanceMatrix=F) {
 
-  # If argument isn"t a string/vector of strings, throw an error
+  # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
     stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
     }
@@ -107,8 +107,8 @@ imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="e
     imPaths <- unlist(sapply(images[dir.exists(images)], getImagePaths), use.names=F)
   }
 
-  # For any paths that aren"t folders, append to imPaths if they are existing image paths
-  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we"re taking any paths that are not folders but which do exist
+  # For any paths that aren't folders, append to imPaths if they are existing image paths
+  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we're taking any paths that are not folders but which do exist
   imPaths <- c(imPaths, images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
 
   # Grab only valid image types (jpegs and pngs)
@@ -119,9 +119,11 @@ imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="e
   # Get clusterList using either hist or kmeans
   if (clusterMethod=="hist") {
     message("Pixel binning method: histogram (predetermined bins)")
+    message("Binning images...")
     clusterList <- getHistList(imPaths, bins=histBins, binAvg=binAvg, lower=lower, upper=upper, normPix=normPix, plotting=plotBins, pausing=pausing, hsv=hsv, bounds=bounds, imgType=imgType)
   } else if (clusterMethod=="kmeans") {
     message("Pixel binning method: kmeans (algorithmically determined bins)")
+    message("Generating clusters...")
     clusterList <- getKMeansList(imPaths, bins=kmeansBins, sampleSize=sampleSize, plotting=plotBins, lower=lower, upper=upper, iter.max=iter.max, nstart=nstart, imgType=imgType)
     clusterList <- extractClusters(clusterList, ordering=F, normalize=normPix)
   } else {
@@ -130,8 +132,9 @@ imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="e
 
   # Get distance matrix using provided method
   message(paste("Comparison metric for distance matrix:", distanceMethod))
+  message("Calculating distance matrix...")
   distanceMatrix <- getColorDistanceMatrix(clusterList, method=distanceMethod, ordering=ordering, plotting=plotHeatmap, sizeWeight=sizeWeight, colorWeight=colorWeight)
-
+  message("Done")
   if (saveTree!=F) {
     # If saveTree is a path, save to that path
     if (is.character(saveTree)) {
