@@ -155,7 +155,14 @@ getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=F, lower=c
   imPaths <- imPaths[grep(x=imPaths, pattern="[.][jpg.|jpeg.|png.]", ignore.case=T)]
 
   # Now that we have our list of valid images, get kmeans fit objects for each one
-  endList <- lapply(imPaths, function(x) getKMeanColors(x, n=bins, sampleSize=sampleSize, plotting=plotting, lower=lower, upper=upper, iter.max=iter.max, nstart=nstart, returnClust=T))
+  endList <- vector("list", length(imPaths))
+
+  # Use a progress bar
+  pb <- txtProgressBar(min=0, max=length(imPaths), style=3)
+  for (i in 1:length(imPaths)) {
+    endList[[i]] <- getKMeanColors(imPaths[i], n=bins, sampleSize=sampleSize, plotting=plotting, lower=lower, upper=upper, iter.max=iter.max, nstart=nstart, returnClust=T)
+    setTxtProgressBar(pb, i)
+  }
 
   # Get just image names (not entire filepath) as labels for list
   listNames <- sapply(imPaths, function(x) tail(strsplit(x, "/")[[1]], 1))
