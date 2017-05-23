@@ -31,11 +31,7 @@ To install the current (largely untested) version of `colordistance` in R:
     # With vignettes
     devtools::install_github("hiweller/colordistance", build_vignettes=TRUE)
     ```
-<<<<<<< HEAD
- 3. If you chose to install vignettes, you can access help documents by running `help(package="colordistance")` or `vignette("colordistance-introduction")`.
-=======
  3. You can access help documents by running `help(package="colordistance")` and clicking on the html files or, if you set `build_vignettes=TRUE` during install, run `vignette("colordistance-introduction")`.
->>>>>>> 71b06064b1fac7d77335932db8ecc57927babf31
 
 ## Documentation
 
