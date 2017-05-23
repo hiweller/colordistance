@@ -8,7 +8,7 @@ An R package with functions for quantifying the differences between colorful obj
 
 **Requirements**: R >= 3.3.2
 
-**Documentation**: <https://github.io/hiweller/colordistance>
+**Documentation**: <https://hiweller.github.io/colordistance>
 
 **Author**: [Hannah Weller](https://scholar.google.com/citations?user=rjI5wpEAAAAJ&hl=en)
 
