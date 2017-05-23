@@ -147,6 +147,9 @@ plotClustersMulti <- function(clusterList, hsv=F, p="all", title="") {
 #'   \code{\link{extractClusters}} or \code{\link{getHistList}}, or a symmetrical distance matrix as output by \code{\link{getColorDistanceMatrix}}.
 #' @param main Title for heatmap plot.
 #' @param col Color scale for heatmap from low to high. Default is \code{colorRampPalette(c("royalblue4", "ghostwhite", "goldenrod2"))(n=299)}, where yellow is more dissimilar and blue is more similar.
+#' @param margins Margins for column and row labels.
+#' @param ... Additional arguments passed on to \code{\link[gplots]{heatmap.2}}.
+#'
 #'
 #' @return Heatmap representation of distance matrix.
 #'
@@ -156,7 +159,7 @@ plotClustersMulti <- function(clusterList, hsv=F, p="all", title="") {
 #' heatmapColorDistance(CDM, main="Heliconius color similarity")
 #' heatmapColorDistance(clusterList, col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
 #' @export
-heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="default") {
+heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="default", margins=c(6, 8)) {
 
   # Shorter handle
   obj <- clusterList_or_matrixObject
@@ -175,6 +178,6 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 
   # Convert to "dist" object for hclust method and plot heatmap
   clust <- as.dist(obj)
-  heatmap(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main)
+  gplots::heatmap.2(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main, trace="none", density.info="none", key.xlab="Color distance score", key.title=NA, keysize=1, srtRow=30, srtCol=35, na.color="#969696", revC=T, margins=margins, offsetRow=0, offsetCol=0)
 
 }

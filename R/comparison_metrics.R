@@ -151,6 +151,8 @@ weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeigh
 #'   \code{F} (for no ordering).
 #' @param plotting Logical. Should a heatmap of the distance matrix be displayed
 #'   once the function finishes running?
+#' @param ... Additional arguments passed on to
+#'   \code{\link{heatmapColorDistance}}.
 #'
 #' @return A distance matrix of image distance scores (the scales vary depending
 #'   on the distance metric chosen, but for all four methods, higher scores =
@@ -174,7 +176,7 @@ weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeigh
 #'
 #' getColorDistanceMatrix(clusterList, method="color.dist", ordering=T)
 #' @export
-getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default", sizeWeight=0.5, colorWeight=0.5, plotting=T) {
+getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default", sizeWeight=0.5, colorWeight=0.5, plotting=T, ...) {
 
   # First redefine the name of this thing for brevity
   obj <- clusterList
@@ -235,7 +237,7 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
   distMat[upper.tri(distMat)] <- t(distMat)[upper.tri(distMat)]
 
   if (plotting) {
-    colordistance::heatmapColorDistance(distMat)
+    colordistance::heatmapColorDistance(distMat, ...)
   }
 
   return(distMat)

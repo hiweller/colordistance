@@ -338,19 +338,13 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
 
   # If pausing is on (and plotting is also on because otherwise this is pointless), fill in one element at a time, plot it, then wait for user input
 
-  # Don't display a progress bar if plots are being displayed and paused; otherwise display progress
-  if (!plotting & !pausing) {
-    pb <- txtProgressBar(min=0, max=length(imPaths), style=3)
-  }
+  # Display progress bar
+  pb <- txtProgressBar(min=0, max=length(imPaths), style=3)
 
   for (i in 1:length(endList)) {
     endList[[i]] <- suppressMessages(getImageHist(imPaths[i], bins=bins, binAvg=binAvg, lower=lower, upper=upper, normPix=normPix, plotting=plotting, hsv=hsv, title=title, bounds=bounds))
 
-    if (plotting & pausing) {
-        pause()
-    } else {
-      setTxtProgressBar(pb, i)
-    }
+    setTxtProgressBar(pb, i)
   }
 
   # Name each list element by image name and include file extension if imgType=TRUE
