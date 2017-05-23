@@ -35,7 +35,7 @@
 #'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 #'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 #'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
-#' @param bins Only applicable if \code{clusterMethod="hist"}. Number of bins
+#' @param histBins Only applicable if \code{clusterMethod="hist"}. Number of bins
 #'   for each channel OR a vector of length 3 with bins for each channel. Bins=3
 #'   will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
 #'   (2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.
