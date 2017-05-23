@@ -1,0 +1,192 @@
+#' Generate and plot a color distance matrix from a set of images
+#'
+#' Takes images, computes color clusters for each image, and calculates distance
+#' matrix/dendrogram from those clusters. This is the fastest way to get a
+#' distance matrix for color similarity starting from a folder of images.
+#' Essentially, it just calls in a series of other package functions in order:
+#' input images -> \code{\link{getImagePaths}} -> \code{\link{getHistList}} or
+#' \code{\link{getKMeansList}} followed by \code{\link{extractClusters}} ->
+#' \code{\link{getColorDistanceMatrix}} -> plotting -> return/save distance
+#' matrix. Sort of railroads you, but good for testing different combinations of
+#' clustering methods and distance metrics.
+#'
+#' @param images Character vector of directories, image paths, or both.
+#' @param clusterMethod Which method for getting color clusters from each image
+#'   should be used? Must be either \code{"hist"} (predetermined bins generated
+#'   by dividing each channel with equidistant bounds; calls
+#'   \code{\link{getHistList}}) or \code{"kmeans"} (determine clusters using
+#'   kmeans fitting on pixels; calls \code{\link{getKMeansList}}).
+#' @param distanceMethod One of four possible comparison methods for calculating
+#'   the color distances: \code{"emd"} (uses \code{\link{EMDistance}},
+#'   recommended), \code{"chisq"} (uses \code{\link{chisqDistance}}),
+#'   \code{"color.dist"} (uses \code{\link{colorDistance}}; not appropriate if
+#'   binAvg=F), or \code{"weighted.pairs"}
+#'   (\code{\link{weightedPairsDistance}}).
+#' @param lower RGB or HSV triplet specifying the lower bounds for background
+#'   pixels. Default upper and lower bounds are set to values that work well for
+#'   a bright green background (RGB [0, 1, 0]).
+#' @param upper RGB or HSV triplet specifying the upper bounds for background
+#'   pixels. Default upper and lower bounds are set to values that work well for
+#'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
+#'   take some trial and error, but the following bounds may work for certain
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
+#' @param histBins Only applicable if \code{clusterMethod="hist"}. Number of bins
+#'   for each channel OR a vector of length 3 with bins for each channel. Bins=3
+#'   will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
+#'   (2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.
+#' @param kmeansBins Only applicable if \code{clusterMethod="kmeans"}. Number of
+#'   KMeans clusters to fit. Unlike \code{\link{getImageHist}}, this represents
+#'   the actual final number of bins, rather than the number of breaks in each
+#'   channel.
+#' @param binAvg Logical. Should the color clusters used for the distance matrix
+#'   be the average of the pixels in that bin (binAvg=\code{TRUE}) or the center
+#'   of the bin ({FALSE})? If a bin is empty, the center of the bin is returned
+#'   as the cluster color regardless. Only applicable if
+#'   \code{clusterMethod="hist"}, since \code{kmeans} clusters are at the center
+#'   of their assigned pixel clouds by definition.
+#' @param normPix Logical. Should RGB or HSV cluster values be normalized using
+#'   \code{\link{normalizeRGB}}?
+#' @param bounds Upper and lower limits for the channels; R reads in images with
+#'   intensities on a 0-1 scale, but 0-255 is common.
+#' @param sampleSize Only applicable if \code{clusterMethod="kmeans"}. Number of
+#'   pixels to be randomly sampled from filtered pixel array for performing fit.
+#'   If set to \code{FALSE}, all pixels are fit, but this can be time-consuming,
+#'   especially for large images. Passed to \code{\link{getKMeansList}}.
+#' @param iter.max Only applicable if \code{clusterMethod="kmeans"}. Inherited
+#'   from \code{\link[stats]{kmeans}}. The maximum number of iterations allowed
+#'   during kmeans fitting. Passed to \code{\link{getKMeansList}}.
+#' @param nstart Only applicable if \code{clusterMethod="kmeans"}. Inherited
+#'   from \code{\link[stats]{kmeans}}. How many random sets should be chosen?
+#'   Passed to \code{\link{getKMeansList}}.
+#' @param ordering Logical if not left as "default". Should the color clusters
+#'   in the list be reordered to minimize the distances between the pairs? If
+#'   left as default, ordering depends on distance method: "emd" and "chisq" do
+#'   not order clusters ("emd" orders on a case-by-case in the
+#'   \code{\link{EMDistance}} function itself and reordering by size similarity
+#'   would make chi-squared meaningless); "color.dist" and "weighted.pairs" use
+#'   ordering. To override defaults, set to either \code{T} (for ordering) or
+#'   \code{F} (for no ordering).
+#' @param sizeWeight Weight of size similarity in determining overall score and
+#'   ordering (if \code{ordering=T}).
+#' @param colorWeight Weight of color similarity in determining overall score
+#'   and ordering (if \code{ordering=T}). Color and size weights do not
+#'   necessarily have to sum to 1.
+#' @param plotHeatmap Logical. Should a heatmap of the distance matrix be
+#'   plotted?
+#' @param returnDistanceMatrix Logical. Should the distance matrix be returned
+#'   to the R environment or just plotted?
+#' @param saveTree Either logical or a filepath for saving the tree; default if
+#'   set to \code{TRUE} is to save in current working directory as
+#'   "ColorTree.newick".
+#' @param saveDistanceMatrix Either logical or filepath for saving distance
+#'   matrix; default if set to \code{TRUE} is to save in current working
+#'   directory as "ColorDistanceMatrix.csv"
+#'
+#' @return Color distance matrix, heatmap, and saved distance matrix and tree
+#'   files if saving is \code{TRUE}.
+#'
+#' @examples
+#' imageClusterPipeline("Heliconius/")
+#' @export
+imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="emd", lower=c(0, 140/255, 0), upper=c(60/255, 1, 60/255), histBins=3, kmeansBins=27, binAvg=T, normPix=F, plotBins=F, pausing=T, hsv=F, bounds=c(0, 1), sampleSize=20000, iter.max=50, nstart=5, imgType=F, ordering="default", sizeWeight=0.5, colorWeight=0.5, plotHeatmap=T, returnDistanceMatrix=T, saveTree=F, saveDistanceMatrix=F) {
+
+  # If argument isn't a string/vector of strings, throw an error
+  if (!is.character(images)) {
+    stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
+    }
+
+  imPaths <- c()
+
+  # Extract image paths from any folders
+  if (length(which(dir.exists(images))) >= 1) {
+    imPaths <- unlist(sapply(images[dir.exists(images)], getImagePaths), use.names=F)
+  }
+
+  # For any paths that aren't folders, append to imPaths if they are existing image paths
+  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we're taking any paths that are not folders but which do exist
+  imPaths <- c(imPaths, images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
+
+  # Grab only valid image types (jpegs and pngs)
+  imPaths <- imPaths[grep(x=imPaths, pattern="[.][jpg.|jpeg.|png.]", ignore.case = T)]
+
+  message(paste(length(imPaths), "images"))
+
+  # Get clusterList using either hist or kmeans
+  if (clusterMethod=="hist") {
+    message("Pixel binning method: histogram (predetermined bins)")
+    message("Binning images...")
+    clusterList <- getHistList(imPaths, bins=histBins, binAvg=binAvg, lower=lower, upper=upper, normPix=normPix, plotting=plotBins, pausing=pausing, hsv=hsv, bounds=bounds, imgType=imgType)
+  } else if (clusterMethod=="kmeans") {
+    message("Pixel binning method: kmeans (algorithmically determined bins)")
+    message("Generating clusters...")
+    clusterList <- getKMeansList(imPaths, bins=kmeansBins, sampleSize=sampleSize, plotting=plotBins, lower=lower, upper=upper, iter.max=iter.max, nstart=nstart, imgType=imgType)
+    clusterList <- extractClusters(clusterList, ordering=F, normalize=normPix)
+  } else {
+    stop("clusterMethod must be one of either 'hist' or 'kmeans'")
+  }
+
+  # Get distance matrix using provided method
+  message(paste("Comparison metric for distance matrix:", distanceMethod))
+  message("Calculating distance matrix...")
+  distanceMatrix <- getColorDistanceMatrix(clusterList, method=distanceMethod, ordering=ordering, plotting=plotHeatmap, sizeWeight=sizeWeight, colorWeight=colorWeight)
+  message("Done")
+  if (saveTree!=F) {
+    # If saveTree is a path, save to that path
+    if (is.character(saveTree)) {
+
+      # If provided filepath is a directory then create a filename
+      if (dir.exists(saveTree)) {
+        saveTree <- paste(saveTree, "/ColorTree.newick", sep="")
+        message(paste("No output filename specified, saving as", saveTree))
+      }
+    }
+
+    # Otherwise, if saveTree=T, save to current working directory
+    else if (saveTree) {
+      saveTree <- "./ColorTree.newick"
+      message("No output filename specified; saving as 'ColorTree.newick'")
+    } else {
+      stop("saveTree must be either a valid path or a logical")
+    }
+
+    exportTree(distanceMatrix, file=saveTree)
+    message(paste("Color dendrogram saved to", normalizePath(saveTree)))
+
+  }
+
+  if (saveDistanceMatrix!=F) {
+    # If saveTree is a path, save to that path
+    if (is.character(saveDistanceMatrix)) {
+
+      # If provided filepath is a directory then create a filename
+      if (dir.exists(saveDistanceMatrix)) {
+        saveDistanceMatrix <- paste(saveDistanceMatrix, "/ColorDistanceMatrix.csv", sep="")
+        message(paste("No output filename specified, saving as", saveDistanceMatrix))
+      }
+    }
+
+    # Otherwise, if saveTree=T, save to current working directory
+    else if (saveDistanceMatrix) {
+      saveDistanceMatrix <- "./ColorDistanceMatrix.csv"
+      message("No output filename specified; saving as 'ColorDistanceMatrix.csv'")
+    } else {
+      stop("saveDistanceMatrix must be either a valid path or a logical")
+      }
+
+    # Write csv
+    write.csv(distanceMatrix, file=saveDistanceMatrix)
+    message(paste("Color distance matrix saved to", normalizePath(saveDistanceMatrix)))
+
+  }
+
+  if (returnDistanceMatrix) {
+    return(distanceMatrix)
+    }
+
+
+}

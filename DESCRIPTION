@@ -1,0 +1,21 @@
+Package: colordistance
+Title: Distance Metrics for Image Color Similarity
+Version: 0.0.0.9000
+Authors@R: person("Hannah", "Weller", email = "hannahiweller@gmail.com", role = c("aut", "cre"))
+Description: Loads and displays images, selectively masks specified background
+  colors, bins pixels by color using either data-dependent or automatically
+  generated color bins, quantitatively measures color similarity among images
+  using one of several distance metrics for comparing RGB or HSV clusters (primarily
+  chi-squared or Wasserstein distances), and clusters images by object color 
+  similarity. Originally written for use with organism coloration (reef fish color
+  diversity, butterfly mimicry, etc), but easily applicable for any image set.
+Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d, plotly, gplots
+Depends: R (>= 3.3.2)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
