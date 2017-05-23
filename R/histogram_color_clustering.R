@@ -345,6 +345,11 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
     endList[[i]] <- suppressMessages(getImageHist(imPaths[i], bins=bins, binAvg=binAvg, lower=lower, upper=upper, normPix=normPix, plotting=plotting, hsv=hsv, title=title, bounds=bounds))
 
     setTxtProgressBar(pb, i)
+
+    if (pausing & plotting) {
+      colordistance:::pause()
+    }
+
   }
 
   # Name each list element by image name and include file extension if imgType=TRUE
