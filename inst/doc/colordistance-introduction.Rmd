@@ -154,7 +154,7 @@ H8hist <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=c(2,
 
 By default, `getImageHist()` also takes the average color of all the pixels assigned to a bin, rather than the center of the bin. To bin each image in the butterfly dataset, we can just pass the whole folder of images to `getHistList()`:
 
-```{r, fig.align="center", fig.width=8, fig.height=5}
+```{r, fig.align="center", results=F, fig.width=8, fig.height=5}
 histList <- colordistance::getHistList("Heliconius/", lower=lower, upper=upper, bins=rep(2, 3), plotting=F, pausing=F)
 ```
 
@@ -164,7 +164,7 @@ The `plotClusters()` function can be helpful for visualizing the resulting clust
 
 With the pixels binned, we can start comparing the histograms across images. 
 
-```{r, fig.align="center", fig.width=7, fig.height=4, echo=F}
+```{r, fig.align="center", fig.width=7, fig.height=4, echo=F, results=F}
 par(mfrow=c(2,4))
 histList <- suppressMessages(colordistance::getHistList("Heliconius/", lower=lower, upper=upper, bins=rep(2, 3), plotting=T, pausing=F))
 ```
@@ -248,7 +248,7 @@ write.csv(CDM, file = "./Heliconius_color_distance_matrix.csv")
 
 But if you want to test a bunch of different methods and options, you can use the pipeline function, `imageClusterPipeline()`, making it easy to see the effect of tweaking certain variables on the overall output.
 
-```{r, fig.align="center", fig.width=7, fig.height=5}
+```{r, fig.align="center", fig.width=7, fig.height=5, results=F}
 # Default: histogram binning, EMD color distance metric, 3 bins per channel (27 total)
 # Note that we get slightly different clustering each time
 default <- colordistance::imageClusterPipeline("Heliconius/", upper=upper, lower=lower)

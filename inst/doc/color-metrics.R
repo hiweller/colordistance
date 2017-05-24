@@ -3,7 +3,7 @@ knitr::opts_chunk$set(
   fig.align="center"
 )
 
-## ---- fig.width=5, fig.height=4------------------------------------------
+## ---- fig.width=6, fig.height=5, results="hide"--------------------------
 
 # First get the cluster sets
 clusters <- colordistance::getHistList("Heliconius/", lower=rep(0.8, 3), upper=rep(1, 3))

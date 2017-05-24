@@ -41,10 +41,12 @@ plotClusters <- function(clusterList, hsv=F, p="all", pausing=T) {
     temp <- vector("list", 1)
     temp[[1]] <- clusterList
     clusterList <- temp
-    pausing <- FALSE
     p <- 1
   }
 
+  if (length(p)==1) {
+    pausing <- FALSE
+  }
   # Plot clusters for each cluster element
   if (is.numeric(p)) {
     for (i in p) {

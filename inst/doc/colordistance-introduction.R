@@ -63,10 +63,10 @@ segments(xz3$x, xz3$y, xz4$x, xz4$y, lty=lty)
 # Using 2 bins per channel as in the above figure
 H8hist <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=c(2, 2, 2), lower=lower, upper=upper)
 
-## ---- fig.align="center", fig.width=8, fig.height=5----------------------
+## ---- fig.align="center", results=F, fig.width=8, fig.height=5-----------
 histList <- colordistance::getHistList("Heliconius/", lower=lower, upper=upper, bins=rep(2, 3), plotting=F, pausing=F)
 
-## ---- fig.align="center", fig.width=7, fig.height=4, echo=F--------------
+## ---- fig.align="center", fig.width=7, fig.height=4, echo=F, results=F----
 par(mfrow=c(2,4))
 histList <- suppressMessages(colordistance::getHistList("Heliconius/", lower=lower, upper=upper, bins=rep(2, 3), plotting=T, pausing=F))
 
@@ -107,7 +107,7 @@ CDM <- colordistance::getColorDistanceMatrix(histList, method="emd", plotting = 
 write.csv(CDM, file = "./Heliconius_color_distance_matrix.csv")
 
 
-## ---- fig.align="center", fig.width=7, fig.height=5----------------------
+## ---- fig.align="center", fig.width=7, fig.height=5, results=F-----------
 # Default: histogram binning, EMD color distance metric, 3 bins per channel (27 total)
 # Note that we get slightly different clustering each time
 default <- colordistance::imageClusterPipeline("Heliconius/", upper=upper, lower=lower)
