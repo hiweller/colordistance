@@ -43,6 +43,11 @@ lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
+\item{histBins}{Only applicable if \code{clusterMethod="hist"}. Number of bins
+for each channel OR a vector of length 3 with bins for each channel. Bins=3
+will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
+(2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.}
+
 \item{kmeansBins}{Only applicable if \code{clusterMethod="kmeans"}. Number of
 KMeans clusters to fit. Unlike \code{\link{getImageHist}}, this represents
 the actual final number of bins, rather than the number of breaks in each
@@ -103,11 +108,6 @@ set to \code{TRUE} is to save in current working directory as
 \item{saveDistanceMatrix}{Either logical or filepath for saving distance
 matrix; default if set to \code{TRUE} is to save in current working
 directory as "ColorDistanceMatrix.csv"}
-
-\item{bins}{Only applicable if \code{clusterMethod="hist"}. Number of bins
-for each channel OR a vector of length 3 with bins for each channel. Bins=3
-will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
-(2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.}
 }
 \value{
 Color distance matrix, heatmap, and saved distance matrix and tree

@@ -165,11 +165,11 @@ getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=F, lower=c
   }
 
   # Get just image names (not entire filepath) as labels for list
-  listNames <- sapply(imPaths, function(x) tail(strsplit(x, "/")[[1]], 1))
+  listNames <- basename(imPaths)
 
   # Unless the imgType flag = T, drop the file extension from the labels
   if (!imgType) {
-    listNames <- sapply(listNames, function(x) head(strsplit(x, "[.]")[[1]], 1))
+    listNames <- sapply(listNames, function(x) strsplit(x, "[.]")[[1]][1])
   }
 
   names(endList) <- listNames

@@ -300,7 +300,7 @@ getHistColors <- function(bins, hsv=F) {
 #' @export
 getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), normPix=F, plotting=F, pausing=T, hsv=F, title="path", imgType=F, bounds=c(0, 1)) {
 
-  # If argument isn"t a string/vector of strings, throw an error
+  # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
     stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
     }
@@ -309,11 +309,11 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
 
   # Extract image paths from any folders
   if (length(which(dir.exists(images))) >= 1) {
-    imPaths <- unlist(sapply(images[dir.exists(images)], getImagePaths), use.names=F)
+    imPaths <- unlist(sapply(images[dir.exists(images)], colordistance::getImagePaths), use.names=F)
   }
 
-  # For any paths that aren"t folders, append to imPaths if they are existing image paths
-  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we"re taking any paths that are not folders but which do exist
+  # For any paths that aren't folders, append to imPaths if they are existing image paths
+  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we're taking any paths that are not folders but which do exist
   imPaths <- c(imPaths, images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
 
   # Grab only valid image types (jpegs and pngs)
@@ -332,7 +332,9 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
     stop("Bins must be a numeric vector of length 1 or length 3")
     }
 
-
+  if (length(imPaths)==0) {
+    stop("No images found")
+  }
   # Empty list for histogram output
   endList <- vector("list", length(imPaths))
 
@@ -353,10 +355,11 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
   }
 
   # Name each list element by image name and include file extension if imgType=TRUE
+  namePaths <- basename(imPaths)
   if (imgType) {
-    names(endList) <- sapply(imPaths, function(x) tail(strsplit(x, split="/")[[1]], 1))
+    names(endList) <- namePaths
   } else {
-    names(endList) <- sapply(imPaths, function(x) strsplit(tail(strsplit(x, split="/")[[1]], 1), split="[.]")[[1]][1])
+    names(endList) <- sapply(namePaths, function(x) strsplit(x, split="[.]")[[1]][1])
   }
 
   return(endList)

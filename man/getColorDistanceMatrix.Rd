@@ -5,7 +5,7 @@
 \title{Distance matrix for a list of color cluster sets}
 \usage{
 getColorDistanceMatrix(clusterList, method = "emd", ordering = "default",
-  sizeWeight = 0.5, colorWeight = 0.5, plotting = T)
+  sizeWeight = 0.5, colorWeight = 0.5, plotting = T, ...)
 }
 \arguments{
 \item{clusterList}{A list of identically sized dataframes with 4 columns each
@@ -33,6 +33,9 @@ ordering. To override defaults, set to either \code{T} (for ordering) or
 
 \item{plotting}{Logical. Should a heatmap of the distance matrix be displayed
 once the function finishes running?}
+
+\item{...}{Additional arguments passed on to
+\code{\link{heatmapColorDistance}}.}
 }
 \value{
 A distance matrix of image distance scores (the scales vary depending

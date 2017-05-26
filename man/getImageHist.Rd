@@ -19,7 +19,7 @@ result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.}
 
 \item{binAvg}{Logical. Should the returned color clusters be the average of
 the pixels in that bin (binAvg=\code{TRUE}) or the center of the bin
-({FALSE})? If a bin is empty, the center of the bin is returned as the
+(\code{FALSE})? If a bin is empty, the center of the bin is returned as the
 cluster color regardless.}
 
 \item{defaultClusters}{Optional dataframe of default color clusters to be
