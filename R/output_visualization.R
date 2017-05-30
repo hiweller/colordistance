@@ -183,3 +183,56 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
   gplots::heatmap.2(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main, trace="none", density.info="none", key.xlab="Color distance score", key.title=NA, keysize=1, srtRow=30, srtCol=35, na.color="#969696", margins=margins, offsetRow=0, offsetCol=0, ...)
 
 }
+
+
+#' Color histogram of binned image
+#'
+#' Plots a color histogram from a dataframe as returned by
+#' \code{\link{getImageHist}}, \code{\link{getHistList}}, or
+#' \code{\link{extractClusters}}. Bars are colored according to the color of the
+#' bin.
+#'
+#' @param histogram A single dataframe or a list of dataframes as returned by
+#'   \code{\link{getImageHist}}, \code{\link{getHistList}}, or
+#'   \code{\link{extractClusters}}. First three columns must be color
+#'   coordinates and fourth column must be cluster size.
+#' @param pausing Logical. Pause and wait for keystroke before plotting the next
+#'   histogram?
+#' @param hsv Logical. Should provided color coordinates be interpreted as HSV?
+#'   If \code{FALSE}, RGB is assumed.
+#'
+#' @examples
+#' color_df <- as.data.frame(matrix(rep(seq(0, 1, length.out=3), 3), nrow=3, ncol=3))
+#' color_df$Pct <- c(0.2, 0.5, 0.3)
+#' plotHist(color_df)
+#' @export
+plotHist <- function(histogram, pausing=T, hsv=F) {
+  if (is.null(dim(histogram))) {
+
+    for (i in 1:length(histogram)) {
+      clusters <- histogram[[i]]
+      if (hsv) {
+        colExp <- apply(clusters, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+      } else {
+        colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+      }
+
+      barplot(as.vector(clusters[ , 4]), col=colExp, main=names(histogram)[i])
+
+      if (pausing) {
+        colordistance:::pause()
+      }
+    }
+  } else if (is.matrix(histogram) | is.data.frame(histogram)) {
+
+    clusters <- histogram
+
+    if (hsv) {
+      colExp <- apply(clusters, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+    } else {
+      colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+    }
+    barplot(as.vector(clusters[ , 4]), col=colExp)
+  }
+}
+
