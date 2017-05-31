@@ -12,7 +12,7 @@
 #' @return Chi-squared distance, \eqn{(a - b)^2/(a + b)}, between vectors a and
 #'   b. If one or both elements are NA/NaN, contribution is counted as a 0.
 #' @examples
-#' chisqDistance(rnorm(10), rnorm(10))
+#' colordistance:::chisqDistance(rnorm(10), rnorm(10))
 chisqDistance <- function(a, b) {
   # If vectors aren"t same length throw an error
   if (length(a) != length(b)) {
@@ -39,7 +39,8 @@ chisqDistance <- function(a, b) {
 #' @return Sum of Euclidean distances between each pair of points (rows) in the
 #'   provided dataframes.
 #' @examples
-#' colorDistance(clusterList[[1]], clusterList[[2]])
+#' clusterList <- colordistance::getHistList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
+#' colordistance:::colorDistance(clusterList[[1]], clusterList[[2]])
 colorDistance <- function(T1, T2) {
   return(sum(sapply(1:dim(T1)[1], function(x) dist(rbind(T1[x, 1:3], T2[x, 1:3])))))
 }
@@ -63,7 +64,8 @@ colorDistance <- function(T1, T2) {
 #'   bin similarity for a pair of 3-dimensional histograms).
 #'
 #' @examples
-#' EMDistance(clusterList[[1]], clusterList[[2]])
+#' clusterList <- colordistance::getHistList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
+#' colordistance:::EMDistance(clusterList[[1]], clusterList[[2]])
 EMDistance <- function(T1, T2) {
   T1 <- as.matrix(cbind(T1[, 4], T1[, 1:3]))
   T2 <- as.matrix(cbind(T2[, 4], T2[, 1:3]))
@@ -94,7 +96,9 @@ EMDistance <- function(T1, T2) {
 #'   points in provided dataframes.
 #'
 #' @examples
-#' weightedPairsDistance(clusterList[[1]], clusterList[[2]])
+#' clusterList <- colordistance::getKMeansList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
+#' clusterList <- colordistance::extractClusters(clusterList, ordering=T)
+#' colordistance:::weightedPairsDistance(clusterList[[1]], clusterList[[2]], sizeWeight=0.8, colorWeight=0.2)
 weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeight=0.5) {
   if (ordering) {
     require(spatstat)
@@ -159,20 +163,21 @@ weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeigh
 #'   more different).
 #'
 #' @examples
+#' clusterList <- colordistance::getHistList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata", "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3), upper=rep(1, 3))
 #' # Default values - recommended!
-#' getColorDistanceMatrix(clusterList)
+#' colordistance::getColorDistanceMatrix(clusterList)
 #'
 #' # Without plotting
-#' getColorDistanceMatrix(clusterList, plotting=F)
+#' colordistance::getColorDistanceMatrix(clusterList, plotting=F)
 #'
 #' # Use chi-squared instead
-#' getColorDistanceMatrix(clusterList, method="chisq")
+#' colordistance::getColorDistanceMatrix(clusterList, method="chisq")
 #'
 #' # Override ordering (throws a warning if you're trying to do this with chisq!)
-#' getColorDistanceMatrix(clusterList, method="chisq", ordering=TRUE)
+#' colordistance::getColorDistanceMatrix(clusterList, method="chisq", ordering=TRUE)
 #'
 #' # Specify high size weight/low color weight for weighted pairs
-#' getColorDistanceMatrix(clusterList, method="weighted.pairs", colorWeight=0.1, sizeWeight=0.9)
+#' colordistance::getColorDistanceMatrix(clusterList, method="weighted.pairs", colorWeight=0.1, sizeWeight=0.9)
 #'
 #' getColorDistanceMatrix(clusterList, method="color.dist", ordering=T)
 #' @export
@@ -268,7 +273,9 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
 #'   dataframe reordered to minimize color distances per cluster pair.
 #'
 #' @examples
-#' orderClusters(extractClusters(getKMeansList("Heliconius/")))
+#' clusterList <- colordistance::getKMeansList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3)))
+#' clusterList <- colordistance::extractClusters(clusterList)
+#' colordistance:::orderClusters(clusterList)
 orderClusters <- function(extractClustersObject) {
 
   endList <- extractClustersObject
@@ -331,7 +338,9 @@ orderClusters <- function(extractClustersObject) {
 #'   cluster normalized as described.
 #'
 #' @examples
-#' normalizeRGB(extractClusters(getKMeansList("Heliconius/")))
+#' clusterList <- colordistance::getKMeansList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3)))
+#' clusterList <- colordistance::extractClusters(clusterList)
+#' colordistance:::normalizeRGB(clusterList)
 normalizeRGB <- function(extractClustersObject) {
   # For every dataframe in the list, divide each RGB cluster by the total for that row
   return(lapply(extractClustersObject, function(x) x <- cbind(t(apply(x, 1, function(y) y[1:3] / sum(y[1:3]))), Pct=x[, 4])))

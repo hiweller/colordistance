@@ -17,7 +17,7 @@
 #' @export
 getImagePaths <- function(path) {
 
-  path <- basename(path)
+  path <- normalizePath(path)
 
   # Make sure input is both a string and a valid folder path
   if (!is.character(path)) {

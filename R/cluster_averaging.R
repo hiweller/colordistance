@@ -11,7 +11,7 @@
 #'   including number of bins, HSV flag, etc.
 #'
 #' @examples
-#' combineClusters("path/to/folder", method="median", bins=2)
+#' combineClusters(system.file("extdata", "Heliconius", package="colordistance"), method="median", bins=2, lower=rep(0.8, 3), upper=rep(1, 3))
 #' @export
 combineClusters <- function(folder, method="mean", ...) {
 
@@ -19,12 +19,12 @@ combineClusters <- function(folder, method="mean", ...) {
   primary <- normalizePath(folder)
 
   # Get a list of all immediate subdirectories
-  subdirNames <- dir(primary)
-  subdirs <- normalizePath(subdirNames)
+  subdirs <- dir(primary, full.names=T)
+  subdirNames <- basename(subdirs)
   subdirs <- subdirs[dir.exists(subdirs)]
 
   # List of all images in each subdirectory, by subdirectory name
-  images <- sapply(subdirs, colordistance::getImagePaths)
+  images <- lapply(subdirs, colordistance::getImagePaths)
 
   # Fill using getHistList - kmeans doesn't make a lot of sense for this
   hist_list <- vector("list", length(images))
@@ -52,7 +52,7 @@ combineClusters <- function(folder, method="mean", ...) {
 #'   R function is accepted.
 #'
 #' @examples
-#' hist_list <- getHistList("Heliconius/")
+#' hist_list <- getHistList(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
 #' median_clusters <- combineList(hist_list, method="median")
 #'
 #' @note
@@ -65,5 +65,7 @@ combineClusters <- function(folder, method="mean", ...) {
 #' @export
 combineList <- function(hist_list, method="mean") {
   temp <- do.call(abind::abind, c(hist_list, list(along=3)))
-  return(as.data.frame(apply(temp, 1:2, eval(method))))
+  df <- as.data.frame(apply(temp, 1:2, eval(method)))
+  df[, 4] <- df[, 4]/sum(df[, 4])
+  return(df)
 }
