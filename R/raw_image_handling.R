@@ -16,6 +16,9 @@
 #' imDir <- getImagePaths("./")
 #' @export
 getImagePaths <- function(path) {
+
+  path <- basename(path)
+
   # Make sure input is both a string and a valid folder path
   if (!is.character(path)) {
     stop("Provided filepath is not a string (character type)")} else if (!file.exists(path)) {stop("Folder does not exist")

@@ -1,4 +1,4 @@
-#'  Generate a histogram based on color distribution in an image
+#'  Generate a 3D histogram based on color distribution in an image
 #'
 #'  Computes a histogram in either RGB or HSV colorspace by sorting pixels into
 #'  a specified number of bins. If you choose 2 bins for each color channel,

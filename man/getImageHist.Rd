@@ -2,7 +2,7 @@
 % Please edit documentation in R/histogram_color_clustering.R
 \name{getImageHist}
 \alias{getImageHist}
-\title{Generate a histogram based on color distribution in an image}
+\title{Generate a 3D histogram based on color distribution in an image}
 \usage{
 getImageHist(image, bins = 3, binAvg = T, defaultClusters = NULL,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = F,
