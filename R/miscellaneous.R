@@ -10,7 +10,7 @@
 #'   }
 #' }
 pause <- function(){
-  invisible(readline(prompt="Press [enter] to continue or [esc] to exit the loop"))
+  invisible(readline(prompt="Press [enter] to continue or [esc] to exit"))
 }
 
 #' Export a distance matrix as a tree object

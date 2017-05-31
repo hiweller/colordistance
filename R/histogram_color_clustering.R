@@ -348,7 +348,7 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
 
     setTxtProgressBar(pb, i)
 
-    if (pausing & plotting) {
+    if (pausing & plotting & i < length(endList)) {
       colordistance:::pause()
     }
 
