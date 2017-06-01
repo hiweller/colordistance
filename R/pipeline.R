@@ -105,6 +105,11 @@
 #' histBins=3, plotBins=TRUE, saveTree="example_tree.newick",
 #' saveDistanceMatrix="example_DM.csv")
 #'
+#' @import grDevices
+#' @import graphics
+#' @import stats
+#' @import utils
+#'
 #' @export
 imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="emd", lower=c(0, 140/255, 0), upper=c(60/255, 1, 60/255), histBins=3, kmeansBins=27, binAvg=TRUE, normPix=FALSE, plotBins=FALSE, pausing=TRUE, hsv=FALSE, bounds=c(0, 1), sampleSize=20000, iter.max=50, nstart=5, imgType=FALSE, ordering="default", sizeWeight=0.5, colorWeight=0.5, plotHeatmap=TRUE, returnDistanceMatrix=TRUE, saveTree=FALSE, saveDistanceMatrix=FALSE) {
 
