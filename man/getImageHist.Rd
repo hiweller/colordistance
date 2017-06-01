@@ -4,10 +4,10 @@
 \alias{getImageHist}
 \title{Generate a 3D histogram based on color distribution in an image}
 \usage{
-getImageHist(image, bins = 3, binAvg = T, defaultClusters = NULL,
-  lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = F,
-  normPix = F, plotting = T, hsv = F, title = "path", bounds = c(0,
-  1))
+getImageHist(image, bins = 3, binAvg = TRUE, defaultClusters = NULL,
+  lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = FALSE,
+  normPix = FALSE, plotting = TRUE, hsv = FALSE, title = "path",
+  bounds = c(0, 1))
 }
 \arguments{
 \item{image}{Path to a valid image (PNG or JPG) or a \code{\link{loadImage}}
@@ -31,52 +31,63 @@ pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
 \item{as.vec}{Logical. Should the bin sizes just be returned as a vector?
-Much faster if only using \code{\link{chisqDist}} for comparison metric.}
+Much faster if only using \code{\link{chisqDistance}} for comparison metric.}
 
-\item{normPix}{Logical. Should RGB or HSV cluster values be normalized using \code{\link{normalizeRGB}}?}
+\item{normPix}{Logical. Should RGB or HSV cluster values be normalized using
+\code{\link{normalizeRGB}}?}
 
-\item{plotting}{Logical. Should a histogram of the bin colors and sizes be plotted?}
+\item{plotting}{Logical. Should a histogram of the bin colors and sizes be
+plotted?}
 
 \item{hsv}{Logical. Should HSV be used instead of RGB?}
 
-\item{title}{String for what the title the plots if plotting is on; defaults to the image name.}
+\item{title}{String for what the title the plots if plotting is on; defaults
+to the image name.}
 
-\item{bounds}{Upper and lower limits for the channels; R reads in images with intensities on a 0-1 scale, but 0-255 is common.}
+\item{bounds}{Upper and lower limits for the channels; R reads in images with
+intensities on a 0-1 scale, but 0-255 is common.}
 }
 \value{
-A vector or dataframe (depending on whether \code{as.vec=T}) of bin sizes and color values.
+A vector or dataframe (depending on whether \code{as.vec=T}) of bin
+  sizes and color values.
 }
 \description{
-Computes a histogram in either RGB or HSV colorspace by sorting pixels into
- a specified number of bins. If you choose 2 bins for each color channel,
- then each of R, G, and B will be divided into 2 bins each, for a total of
- 2^3 = 8 bins. Once all pixels have been binned, the function will return
- either the size of each bin, either in number of pixels or fraction of total
- pixels, and the color of each bin, either as the geometric center of the bin
- or as the average color of all pixels assigned to it. For example, if you
- input an image of a red square and used 8 bins, all red pixels (RGB triplet
- of [1, 0, 0]) would be assigned to the bin with R bounds (0.5, 1], G bounds
- [0, 0.5) and B bounds [0, 0.5). The average color of the bin would be [0.75,
- 0.25, 0.25], but the average color of the pixels assigned to that bin would
- be [1, 0, 0]. The latter option is obviously more informative, but takes
- longer (about 1.5-2x longer depending on the images).
+Computes a histogram in either RGB or HSV colorspace by sorting pixels into a
+specified number of bins.
+}
+\details{
+If you choose 2 bins for each color channel, then each of R, G, and
+B will be divided into 2 bins each, for a total of 2^3 = 8 bins.
+
+Once all pixels have been binned, the function will return either the size of
+each bin, either in number of pixels or fraction of total pixels, and the
+color of each bin, either as the geometric center of the bin or as the
+average color of all pixels assigned to it.
+
+For example, if you input an image of a red square and used 8 bins, all red
+pixels (RGB triplet of [1, 0, 0]) would be assigned to the bin with R bounds
+(0.5, 1], G bounds [0, 0.5) and B bounds [0, 0.5). The average color of the
+bin would be [0.75, 0.25, 0.25], but the average color of the pixels assigned
+to that bin would be [1, 0, 0]. The latter option is obviously more
+informative, but takes longer (about 1.5-2x longer depending on the images).
 }
 \examples{
-getImageHist("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=T)
-getImageHist("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
+colordistance::getImageHist(system.file("extdata",
+"Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE)
+
+colordistance::getImageHist(system.file("extdata",
+"Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 }

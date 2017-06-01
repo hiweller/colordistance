@@ -18,16 +18,26 @@ A list of the same size and structure as the input list, but with the
 }
 \description{
 Converts clusters from raw channel intensity to their fraction of the
- intensity for that cluster For example, a bright yellow (R=1, G=1, B=0) and
- a darker yellow (R=0.8, G=0.8, B=0) both have 50\% red, 50\% green, and 0\%
- blue, so their normalized values would be equivalent. This is a useful
- option if your images have a lot of variation in lighting, but obviously
- comes at the cost of reducing variation (if darker and lighter colors are
- meaningful sources of variation in the dataset).  A similar but less harsh
- alternative would be to use HSV rather than RGB for pixel binning and color
- similarity clustering by setting \code{hsv=T} in clustering functions and
- specifying a low number of 'value' bins (e.g. \code{bins=c(8, 8, 2)}).
+intensity for that cluster
+}
+\note{
+This is a useful option if your images have a lot of variation in lighting,
+but obviously comes at the cost of reducing variation (if darker and lighter
+colors are meaningful sources of variation in the dataset).
+
+For example, a bright yellow (R=1, G=1, B=0) and a darker yellow (R=0.8,
+G=0.8, B=0) both have 50\% red, 50\% green, and 0\% blue, so their normalized
+values would be equivalent.
+
+A similar but less harsh alternative would be to use HSV rather than RGB for
+pixel binning and color similarity clustering by setting \code{hsv=T} in
+clustering functions and specifying a low number of 'value' bins (e.g.
+\code{bins=c(8, 8, 2)}).
 }
 \examples{
-normalizeRGB(extractClusters(getKMeansList("Heliconius/")))
+clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+"Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
+upper=rep(1, 3)))
+clusterList <- colordistance::extractClusters(clusterList)
+colordistance:::normalizeRGB(clusterList)
 }

@@ -5,7 +5,7 @@
 \title{Distance matrix for a list of color cluster sets}
 \usage{
 getColorDistanceMatrix(clusterList, method = "emd", ordering = "default",
-  sizeWeight = 0.5, colorWeight = 0.5, plotting = T, ...)
+  sizeWeight = 0.5, colorWeight = 0.5, plotting = TRUE, ...)
 }
 \arguments{
 \item{clusterList}{A list of identically sized dataframes with 4 columns each
@@ -44,33 +44,47 @@ A distance matrix of image distance scores (the scales vary depending
 }
 \description{
 Calculates a distance matrix for a list of color cluster sets as returned by
- \code{\link{extractClusters}} or \code{\link{getHistList}} based on the
- specified distance metric. Each cell represents the distance between a pair
- of color cluster sets as measured using either chi-squared distance (cluster
- size only), earth mover's distance (size and color), weighted pairs (size
- and color with user-specified weights for each), or color distance
- (Euclidean distance between clusters as 3-dimensional - RGB or HSV - color
- coordinates). Earth mover's distance is recommended unless \code{binAvg} is
- set to false during cluster list generation (in which case all paired bins
- will have the same colors across datasets), in which case chi-squared is
- recommended. Weighted pairs or color distance may be appropriate depending
- on the question, but generally give poorer results.
+\code{\link{extractClusters}} or \code{\link{getHistList}} based on the
+specified distance metric.
+}
+\details{
+Each cell represents the distance between a pair of color cluster
+sets as measured using either chi-squared distance (cluster size only), earth
+mover's distance (size and color), weighted pairs (size and color with
+user-specified weights for each), or color distance (Euclidean distance
+between clusters as 3-dimensional - RGB or HSV - color coordinates).
+
+Earth mover's distance is recommended unless \code{binAvg} is set to false
+during cluster list generation (in which case all paired bins will have the
+same colors across datasets), in which case chi-squared is recommended.
+Weighted pairs or color distance may be appropriate depending on the
+question, but generally give poorer results.
 }
 \examples{
+clusterList <- colordistance::getHistList(c(system.file("extdata",
+"Heliconius/Heliconius_A", package="colordistance"), system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3),
+upper=rep(1, 3))
+
 # Default values - recommended!
-getColorDistanceMatrix(clusterList)
+colordistance::getColorDistanceMatrix(clusterList, main="EMD")
 
 # Without plotting
-getColorDistanceMatrix(clusterList, plotting=F)
+colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
 
 # Use chi-squared instead
-getColorDistanceMatrix(clusterList, method="chisq")
+colordistance::getColorDistanceMatrix(clusterList, method="chisq", main="Chi-squared")
 
-# Override ordering (throws a warning if you're trying to do this with chisq!)
-getColorDistanceMatrix(clusterList, method="chisq", ordering=TRUE)
+# Override ordering (throws a warning if you're trying to do this with
+# chisq!)
+colordistance::getColorDistanceMatrix(clusterList, method="chisq",
+ordering=TRUE, main="Chi-squared w/ ordering")
 
 # Specify high size weight/low color weight for weighted pairs
-getColorDistanceMatrix(clusterList, method="weighted.pairs", colorWeight=0.1, sizeWeight=0.9)
+colordistance::getColorDistanceMatrix(clusterList, method="weighted.pairs",
+colorWeight=0.1, sizeWeight=0.9, main="Weighted pairs")
 
-getColorDistanceMatrix(clusterList, method="color.dist", ordering=T)
+# Color distance only
+colordistance::getColorDistanceMatrix(clusterList, method="color.dist",
+ordering=TRUE, main="Color distance only")
 }

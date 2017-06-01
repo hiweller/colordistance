@@ -4,7 +4,7 @@
 \alias{plotClusters}
 \title{Plot clusters in 3D color space}
 \usage{
-plotClusters(clusterList, hsv = F, p = "all", pausing = T)
+plotClusters(clusterList, hsv = FALSE, p = "all", pausing = TRUE)
 }
 \arguments{
 \item{clusterList}{A list of identically sized dataframes with 4 columns each
@@ -26,12 +26,19 @@ A 3D \code{\link[plotly]{plot_ly}} plot of cluster sizes in the
 \description{
 Interactive, 3D \code{\link[plotly]{plot_ly}} plots of cluster sizes and
 colors for each image in a list of cluster dataframes in order to visualize
-cluster output. Requires a plotly account.
+cluster output.
 }
 \examples{
-clusterList <- getHistList("Heliconius/", plotting=F)
-plotClusters(clusterList, p=c(1:3, 7:8))
+clusterList <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
+lower=rep(0.8, 3), upper=rep(1, 3))
 
-clusterListHSV <- getHistList("Heliconius/", hsv=T, plotting=F)
-plotClusters(clusterListHSV, p=c(1:3, 7:8), hsv=T, pausing=F)
+colordistance::plotClusters(clusterList, p=c(1:3, 7:8))
+
+clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,
+plotting=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
+
+colordistance::plotClusters(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE,
+pausing=FALSE)
 }

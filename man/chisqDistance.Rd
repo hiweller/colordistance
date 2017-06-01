@@ -21,5 +21,5 @@ which must be of the same length. Good for comparing color histograms if you
 don't want to weight by color similarity. Probably hugely redundant; alas.
 }
 \examples{
-chisqDistance(rnorm(10), rnorm(10))
+colordistance:::chisqDistance(rnorm(10), rnorm(10))
 }

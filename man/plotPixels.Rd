@@ -5,7 +5,7 @@
 \title{Plot pixels in colorspace}
 \usage{
 plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.24, 1,
-  0.24), hsv = F, rev = F)
+  0.24), hsv = FALSE, rev = FALSE)
 }
 \arguments{
 \item{img}{Either a path to an image or a \code{\link{loadImage}} object.}
@@ -19,19 +19,15 @@ pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
 \item{hsv}{Logical. Should pixels be plotted in HSV instead of RGB
 colorspace?}
@@ -45,7 +41,9 @@ obscured when rev is \code{F}?}
   \code{\link[scatterplot3d]{scatterplot3d}} function.
 }
 \description{
-Plots non-background pixels according to their color coordinates, and colors them according to their RGB or HSV values. Dimensions are either RGB or HSV depending on flags.
+Plots non-background pixels according to their color coordinates, and colors
+them according to their RGB or HSV values. Dimensions are either RGB or HSV
+depending on flags.
 }
 \note{
 If \code{n} is not numeric, then all pixels are plotted, but this is
@@ -54,5 +52,7 @@ If \code{n} is not numeric, then all pixels are plotted, but this is
   important details.
 }
 \examples{
-plotPixels("Heliconius/Heliconius_01.png", n=20000, upper=rep(1, 3), lower=rep(0.8, 3))
+colordistance::plotPixels(system.file("extdata",
+"Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+n=20000, upper=rep(1, 3), lower=rep(0.8, 3))
 }

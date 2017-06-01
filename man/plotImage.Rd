@@ -13,11 +13,17 @@ plotImage(img)
 A plot of the provided image in the current plot window.
 }
 \description{
-Plots an image as an image. Redundant, but a nice sanity check. Used in a few
-other functions in \code{colordistance} package. Takes either a path to an
-image (RGB or PNG) or an image object as read in by \code{\link{loadImage}}.
+Plots an image as an image.
+}
+\details{
+Redundant, but a nice sanity check. Used in a few other functions in
+\code{colordistance} package. Takes either a path to an image (RGB or PNG) or
+an image object as read in by \code{\link{loadImage}}.
 }
 \examples{
-plotImage("Heliconius/Heliconius_01.png")
-plotImage(loadImage("Heliconius/Heliconius_01.png"))
+colordistance::plotImage(system.file("extdata",
+"Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"))
+colordistance::plotImage(loadImage(system.file("extdata",
+"Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+lower=rep(0.8, 3), upper=rep(1, 3)))
 }

@@ -17,11 +17,18 @@ A vector of absolute filepaths to JPG and PNG images in the given
 \description{
 Find all valid image paths (PNG and JPG) in a directory (does not search
 subdirectories). Will recover any image ending in .PNG, .JPG, or .JPEG,
-case-insensitive. In the event that no compatible images are found in the
-directory, it returns a message to that effect instead of an empty vector.
+case-insensitive.
+}
+\note{
+In the event that no compatible images are found in the directory, it
+returns a message to that effect instead of an empty vector.
 }
 \examples{
-imDir <- getImagePaths("Heliconius/")
-imDir <- getImagePaths("some/nonexistent/directory")
-imDir <- getImagePaths("./")
+imDir <- colordistance::getImagePaths(system.file("extdata",
+"Heliconius/Heliconius_A", package="colordistance"))
+\dontrun{
+imDir <- colordistance::getImagePaths("some/nonexistent/directory")
+}
+imDir <- colordistance::getImagePaths("./")
+
 }

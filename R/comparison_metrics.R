@@ -25,11 +25,11 @@ chisqDistance <- function(a, b) {
   return(sum(v))
 }
 
-#'  Sum of Euclidean distances between color clusters
+#' Sum of Euclidean distances between color clusters
 #'
-#'  Calculates the Euclidean distance between each pair of points in two
-#'  dataframes as returned by extractClusters or getImageHist and returns the
-#'  sum of the distances.
+#' Calculates the Euclidean distance between each pair of points in two
+#' dataframes as returned by extractClusters or getImageHist and returns the sum
+#' of the distances.
 #'
 #' @param T1 Dataframe (especially a dataframe as returned by
 #'   \code{extractClusters()} or \code{getImageHist()}, but first three columns
@@ -39,32 +39,36 @@ chisqDistance <- function(a, b) {
 #' @return Sum of Euclidean distances between each pair of points (rows) in the
 #'   provided dataframes.
 #' @examples
-#' clusterList <- colordistance::getHistList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
+#' clusterList <- colordistance::getHistList(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+#' upper=rep(1, 3))
 #' colordistance:::colorDistance(clusterList[[1]], clusterList[[2]])
 colorDistance <- function(T1, T2) {
-  return(sum(sapply(1:dim(T1)[1], function(x) dist(rbind(T1[x, 1:3], T2[x, 1:3])))))
+  return(sum(sapply(1:dim(T1)[1], function(x) stats::dist(rbind(T1[x, 1:3], T2[x, 1:3])))))
 }
 
-#'  Earth mover's distance between two sets of color clusters
+#' Earth mover's distance between two sets of color clusters
 #'
-#'  Calculates the
-#'  \href{http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
-#'  mover's distance} (briefly, the amount of work required to move the data
-#'  from one distribution to resemble the other distribution, or the amount of
-#'  "dirt" you have to shovel weighted by how far you have to shovel it).
-#'  Accounts for both color disparity and size disparity. Recommended unless
-#'  \code{binAvg} is off for histogram generation.
+#' Calculates the
+#' \href{http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
+#' mover's distance} (briefly, the amount of work required to move the data from
+#' one distribution to resemble the other distribution, or the amount of "dirt"
+#' you have to shovel weighted by how far you have to shovel it). Accounts for
+#' both color disparity and size disparity. Recommended unless \code{binAvg} is
+#' off for histogram generation.
 #'
 #' @param T1 Dataframe (especially a dataframe as returned by
-#'   \code{link{extractClusters}} or \code{\link{getImageHist}}, but first three columns
-#'   must be coordinates).
+#'   \code{link{extractClusters}} or \code{\link{getImageHist}}, but first three
+#'   columns must be coordinates).
 #' @param T2 Another dataframe like T1.
 #'
 #' @return Earth mover's distance between the two dataframes (metric of overall
 #'   bin similarity for a pair of 3-dimensional histograms).
 #'
 #' @examples
-#' clusterList <- colordistance::getHistList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
+#' clusterList <- colordistance::getHistList(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+#' upper=rep(1, 3))
 #' colordistance:::EMDistance(clusterList[[1]], clusterList[[2]])
 EMDistance <- function(T1, T2) {
   T1 <- as.matrix(cbind(T1[, 4], T1[, 1:3]))
@@ -73,17 +77,15 @@ EMDistance <- function(T1, T2) {
 }
 
 
-#'  Distance between color clusters with user-specified color/size weights
+#' Distance between color clusters with user-specified color/size weights
 #'
-#'  Distance metric with optional user input for specifying how much the bin
-#'  size similarity and color similarity should be weighted when pairing
-#'  clusters from different color cluster sets. (For example, if
-#'  \code{sizeWeight} = 1 and \code{colorWeight} = 0, two clusters of identical
-#'  color but different sizes would not be compared). Use with caution.
+#' Distance metric with optional user input for specifying how much the bin size
+#' similarity and color similarity should be weighted when pairing clusters from
+#' different color cluster sets.
 #'
 #' @param T1 Dataframe (especially a dataframe as returned by
-#'   \code{extractClusters} or \code{getImageHist}, but first three columns
-#'   must be coordinates).
+#'   \code{extractClusters} or \code{getImageHist}, but first three columns must
+#'   be coordinates).
 #' @param T2 Another dataframe like T1.
 #' @param ordering Logical. Should clusters by paired in order to minimize
 #'   overall distance scores or evaluated in the order given?
@@ -95,18 +97,25 @@ EMDistance <- function(T1, T2) {
 #' @return Similarity score based on size and color similarity of each pair of
 #'   points in provided dataframes.
 #'
+#' @note Use with caution, since weights can easily swing distance scores more
+#'   dramatically than might be expected. For example, if \code{sizeWeight} = 1
+#'   and \code{colorWeight} = 0, two clusters of identical color but different
+#'   sizes would not be compared.
+#'
 #' @examples
-#' clusterList <- colordistance::getKMeansList(system.file("extdata", "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
-#' clusterList <- colordistance::extractClusters(clusterList, ordering=T)
-#' colordistance:::weightedPairsDistance(clusterList[[1]], clusterList[[2]], sizeWeight=0.8, colorWeight=0.2)
-weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeight=0.5) {
+#' clusterList <- colordistance::getKMeansList(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+#' upper=rep(1, 3))
+#' clusterList <- colordistance::extractClusters(clusterList, ordering=TRUE)
+#' colordistance:::weightedPairsDistance(clusterList[[1]], clusterList[[2]],
+#' sizeWeight=0.8, colorWeight=0.2)
+weightedPairsDistance <- function(T1, T2, ordering=FALSE, sizeWeight=0.5, colorWeight=0.5) {
   if (ordering) {
-    require(spatstat)
-    require(clue)
-    im1 <- spatstat::pp3(T1[, 1], T1[, 2], T1[, 3], box3(c(0, 1)))
-    im2 <- spatstat::pp3(T2[, 1], T2[, 2], T2[, 3], box3(c(0, 1)))
+
+    im1 <- spatstat::pp3(T1[, 1], T1[, 2], T1[, 3], spatstat::box3(c(0, 1)))
+    im2 <- spatstat::pp3(T2[, 1], T2[, 2], T2[, 3], spatstat::box3(c(0, 1)))
     colDist <- spatstat::crossdist(im1, im2) / sqrt(3)
-    sizeDist <- spatstat::crossdist(spatstat::ppx(T1[, 4]), ppx(T2[, 4])) / t(sapply(c(1:dim(T1)[1]), function(x) T1[x, 4] + T2[, 4]))
+    sizeDist <- spatstat::crossdist(spatstat::ppx(T1[, 4]), spatstat::ppx(T2[, 4])) / t(sapply(c(1:dim(T1)[1]), function(x) T1[x, 4] + T2[, 4]))
     sizeDist[is.nan(sizeDist)] <- 0
 
     pairMatrix <- sizeWeight*sizeDist + colorWeight*colDist
@@ -115,25 +124,16 @@ weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeigh
   } else {
     # If ordering is FALSE, take only distances between each ordered bin - compare 1 to 1, 2 to 2, etc, regardless of color or size similarity
     colDist <- sum(sapply(c(1:dim(T1)[1]), function(x) dist(rbind(T1[x, 1:3], T2[x, 1:3])) / sqrt(3)))
-    sizeDist <- colordistance:::chisqDistance(T1[, 4], T2[, 4])
+    sizeDist <- chisqDistance(T1[, 4], T2[, 4])
     return(colDist*colorWeight + sizeDist*sizeWeight)
   }
 }
 
-#'  Distance matrix for a list of color cluster sets
+#' Distance matrix for a list of color cluster sets
 #'
-#'  Calculates a distance matrix for a list of color cluster sets as returned by
-#'  \code{\link{extractClusters}} or \code{\link{getHistList}} based on the
-#'  specified distance metric. Each cell represents the distance between a pair
-#'  of color cluster sets as measured using either chi-squared distance (cluster
-#'  size only), earth mover's distance (size and color), weighted pairs (size
-#'  and color with user-specified weights for each), or color distance
-#'  (Euclidean distance between clusters as 3-dimensional - RGB or HSV - color
-#'  coordinates). Earth mover's distance is recommended unless \code{binAvg} is
-#'  set to false during cluster list generation (in which case all paired bins
-#'  will have the same colors across datasets), in which case chi-squared is
-#'  recommended. Weighted pairs or color distance may be appropriate depending
-#'  on the question, but generally give poorer results.
+#' Calculates a distance matrix for a list of color cluster sets as returned by
+#' \code{\link{extractClusters}} or \code{\link{getHistList}} based on the
+#' specified distance metric.
 #'
 #' @param clusterList A list of identically sized dataframes with 4 columns each
 #'   (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
@@ -162,26 +162,47 @@ weightedPairsDistance <- function(T1, T2, ordering=F, sizeWeight=0.5, colorWeigh
 #'   on the distance metric chosen, but for all four methods, higher scores =
 #'   more different).
 #'
+#' @details Each cell represents the distance between a pair of color cluster
+#' sets as measured using either chi-squared distance (cluster size only), earth
+#' mover's distance (size and color), weighted pairs (size and color with
+#' user-specified weights for each), or color distance (Euclidean distance
+#' between clusters as 3-dimensional - RGB or HSV - color coordinates).
+#'
+#' Earth mover's distance is recommended unless \code{binAvg} is set to false
+#' during cluster list generation (in which case all paired bins will have the
+#' same colors across datasets), in which case chi-squared is recommended.
+#' Weighted pairs or color distance may be appropriate depending on the
+#' question, but generally give poorer results.
+#'
 #' @examples
-#' clusterList <- colordistance::getHistList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata", "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3), upper=rep(1, 3))
+#' clusterList <- colordistance::getHistList(c(system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3),
+#' upper=rep(1, 3))
+#'
 #' # Default values - recommended!
-#' colordistance::getColorDistanceMatrix(clusterList)
+#' colordistance::getColorDistanceMatrix(clusterList, main="EMD")
 #'
 #' # Without plotting
-#' colordistance::getColorDistanceMatrix(clusterList, plotting=F)
+#' colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
 #'
 #' # Use chi-squared instead
-#' colordistance::getColorDistanceMatrix(clusterList, method="chisq")
+#' colordistance::getColorDistanceMatrix(clusterList, method="chisq", main="Chi-squared")
 #'
-#' # Override ordering (throws a warning if you're trying to do this with chisq!)
-#' colordistance::getColorDistanceMatrix(clusterList, method="chisq", ordering=TRUE)
+#' # Override ordering (throws a warning if you're trying to do this with
+#' # chisq!)
+#' colordistance::getColorDistanceMatrix(clusterList, method="chisq",
+#' ordering=TRUE, main="Chi-squared w/ ordering")
 #'
 #' # Specify high size weight/low color weight for weighted pairs
-#' colordistance::getColorDistanceMatrix(clusterList, method="weighted.pairs", colorWeight=0.1, sizeWeight=0.9)
+#' colordistance::getColorDistanceMatrix(clusterList, method="weighted.pairs",
+#' colorWeight=0.1, sizeWeight=0.9, main="Weighted pairs")
 #'
-#' getColorDistanceMatrix(clusterList, method="color.dist", ordering=T)
+#' # Color distance only
+#' colordistance::getColorDistanceMatrix(clusterList, method="color.dist",
+#' ordering=TRUE, main="Color distance only")
 #' @export
-getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default", sizeWeight=0.5, colorWeight=0.5, plotting=T, ...) {
+getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default", sizeWeight=0.5, colorWeight=0.5, plotting=TRUE, ...) {
 
   # First redefine the name of this thing for brevity
   obj <- clusterList
@@ -214,7 +235,7 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
     # Use specified method
     # In each case, for every pair defined above, calculate distance metric and insert into distance matrix cell
     if (method=="emd") {
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance:::EMDistance(obj[[x[1]]], obj[[x[2]]]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- EMDistance(obj[[x[1]]], obj[[x[2]]]))
     } else if (method=="chisq") {
 
       # Throw a warning if reordering with just chisq method
@@ -222,15 +243,15 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
         warning("Setting ordering = T for 'chisq' method not recommended (comparisons may not be valid)")
         }
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance:::chisqDistance(obj[[x[1]]][, 4], obj[[x[2]]][, 4]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- chisqDistance(obj[[x[1]]][, 4], obj[[x[2]]][, 4]))
 
     } else if (method=="color.dist") {
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance:::colorDistance(obj[[x[1]]], obj[[x[2]]]))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colorDistance(obj[[x[1]]], obj[[x[2]]]))
 
     } else if (method=="weighted.pairs") {
 
-      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- colordistance:::weightedPairsDistance(obj[[x[1]]], obj[[x[2]]], ordering=ordering, colorWeight=colorWeight, sizeWeight=sizeWeight))
+      distMat[pairs] <- apply(pairs, 1, function(x) distMat[x[1], x[2]] <- weightedPairsDistance(obj[[x[1]]], obj[[x[2]]], ordering=ordering, colorWeight=colorWeight, sizeWeight=sizeWeight))
 
     } else {
       stop("Comparison method must be one of 'emd', 'chisq', 'color.dist' or 'weighted.pairs'")
@@ -253,16 +274,7 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
 #'
 #' Reorders clusters to minimize color distance using the
 #' \href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm}
-#' as implemented by \code{\link[clue]{solve_LSAP}}. Briefly: Euclidean
-#' distances between every possible pair of clusters across two dataframes are
-#' calculated, and pairs of clusters are chosen in order to minimize the total
-#' sum of color distances between the cluster pairs (i.e. A1-B1, A2-B2, etc).
-#' For example, if dataframe A has a black cluster, a white cluster, and a blue
-#' cluster, in that order, and dataframe B has a white cluster, a blue cluster,
-#' and a grey cluster, in that order, the final pairs might be A1-B3 (black and
-#' grey), A2-B2 (blue and blue), and A3-B1 (white and white). Rows are reordered
-#' so that paired rows are in the same row index (in the example, dataframe B
-#' would be reshuffled to go grey, blue, white instead of white, grey, blue).
+#' as implemented by \code{\link[clue]{solve_LSAP}}.
 #'
 #' @param extractClustersObject A list of color clusters such as those returned
 #'   by \code{\link{extractClusters}} or \code{\link{getHistList}}. List must
@@ -272,8 +284,24 @@ getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default"
 #' @return A list with identical data to the input list, but with rows in each
 #'   dataframe reordered to minimize color distances per cluster pair.
 #'
+#' @details Briefly: Euclidean distances between every possible pair of clusters
+#' across two dataframes are calculated, and pairs of clusters are chosen in
+#' order to minimize the total sum of color distances between the cluster pairs
+#' (i.e. A1-B1, A2-B2, etc).
+#'
+#' For example, if dataframe A has a black cluster, a white cluster, and a blue
+#' cluster, in that order, and dataframe B has a white cluster, a blue cluster,
+#' and a grey cluster, in that order, the final pairs might be A1-B3 (black and
+#' grey), A2-B2 (blue and blue), and A3-B1 (white and white).
+#'
+#' Rows are reordered so that paired rows are in the same row index (in the
+#' example, dataframe B would be reshuffled to go grey, blue, white instead of
+#' white, grey, blue).
+#'
 #' @examples
-#' clusterList <- colordistance::getKMeansList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3)))
+#' clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
+#' upper=rep(1, 3)))
 #' clusterList <- colordistance::extractClusters(clusterList)
 #' colordistance:::orderClusters(clusterList)
 orderClusters <- function(extractClustersObject) {
@@ -316,18 +344,10 @@ orderClusters <- function(extractClustersObject) {
 
 }
 
-#'  Normalize pixel RGB ratios
+#' Normalize pixel RGB ratios
 #'
-#'  Converts clusters from raw channel intensity to their fraction of the
-#'  intensity for that cluster For example, a bright yellow (R=1, G=1, B=0) and
-#'  a darker yellow (R=0.8, G=0.8, B=0) both have 50\% red, 50\% green, and 0\%
-#'  blue, so their normalized values would be equivalent. This is a useful
-#'  option if your images have a lot of variation in lighting, but obviously
-#'  comes at the cost of reducing variation (if darker and lighter colors are
-#'  meaningful sources of variation in the dataset).  A similar but less harsh
-#'  alternative would be to use HSV rather than RGB for pixel binning and color
-#'  similarity clustering by setting \code{hsv=T} in clustering functions and
-#'  specifying a low number of 'value' bins (e.g. \code{bins=c(8, 8, 2)}).
+#' Converts clusters from raw channel intensity to their fraction of the
+#' intensity for that cluster
 #'
 #' @param extractClustersObject A list of color clusters such as those returned
 #'   by \code{\link{extractClusters}} or \code{\link{getHistList}}. List must
@@ -337,8 +357,25 @@ orderClusters <- function(extractClustersObject) {
 #' @return A list of the same size and structure as the input list, but with the
 #'   cluster normalized as described.
 #'
+#' @note
+#'
+#' This is a useful option if your images have a lot of variation in lighting,
+#' but obviously comes at the cost of reducing variation (if darker and lighter
+#' colors are meaningful sources of variation in the dataset).
+#'
+#' For example, a bright yellow (R=1, G=1, B=0) and a darker yellow (R=0.8,
+#' G=0.8, B=0) both have 50\% red, 50\% green, and 0\% blue, so their normalized
+#' values would be equivalent.
+#'
+#' A similar but less harsh alternative would be to use HSV rather than RGB for
+#' pixel binning and color similarity clustering by setting \code{hsv=T} in
+#' clustering functions and specifying a low number of 'value' bins (e.g.
+#' \code{bins=c(8, 8, 2)}).
+#'
 #' @examples
-#' clusterList <- colordistance::getKMeansList(c(system.file("extdata", "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3)))
+#' clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
+#' upper=rep(1, 3)))
 #' clusterList <- colordistance::extractClusters(clusterList)
 #' colordistance:::normalizeRGB(clusterList)
 normalizeRGB <- function(extractClustersObject) {

@@ -4,27 +4,26 @@
 \alias{loadImage}
 \title{Import image and generate filtered 2D pixel array(s)}
 \usage{
-loadImage(path, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), hsv = T)
+loadImage(path, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24),
+  hsv = TRUE)
 }
 \arguments{
+\item{path}{Path to image (a string).}
+
 \item{lower}{RGB or HSV triplet specifying the lower bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
 \item{hsv}{Logical. Should HSV pixel array also be calculated? Setting to
 \code{FALSE} will shave some time off the analysis, but not much (a few
@@ -37,15 +36,13 @@ A list with original image ($original.rgb, 3D array), 2D matrix with
 }
 \description{
 Imports a single image and returns a list with the original image as a 3D
-array, a 2D matrix with background pixels removed, and the absolute path to the
-original image. The 3D array is useful for displaying the original
-image, while the 2D arrays (RGB and HSV) are treated as rows of data for
-clustering in the rest of the package.
+array, a 2D matrix with background pixels removed, and the absolute path to
+the original image.
 }
-\note{
-The upper and lower limits for background pixel elimination set the inclusive
-bounds for which pixels should be ignored for the 2D arrays; while all
-background pixels are ideally a single color, images photographed against
+\details{
+The upper and lower limits for background pixel elimination set the
+inclusive bounds for which pixels should be ignored for the 2D arrays; while
+all background pixels are ideally a single color, images photographed against
 "uniform" backgrounds often contain some variation, and even segmentation
 done with photo editing software will produce some variance as a result of
 image compression.
@@ -60,12 +57,18 @@ pixel would be ignored because 0 <= 0.1 <= 0.2, 0.6 <= 0.9 <= 1, and 0 <= 0.2
 <= 0.2. But a pixel with the RGB channel values [0.3, 0.9, 0.2] would not be
 considered background because 0.3 >= 0.2.
 }
+\note{
+The 3D array is useful for displaying the original image, while the 2D
+arrays (RGB and HSV) are treated as rows of data for clustering in the rest
+of the package.
+}
 \examples{
-loadedImg <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3))
+loadedImg <- colordistance::loadImage(system.file("extdata",
+"Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+upper=rep(1, 3), lower=rep(0.8, 3))
 
-# Time difference if you leave out HSV conversion - a few microseconds on a
-late 2015 Macbook
-system.time(loadedImgNoHSV <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3)))
-system.time(loadedImgNoHSV <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), hsv=F))
+loadedImgNoHSV <- colordistance::loadImage(system.file("extdata",
+"Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+upper=rep(1, 3), lower=rep(0.8, 3), hsv=FALSE)
 
 }

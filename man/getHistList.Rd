@@ -4,9 +4,10 @@
 \alias{getHistList}
 \title{Generate a list of cluster sets for multiple images}
 \usage{
-getHistList(images, bins = 3, binAvg = T, lower = c(0, 0.55, 0),
-  upper = c(0.24, 1, 0.24), normPix = F, plotting = F, pausing = T,
-  hsv = F, title = "path", imgType = F, bounds = c(0, 1))
+getHistList(images, bins = 3, binAvg = TRUE, lower = c(0, 0.55, 0),
+  upper = c(0.24, 1, 0.24), normPix = FALSE, plotting = FALSE,
+  pausing = TRUE, hsv = FALSE, title = "path", imgType = FALSE,
+  bounds = c(0, 1))
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}
@@ -25,19 +26,15 @@ pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
 \item{normPix}{Logical. Should RGB or HSV cluster values be normalized using
 \code{\link{normalizeRGB}}?}
@@ -67,16 +64,30 @@ A list of \code{\link{getImageHist}} dataframes, 1 per image, named
 }
 \description{
 Applies \code{\link{getImageHist}} to every image in a provided set of image
-paths and/or directories containing images. For every image, the pixels are
-binned according to the specified bin breaks. By providing the bounds for the
-bins rather than letting an algorithm select centers (as in
-\code{\link{getKMeansList}}), clusters of nearly redundant colors are
-avoided. So you don't end up with, say, 3 nearly-identical yellow clusters
-which are treated as unrelated just because there's a lot of yellow in your
-image; you just get a very large yellow cluster and empty non-yellow bins.
+paths and/or directories containing images.
+}
+\note{
+For every image, the pixels are binned according to the specified bin
+breaks. By providing the bounds for the bins rather than letting an algorithm
+select centers (as in \code{\link{getKMeansList}}), clusters of nearly
+redundant colors are avoided.
+
+So you don't end up with, say, 3 nearly-identical yellow clusters which are
+treated as unrelated just because there's a lot of yellow in your image; you
+just get a very large yellow cluster and empty non-yellow bins.
 }
 \examples{
-getHistList("Heliconius/", upper=rep(1, 3), lower=rep(0.8, 3))
-getHistList(c("Heliconius/Heliconius_01.png", "Heliconius/Heliconius_05.png"), pausing=F, upper=rep(1, 3), lower=rep(0.8, 3))
-outList <- getHistList("Heliconius/", plotting=F, upper=rep(1, 3), lower=rep(0.8, 3))
+clusterList <- colordistance::getHistList(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
+lower=rep(0.8, 3))
+
+clusterList <- colordistance::getHistList(c(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), system.file("extdata",
+"Heliconius/Heliconius_A", package="colordistance")), pausing=FALSE,
+upper=rep(1, 3), lower=rep(0.8, 3))
+
+clusterList <- colordistance::getHistList(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
+upper=rep(1, 3), lower=rep(0.8, 3))
+
 }

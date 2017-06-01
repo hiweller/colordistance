@@ -4,7 +4,7 @@
 \alias{plotHist}
 \title{Color histogram of binned image}
 \usage{
-plotHist(histogram, pausing = T, hsv = F)
+plotHist(histogram, pausing = TRUE, hsv = FALSE)
 }
 \arguments{
 \item{histogram}{A single dataframe or a list of dataframes as returned by
@@ -25,7 +25,10 @@ Plots a color histogram from a dataframe as returned by
 bin.
 }
 \examples{
-color_df <- as.data.frame(matrix(rep(seq(0, 1, length.out=3), 3), nrow=3, ncol=3))
+color_df <- as.data.frame(matrix(rep(seq(0, 1, length.out=3), 3), nrow=3,
+ncol=3))
+
 color_df$Pct <- c(0.2, 0.5, 0.3)
-plotHist(color_df)
+
+colordistance::plotHist(color_df)
 }

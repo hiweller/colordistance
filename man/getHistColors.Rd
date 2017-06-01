@@ -4,7 +4,7 @@
 \alias{getHistColors}
 \title{Vector of hex colors for histogram bin coloration}
 \usage{
-getHistColors(bins, hsv = F)
+getHistColors(bins, hsv = FALSE)
 }
 \arguments{
 \item{bins}{Number of bins for each channel OR a vector of length 3 with bins
@@ -18,10 +18,9 @@ A vector of hex codes for bin colors.
 }
 \description{
 Gets a vector of colors for plotting histograms from
- \code{\link{getImageHist}} in helpful ways. Pretty internalized/highly
- specific.
+\code{\link{getImageHist}} in helpful ways.
 }
 \examples{
-getHistColors(bins=3)
-getHistColors(bins=c(8, 3, 3), hsv=T)
+colordistance:::getHistColors(bins=3)
+colordistance:::getHistColors(bins=c(8, 3, 3), hsv=TRUE)
 }

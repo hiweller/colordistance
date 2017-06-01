@@ -1,14 +1,7 @@
 #' Generate and plot a color distance matrix from a set of images
 #'
 #' Takes images, computes color clusters for each image, and calculates distance
-#' matrix/dendrogram from those clusters. This is the fastest way to get a
-#' distance matrix for color similarity starting from a folder of images.
-#' Essentially, it just calls in a series of other package functions in order:
-#' input images -> \code{\link{getImagePaths}} -> \code{\link{getHistList}} or
-#' \code{\link{getKMeansList}} followed by \code{\link{extractClusters}} ->
-#' \code{\link{getColorDistanceMatrix}} -> plotting -> return/save distance
-#' matrix. Sort of railroads you, but good for testing different combinations of
-#' clustering methods and distance metrics.
+#' matrix/dendrogram from those clusters.
 #'
 #' @param images Character vector of directories, image paths, or both.
 #' @param clusterMethod Which method for getting color clusters from each image
@@ -35,10 +28,11 @@
 #'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 #'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 #'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
-#' @param histBins Only applicable if \code{clusterMethod="hist"}. Number of bins
-#'   for each channel OR a vector of length 3 with bins for each channel. Bins=3
-#'   will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
-#'   (2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.
+#' @param histBins Only applicable if \code{clusterMethod="hist"}. Number of
+#'   bins for each channel OR a vector of length 3 with bins for each channel.
+#'   Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in
+#'   2*2*3=12 bins (2 red, 2 green, 3 blue), etc. Passed to
+#'   \code{\link{getHistList}}.
 #' @param kmeansBins Only applicable if \code{clusterMethod="kmeans"}. Number of
 #'   KMeans clusters to fit. Unlike \code{\link{getImageHist}}, this represents
 #'   the actual final number of bins, rather than the number of breaks in each
@@ -53,6 +47,12 @@
 #'   \code{\link{normalizeRGB}}?
 #' @param bounds Upper and lower limits for the channels; R reads in images with
 #'   intensities on a 0-1 scale, but 0-255 is common.
+#' @param plotBins Logical. Should the bins for each image be plotted as they
+#'   are calculated?
+#' @param pausing Logical. If \code{plotBins=TRUE}, pause and wait for user
+#'   keystroke before plotting bins for next image?
+#' @param hsv Logical. Use HSV instead of RGB for generating clusters?
+#' @param imgType Logical. Should file extensions be retained with labels?
 #' @param sampleSize Only applicable if \code{clusterMethod="kmeans"}. Number of
 #'   pixels to be randomly sampled from filtered pixel array for performing fit.
 #'   If set to \code{FALSE}, all pixels are fit, but this can be time-consuming,
@@ -90,10 +90,23 @@
 #' @return Color distance matrix, heatmap, and saved distance matrix and tree
 #'   files if saving is \code{TRUE}.
 #'
+#' @note This is the fastest way to get a distance matrix for color similarity
+#' starting from a folder of images. Essentially, it just calls in a series of
+#' other package functions in order: input images -> \code{\link{getImagePaths}}
+#' -> \code{\link{getHistList}} or \code{\link{getKMeansList}} followed by
+#' \code{\link{extractClusters}} -> \code{\link{getColorDistanceMatrix}} ->
+#' plotting -> return/save distance matrix. Sort of railroads you, but good for
+#' testing different combinations of clustering methods and distance metrics.
+#'
 #' @examples
-#' imageClusterPipeline("Heliconius/")
+#' colordistance::imageClusterPipeline(dir(system.file("extdata", "Heliconius/",
+#' package="colordistance"), full.names=TRUE), hsv=TRUE, lower=rep(0.8,
+#' 3), upper=rep(1, 3), clusterMethod="hist", distanceMethod="emd",
+#' histBins=3, plotBins=TRUE, saveTree="example_tree.newick",
+#' saveDistanceMatrix="example_DM.csv")
+#'
 #' @export
-imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="emd", lower=c(0, 140/255, 0), upper=c(60/255, 1, 60/255), histBins=3, kmeansBins=27, binAvg=T, normPix=F, plotBins=F, pausing=T, hsv=F, bounds=c(0, 1), sampleSize=20000, iter.max=50, nstart=5, imgType=F, ordering="default", sizeWeight=0.5, colorWeight=0.5, plotHeatmap=T, returnDistanceMatrix=T, saveTree=F, saveDistanceMatrix=F) {
+imageClusterPipeline <- function(images, clusterMethod="hist", distanceMethod="emd", lower=c(0, 140/255, 0), upper=c(60/255, 1, 60/255), histBins=3, kmeansBins=27, binAvg=TRUE, normPix=FALSE, plotBins=FALSE, pausing=TRUE, hsv=FALSE, bounds=c(0, 1), sampleSize=20000, iter.max=50, nstart=5, imgType=FALSE, ordering="default", sizeWeight=0.5, colorWeight=0.5, plotHeatmap=TRUE, returnDistanceMatrix=TRUE, saveTree=FALSE, saveDistanceMatrix=FALSE) {
 
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {

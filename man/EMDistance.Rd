@@ -8,8 +8,8 @@ EMDistance(T1, T2)
 }
 \arguments{
 \item{T1}{Dataframe (especially a dataframe as returned by
-\code{link{extractClusters}} or \code{\link{getImageHist}}, but first three columns
-must be coordinates).}
+\code{link{extractClusters}} or \code{\link{getImageHist}}, but first three
+columns must be coordinates).}
 
 \item{T2}{Another dataframe like T1.}
 }
@@ -19,13 +19,16 @@ Earth mover's distance between the two dataframes (metric of overall
 }
 \description{
 Calculates the
- \href{http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
- mover's distance} (briefly, the amount of work required to move the data
- from one distribution to resemble the other distribution, or the amount of
- "dirt" you have to shovel weighted by how far you have to shovel it).
- Accounts for both color disparity and size disparity. Recommended unless
- \code{binAvg} is off for histogram generation.
+\href{http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
+mover's distance} (briefly, the amount of work required to move the data from
+one distribution to resemble the other distribution, or the amount of "dirt"
+you have to shovel weighted by how far you have to shovel it). Accounts for
+both color disparity and size disparity. Recommended unless \code{binAvg} is
+off for histogram generation.
 }
 \examples{
-EMDistance(clusterList[[1]], clusterList[[2]])
+clusterList <- colordistance::getHistList(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+upper=rep(1, 3))
+colordistance:::EMDistance(clusterList[[1]], clusterList[[2]])
 }

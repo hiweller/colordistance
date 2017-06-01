@@ -9,8 +9,11 @@
 #' @param n Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
 #'   this represents the actual final number of bins, rather than the number of
 #'   breaks in each channel.
-#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel array for performing fit. If set to \code{FALSE}, all pixels are fit, but this can be time-consuming, especially for large images.
-#' @param plotting Logical. Should the results of the KMeans fit (original image + histogram of colors and bin sizes) be plotted?
+#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
+#'   array for performing fit. If set to \code{FALSE}, all pixels are fit, but
+#'   this can be time-consuming, especially for large images.
+#' @param plotting Logical. Should the results of the KMeans fit (original image
+#'   + histogram of colors and bin sizes) be plotted?
 #' @param lower RGB or HSV triplet specifying the lower bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]).
@@ -18,26 +21,27 @@
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
-#' @param iter.max Inherited from \code{\link[stats]{kmeans}}. The maximum number of iterations allowed.
-#' @param nstart Inherited from \code{\link[stats]{kmeans}}. How many random sets should be chosen?
-#' @param returnClust Logical. Should clusters be returned? If \code{FALSE}, results are plotted but not returned.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
+#' @param iter.max Inherited from \code{\link[stats]{kmeans}}. The maximum
+#'   number of iterations allowed.
+#' @param nstart Inherited from \code{\link[stats]{kmeans}}. How many random
+#'   sets should be chosen?
+#' @param returnClust Logical. Should clusters be returned? If \code{FALSE},
+#'   results are plotted but not returned.
 #'
 #' @return A \code{\link[stats]{kmeans}} fit object.
 #'
 #' @examples
-#' getKMeanColors("Heliconius/Heliconius_01.png", n=15, returnClust=F)
+#' colordistance::getKMeanColors(system.file("extdata",
+#' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"), n=3,
+#' returnClust=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 #' @export
-getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=T, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, returnClust=T) {
+getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=TRUE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, returnClust=TRUE) {
   # Load image, store original image and reshaped pixel matrix separately
   imload <- loadImage(path, lower=lower, upper=upper)
   img <- imload$original.rgb
@@ -92,10 +96,14 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=T, lower=c(0, 
 
 #' Get KMeans clusters for every image in a set
 #'
-#' Performs \code{\link{getKMeanColors}} on every image in a set of images and returns a list of kmeans fit objects, where each dataframe contains the RGB coordinates of the clusters and the percentage of pixels in the image assigned to that cluster.
+#' Performs \code{\link{getKMeanColors}} on every image in a set of images and
+#' returns a list of kmeans fit objects, where each dataframe contains the RGB
+#' coordinates of the clusters and the percentage of pixels in the image
+#' assigned to that cluster.
 #'
-#' @param images A character vector of directories, image paths, or a combination of both. Takes either absolute or relative filepaths.
-#' @param n Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
+#' @param images A character vector of directories, image paths, or a
+#'   combination of both. Takes either absolute or relative filepaths.
+#' @param bins Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
 #'   this represents the actual final number of bins, rather than the number of
 #'   breaks in each channel.
 #' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
@@ -110,16 +118,12 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=T, lower=c(0, 
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param iter.max Inherited from \code{\link[stats]{kmeans}}. The maximum
 #'   number of iterations allowed.
 #' @param nstart Inherited from \code{\link[stats]{kmeans}}. How many random
@@ -131,10 +135,11 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=T, lower=c(0, 
 #'   original image names.
 #'
 #' @examples
-#' getKMeansList(c("Heliconius/", "Chaetodontidae/Chaetodon_01.png"),
-#' plotting=T, sampleSize=10000, n=20)
+#' kmeans_list <- colordistance::getKMeansList(dir(system.file("extdata",
+#' "Heliconius/", package="colordistance"), full.names=TRUE), bins=3,
+#' lower=rep(0.8, 3), upper=rep(1, 3), plotting=TRUE)
 #' @export
-getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=F, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, imgType=F) {
+getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=FALSE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, imgType=FALSE) {
   # If argument isn"t a string/vector of strings, throw an error
   if (!is.character(images)) {
     stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
@@ -180,18 +185,33 @@ getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=F, lower=c
 
 #' Extract cluster values and sizes from kmeans fit objects
 #'
-#' Extract a list of dataframes with the same format as those returned by \code{\link{getHistList}}, where each dataframe has 3 color attributes (R, G, B or H, S, V) and a size attribute (Pct) for every cluster. Names are inherited from the list passed to the function.
+#' Extract a list of dataframes with the same format as those returned by
+#' \code{\link{getHistList}}, where each dataframe has 3 color attributes (R, G,
+#' B or H, S, V) and a size attribute (Pct) for every cluster.
 #'
-#' @param getKMeansListObject A list of \code{\link[stats]{kmeans}} fit objects (especially as returned by getKMeansList).
-#' @param ordering Logical. Should clusters by reordered by color similarity? If \code{TRUE}, the Hungarian algorithm via \code{\link[clue]{solve_LSAP}} is applied to find the minimum sum of Euclidean distances between color pairs for every pair of cluster objects and colors are reordered accordingly.
-#' @param normalize Logical. Should each cluster be normalized to show R:G:B or H:S:V ratios rather than absolute values? Can be helpful for inconsistent lighting, but reduces variation. See \code{\link{normalizeRGB}}.
+#' @param getKMeansListObject A list of \code{\link[stats]{kmeans}} fit objects
+#'   (especially as returned by getKMeansList).
+#' @param ordering Logical. Should clusters by reordered by color similarity? If
+#'   \code{TRUE}, the Hungarian algorithm via \code{\link[clue]{solve_LSAP}} is
+#'   applied to find the minimum sum of Euclidean distances between color pairs
+#'   for every pair of cluster objects and colors are reordered accordingly.
+#' @param normalize Logical. Should each cluster be normalized to show R:G:B or
+#'   H:S:V ratios rather than absolute values? Can be helpful for inconsistent
+#'   lighting, but reduces variation. See \code{\link{normalizeRGB}}.
 #'
-#' @return A list of dataframes (same length as input list), each with 4 columns: R, G, B (or H, S, V) and Pct (cluster size), with one row per cluster.
+#' @return A list of dataframes (same length as input list), each with 4
+#'   columns: R, G, B (or H, S, V) and Pct (cluster size), with one row per
+#'   cluster.
+#'
+#' @note Names are inherited from the list passed to the function.
 #'
 #' @examples
-#' extractClusters(getKMeansList("Heliconius/"))
+#' clusterList <- colordistance::getKMeansList(system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance"), bins=3)
+#'
+#' colordistance::extractClusters(clusterList)
 #' @export
-extractClusters <- function(getKMeansListObject, ordering=T, normalize=F) {
+extractClusters <- function(getKMeansListObject, ordering=TRUE, normalize=FALSE) {
 
   if (class(getKMeansListObject)!="kmeans") {
     # Extract cluster size and centers

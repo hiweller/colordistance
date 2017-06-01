@@ -6,11 +6,12 @@
 \usage{
 imageClusterPipeline(images, clusterMethod = "hist", distanceMethod = "emd",
   lower = c(0, 140/255, 0), upper = c(60/255, 1, 60/255), histBins = 3,
-  kmeansBins = 27, binAvg = T, normPix = F, plotBins = F, pausing = T,
-  hsv = F, bounds = c(0, 1), sampleSize = 20000, iter.max = 50,
-  nstart = 5, imgType = F, ordering = "default", sizeWeight = 0.5,
-  colorWeight = 0.5, plotHeatmap = T, returnDistanceMatrix = T,
-  saveTree = F, saveDistanceMatrix = F)
+  kmeansBins = 27, binAvg = TRUE, normPix = FALSE, plotBins = FALSE,
+  pausing = TRUE, hsv = FALSE, bounds = c(0, 1), sampleSize = 20000,
+  iter.max = 50, nstart = 5, imgType = FALSE, ordering = "default",
+  sizeWeight = 0.5, colorWeight = 0.5, plotHeatmap = TRUE,
+  returnDistanceMatrix = TRUE, saveTree = FALSE,
+  saveDistanceMatrix = FALSE)
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}
@@ -43,10 +44,11 @@ lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
-\item{histBins}{Only applicable if \code{clusterMethod="hist"}. Number of bins
-for each channel OR a vector of length 3 with bins for each channel. Bins=3
-will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in 2*2*3=12 bins
-(2 red, 2 green, 3 blue), etc. Passed to \code{\link{getHistList}}.}
+\item{histBins}{Only applicable if \code{clusterMethod="hist"}. Number of
+bins for each channel OR a vector of length 3 with bins for each channel.
+Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will result in
+2*2*3=12 bins (2 red, 2 green, 3 blue), etc. Passed to
+\code{\link{getHistList}}.}
 
 \item{kmeansBins}{Only applicable if \code{clusterMethod="kmeans"}. Number of
 KMeans clusters to fit. Unlike \code{\link{getImageHist}}, this represents
@@ -63,6 +65,14 @@ of their assigned pixel clouds by definition.}
 \item{normPix}{Logical. Should RGB or HSV cluster values be normalized using
 \code{\link{normalizeRGB}}?}
 
+\item{plotBins}{Logical. Should the bins for each image be plotted as they
+are calculated?}
+
+\item{pausing}{Logical. If \code{plotBins=TRUE}, pause and wait for user
+keystroke before plotting bins for next image?}
+
+\item{hsv}{Logical. Use HSV instead of RGB for generating clusters?}
+
 \item{bounds}{Upper and lower limits for the channels; R reads in images with
 intensities on a 0-1 scale, but 0-255 is common.}
 
@@ -78,6 +88,8 @@ during kmeans fitting. Passed to \code{\link{getKMeansList}}.}
 \item{nstart}{Only applicable if \code{clusterMethod="kmeans"}. Inherited
 from \code{\link[stats]{kmeans}}. How many random sets should be chosen?
 Passed to \code{\link{getKMeansList}}.}
+
+\item{imgType}{Logical. Should file extensions be retained with labels?}
 
 \item{ordering}{Logical if not left as "default". Should the color clusters
 in the list be reordered to minimize the distances between the pairs? If
@@ -115,15 +127,22 @@ Color distance matrix, heatmap, and saved distance matrix and tree
 }
 \description{
 Takes images, computes color clusters for each image, and calculates distance
-matrix/dendrogram from those clusters. This is the fastest way to get a
-distance matrix for color similarity starting from a folder of images.
-Essentially, it just calls in a series of other package functions in order:
-input images -> \code{\link{getImagePaths}} -> \code{\link{getHistList}} or
-\code{\link{getKMeansList}} followed by \code{\link{extractClusters}} ->
-\code{\link{getColorDistanceMatrix}} -> plotting -> return/save distance
-matrix. Sort of railroads you, but good for testing different combinations of
-clustering methods and distance metrics.
+matrix/dendrogram from those clusters.
+}
+\note{
+This is the fastest way to get a distance matrix for color similarity
+starting from a folder of images. Essentially, it just calls in a series of
+other package functions in order: input images -> \code{\link{getImagePaths}}
+-> \code{\link{getHistList}} or \code{\link{getKMeansList}} followed by
+\code{\link{extractClusters}} -> \code{\link{getColorDistanceMatrix}} ->
+plotting -> return/save distance matrix. Sort of railroads you, but good for
+testing different combinations of clustering methods and distance metrics.
 }
 \examples{
-imageClusterPipeline("Heliconius/")
+colordistance::imageClusterPipeline(dir(system.file("extdata", "Heliconius/",
+package="colordistance"), full.names=TRUE), hsv=TRUE, lower=rep(0.8,
+3), upper=rep(1, 3), clusterMethod="hist", distanceMethod="emd",
+histBins=3, plotBins=TRUE, saveTree="example_tree.newick",
+saveDistanceMatrix="example_DM.csv")
+
 }

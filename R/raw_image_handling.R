@@ -2,22 +2,27 @@
 #'
 #' Find all valid image paths (PNG and JPG) in a directory (does not search
 #' subdirectories). Will recover any image ending in .PNG, .JPG, or .JPEG,
-#' case-insensitive. In the event that no compatible images are found in the
-#' directory, it returns a message to that effect instead of an empty vector.
+#' case-insensitive.
 #'
 #' @param path Path to directory in which to search for images. Absolute or
 #'   relative filepaths are fine.
 #'
 #' @return A vector of absolute filepaths to JPG and PNG images in the given
 #'   directory.
+#'
+#' @note In the event that no compatible images are found in the directory, it
+#' returns a message to that effect instead of an empty vector.
+#'
 #' @examples
-#' imDir <- getImagePaths("Heliconius/")
-#' imDir <- getImagePaths("some/nonexistent/directory")
-#' imDir <- getImagePaths("./")
+#' imDir <- colordistance::getImagePaths(system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance"))
+#' \dontrun{
+#' imDir <- colordistance::getImagePaths("some/nonexistent/directory")
+#' }
+#' imDir <- colordistance::getImagePaths("./")
+#'
 #' @export
 getImagePaths <- function(path) {
-
-  path <- normalizePath(path)
 
   # Make sure input is both a string and a valid folder path
   if (!is.character(path)) {
@@ -37,11 +42,10 @@ getImagePaths <- function(path) {
 #' Import image and generate filtered 2D pixel array(s)
 #'
 #' Imports a single image and returns a list with the original image as a 3D
-#' array, a 2D matrix with background pixels removed, and the absolute path to the
-#' original image. The 3D array is useful for displaying the original
-#' image, while the 2D arrays (RGB and HSV) are treated as rows of data for
-#' clustering in the rest of the package.
+#' array, a 2D matrix with background pixels removed, and the absolute path to
+#' the original image.
 #'
+#' @param path Path to image (a string).
 #' @param lower RGB or HSV triplet specifying the lower bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]).
@@ -49,16 +53,12 @@ getImagePaths <- function(path) {
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param hsv Logical. Should HSV pixel array also be calculated? Setting to
 #'   \code{FALSE} will shave some time off the analysis, but not much (a few
 #'   microseconds per image).
@@ -66,18 +66,23 @@ getImagePaths <- function(path) {
 #' @return A list with original image ($original.rgb, 3D array), 2D matrix with
 #'   background pixels removed ($filtered.rgb.2d and $filtered.hsv.2d), and path
 #'   to the original image ($path).
+#'
+#' @note The 3D array is useful for displaying the original image, while the 2D
+#' arrays (RGB and HSV) are treated as rows of data for clustering in the rest
+#' of the package.
+#'
 #' @examples
-#' loadedImg <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3))
+#' loadedImg <- colordistance::loadImage(system.file("extdata",
+#' "Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+#' upper=rep(1, 3), lower=rep(0.8, 3))
 #'
-#' # Time difference if you leave out HSV conversion - a few microseconds on a
-#' late 2015 Macbook
-#' system.time(loadedImgNoHSV <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3)))
-#' system.time(loadedImgNoHSV <- loadImage("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), hsv=F))
+#' loadedImgNoHSV <- colordistance::loadImage(system.file("extdata",
+#' "Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+#' upper=rep(1, 3), lower=rep(0.8, 3), hsv=FALSE)
 #'
-#' @note
-#' The upper and lower limits for background pixel elimination set the inclusive
-#' bounds for which pixels should be ignored for the 2D arrays; while all
-#' background pixels are ideally a single color, images photographed against
+#' @details The upper and lower limits for background pixel elimination set the
+#' inclusive bounds for which pixels should be ignored for the 2D arrays; while
+#' all background pixels are ideally a single color, images photographed against
 #' "uniform" backgrounds often contain some variation, and even segmentation
 #' done with photo editing software will produce some variance as a result of
 #' image compression.
@@ -92,7 +97,7 @@ getImagePaths <- function(path) {
 #' <= 0.2. But a pixel with the RGB channel values [0.3, 0.9, 0.2] would not be
 #' considered background because 0.3 >= 0.2.
 #' @export
-loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=T) {
+loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRUE) {
 
   # Read in the file as either JPG or PNG (or, if neither, stop execution and return error message)
   if (!is.character(path)) {
@@ -144,17 +149,23 @@ loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=T) 
 
 #' Display an image in a plot window
 #'
-#' Plots an image as an image. Redundant, but a nice sanity check. Used in a few
-#' other functions in \code{colordistance} package. Takes either a path to an
-#' image (RGB or PNG) or an image object as read in by \code{\link{loadImage}}.
+#' Plots an image as an image.
+#'
 #' @export
 #' @param img Either a path to an image or a \code{\link{loadImage}} object.
 #'
 #' @return A plot of the provided image in the current plot window.
 #'
+#' @details Redundant, but a nice sanity check. Used in a few other functions in
+#' \code{colordistance} package. Takes either a path to an image (RGB or PNG) or
+#' an image object as read in by \code{\link{loadImage}}.
+#'
 #' @examples
-#' plotImage("Heliconius/Heliconius_01.png")
-#' plotImage(loadImage("Heliconius/Heliconius_01.png"))
+#' colordistance::plotImage(system.file("extdata",
+#' "Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"))
+#' colordistance::plotImage(loadImage(system.file("extdata",
+#' "Heliconius/Heliconius_A/Heliconius_01.jpeg", package="colordistance"),
+#' lower=rep(0.8, 3), upper=rep(1, 3)))
 #' @export
 plotImage <- function(img) {
   # If a filepath is passed, load the image from that filepath
@@ -170,11 +181,11 @@ plotImage <- function(img) {
 
   # If the image is an array of either 2 (black and white) or 3 (RGB) dimensions, plot it
   if (is.array(img) & (length(dim(img))==2 | length(dim(img))==3)) {
-    require(graphics)
+
     asp <- dim(img)[1]/dim(img)[2]
     main <- tail(strsplit(path, split="[.]")[[1]], 1)
     plot(0:1, 0:1, type="n", ann=F, axes=F, asp=asp, main=main)
-    rasterImage(img, 0, 0, 1, 1)
+    graphics::rasterImage(img, 0, 0, 1, 1)
   } else {
     # If neither a valid filepath nor a valid array were provided, throw error
     stop("Provided filepath or array must be a 2D (black and white) or 3D (RGB) array for plotting")
@@ -183,7 +194,9 @@ plotImage <- function(img) {
 
 #' Plot pixels in colorspace
 #'
-#' Plots non-background pixels according to their color coordinates, and colors them according to their RGB or HSV values. Dimensions are either RGB or HSV depending on flags.
+#' Plots non-background pixels according to their color coordinates, and colors
+#' them according to their RGB or HSV values. Dimensions are either RGB or HSV
+#' depending on flags.
 #' @export
 #' @param img Either a path to an image or a \code{\link{loadImage}} object.
 #' @param n Number of randomly selected pixels to plot; recommend <20000 for
@@ -196,16 +209,12 @@ plotImage <- function(img) {
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param hsv Logical. Should pixels be plotted in HSV instead of RGB
 #'   colorspace?
 #' @param rev Logical. Should the plot be rotated to view pixels which may be
@@ -215,13 +224,16 @@ plotImage <- function(img) {
 #'   to their color in the image. Uses
 #'   \code{\link[scatterplot3d]{scatterplot3d}} function.
 #' @examples
-#' plotPixels("Heliconius/Heliconius_01.png", n=20000, upper=rep(1, 3), lower=rep(0.8, 3))
+#' colordistance::plotPixels(system.file("extdata",
+#' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+#' n=20000, upper=rep(1, 3), lower=rep(0.8, 3))
 #' @note If \code{n} is not numeric, then all pixels are plotted, but this is
 #'   not recommended. Unless the image has a low pixel count, it takes much
 #'   longer, and plotting this many points in the plot window can obscure
 #'   important details.
+#'
 #' @export
-plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=F, rev=F) {
+plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=FALSE, rev=FALSE) {
 
   # If a filepath is passed, load the image from that filepath
   if (is.character(img)) {

@@ -1,18 +1,7 @@
-#'  Generate a 3D histogram based on color distribution in an image
+#' Generate a 3D histogram based on color distribution in an image
 #'
-#'  Computes a histogram in either RGB or HSV colorspace by sorting pixels into
-#'  a specified number of bins. If you choose 2 bins for each color channel,
-#'  then each of R, G, and B will be divided into 2 bins each, for a total of
-#'  2^3 = 8 bins. Once all pixels have been binned, the function will return
-#'  either the size of each bin, either in number of pixels or fraction of total
-#'  pixels, and the color of each bin, either as the geometric center of the bin
-#'  or as the average color of all pixels assigned to it. For example, if you
-#'  input an image of a red square and used 8 bins, all red pixels (RGB triplet
-#'  of [1, 0, 0]) would be assigned to the bin with R bounds (0.5, 1], G bounds
-#'  [0, 0.5) and B bounds [0, 0.5). The average color of the bin would be [0.75,
-#'  0.25, 0.25], but the average color of the pixels assigned to that bin would
-#'  be [1, 0, 0]. The latter option is obviously more informative, but takes
-#'  longer (about 1.5-2x longer depending on the images).
+#' Computes a histogram in either RGB or HSV colorspace by sorting pixels into a
+#' specified number of bins.
 #'
 #' @param image Path to a valid image (PNG or JPG) or a \code{\link{loadImage}}
 #'   object.
@@ -33,31 +22,52 @@
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param as.vec Logical. Should the bin sizes just be returned as a vector?
-#'   Much faster if only using \code{\link{chisqDist}} for comparison metric.
-#' @param normPix Logical. Should RGB or HSV cluster values be normalized using \code{\link{normalizeRGB}}?
-#' @param plotting Logical. Should a histogram of the bin colors and sizes be plotted?
+#'   Much faster if only using \code{\link{chisqDistance}} for comparison metric.
+#' @param normPix Logical. Should RGB or HSV cluster values be normalized using
+#'   \code{\link{normalizeRGB}}?
+#' @param plotting Logical. Should a histogram of the bin colors and sizes be
+#'   plotted?
 #' @param hsv Logical. Should HSV be used instead of RGB?
-#' @param title String for what the title the plots if plotting is on; defaults to the image name.
-#' @param bounds Upper and lower limits for the channels; R reads in images with intensities on a 0-1 scale, but 0-255 is common.
+#' @param title String for what the title the plots if plotting is on; defaults
+#'   to the image name.
+#' @param bounds Upper and lower limits for the channels; R reads in images with
+#'   intensities on a 0-1 scale, but 0-255 is common.
 #'
-#' @return A vector or dataframe (depending on whether \code{as.vec=T}) of bin sizes and color values.
+#' @return A vector or dataframe (depending on whether \code{as.vec=T}) of bin
+#'   sizes and color values.
+#'
+#' @details If you choose 2 bins for each color channel, then each of R, G, and
+#' B will be divided into 2 bins each, for a total of 2^3 = 8 bins.
+#'
+#' Once all pixels have been binned, the function will return either the size of
+#' each bin, either in number of pixels or fraction of total pixels, and the
+#' color of each bin, either as the geometric center of the bin or as the
+#' average color of all pixels assigned to it.
+#'
+#' For example, if you input an image of a red square and used 8 bins, all red
+#' pixels (RGB triplet of [1, 0, 0]) would be assigned to the bin with R bounds
+#' (0.5, 1], G bounds [0, 0.5) and B bounds [0, 0.5). The average color of the
+#' bin would be [0.75, 0.25, 0.25], but the average color of the pixels assigned
+#' to that bin would be [1, 0, 0]. The latter option is obviously more
+#' informative, but takes longer (about 1.5-2x longer depending on the images).
 #'
 #' @examples
-#' getImageHist("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=T)
-#' getImageHist("Heliconius/Heliconius_01.png", upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
+#' colordistance::getImageHist(system.file("extdata",
+#' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+#' upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE)
+#'
+#' colordistance::getImageHist(system.file("extdata",
+#' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
+#' upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 #' @export
-getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), as.vec=F, normPix=F, plotting=T, hsv=F, title="path", bounds=c(0, 1)) {
+getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), as.vec=FALSE, normPix=FALSE, plotting=TRUE, hsv=FALSE, title="path", bounds=c(0, 1)) {
   # If filepath was provided, check to make sure it exists or throw an error
   if (is.character(image)) {
     if (file.exists(image)) {
@@ -168,9 +178,9 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
         }
     if (binAvg) {
       if (hsv) {
-        colExp <- apply(clusters, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+        colExp <- apply(clusters, 1, function(x) grDevices::hsv(h=x[1], s=x[2], v=x[3]))
       } else {
-        colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+        colExp <- apply(clusters, 1, function(x) grDevices::rgb(red=x[1], green=x[2], blue=x[3]))
         }
     } else {
       colExp <- getHistColors(bins, hsv=hsv)
@@ -189,11 +199,10 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
 
 }
 
-#'  Vector of hex colors for histogram bin coloration
+#' Vector of hex colors for histogram bin coloration
 #'
-#'  Gets a vector of colors for plotting histograms from
-#'  \code{\link{getImageHist}} in helpful ways. Pretty internalized/highly
-#'  specific.
+#' Gets a vector of colors for plotting histograms from
+#' \code{\link{getImageHist}} in helpful ways.
 #'
 #' @param bins Number of bins for each channel OR a vector of length 3 with bins
 #'   for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
@@ -203,9 +212,9 @@ getImageHist <- function(image, bins=3, binAvg=T, defaultClusters=NULL, lower=c(
 #' @return A vector of hex codes for bin colors.
 #'
 #' @examples
-#' getHistColors(bins=3)
-#' getHistColors(bins=c(8, 3, 3), hsv=T)
-getHistColors <- function(bins, hsv=F) {
+#' colordistance:::getHistColors(bins=3)
+#' colordistance:::getHistColors(bins=c(8, 3, 3), hsv=TRUE)
+getHistColors <- function(bins, hsv=FALSE) {
 
   # If only 1 number given, use that number of bins for each channel
   if (length(bins)==1) {
@@ -241,13 +250,7 @@ getHistColors <- function(bins, hsv=F) {
 #' Generate a list of cluster sets for multiple images
 #'
 #' Applies \code{\link{getImageHist}} to every image in a provided set of image
-#' paths and/or directories containing images. For every image, the pixels are
-#' binned according to the specified bin breaks. By providing the bounds for the
-#' bins rather than letting an algorithm select centers (as in
-#' \code{\link{getKMeansList}}), clusters of nearly redundant colors are
-#' avoided. So you don't end up with, say, 3 nearly-identical yellow clusters
-#' which are treated as unrelated just because there's a lot of yellow in your
-#' image; you just get a very large yellow cluster and empty non-yellow bins.
+#' paths and/or directories containing images.
 #'
 #' @param images Character vector of directories, image paths, or both.
 #' @param bins Number of bins for each channel OR a vector of length 3 with bins
@@ -264,16 +267,12 @@ getHistColors <- function(bins, hsv=F) {
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
-#'   common background colors:
-#' \itemize{
-#' \item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-#' \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-#' \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-#' \item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-#' }
-#' If no background filtering is needed, set bounds to some non-numeric value
-#' (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-#' interpreted as \code{NULL}.
+#'   common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+#'   upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+#'   1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+#'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+#'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+#'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param normPix Logical. Should RGB or HSV cluster values be normalized using
 #'   \code{\link{normalizeRGB}}?
 #' @param plotting Logical. Should the histogram generated for each image be
@@ -293,12 +292,31 @@ getHistColors <- function(bins, hsv=F) {
 #' @return A list of \code{\link{getImageHist}} dataframes, 1 per image, named
 #'   by image name.
 #'
+#' @note For every image, the pixels are binned according to the specified bin
+#' breaks. By providing the bounds for the bins rather than letting an algorithm
+#' select centers (as in \code{\link{getKMeansList}}), clusters of nearly
+#' redundant colors are avoided.
+#'
+#' So you don't end up with, say, 3 nearly-identical yellow clusters which are
+#' treated as unrelated just because there's a lot of yellow in your image; you
+#' just get a very large yellow cluster and empty non-yellow bins.
+#'
 #' @examples
-#' getHistList("Heliconius/", upper=rep(1, 3), lower=rep(0.8, 3))
-#' getHistList(c("Heliconius/Heliconius_01.png", "Heliconius/Heliconius_05.png"), pausing=F, upper=rep(1, 3), lower=rep(0.8, 3))
-#' outList <- getHistList("Heliconius/", plotting=F, upper=rep(1, 3), lower=rep(0.8, 3))
+#' clusterList <- colordistance::getHistList(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
+#' lower=rep(0.8, 3))
+#'
+#' clusterList <- colordistance::getHistList(c(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), system.file("extdata",
+#' "Heliconius/Heliconius_A", package="colordistance")), pausing=FALSE,
+#' upper=rep(1, 3), lower=rep(0.8, 3))
+#'
+#' clusterList <- colordistance::getHistList(system.file("extdata",
+#' "Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
+#' upper=rep(1, 3), lower=rep(0.8, 3))
+#'
 #' @export
-getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), normPix=F, plotting=F, pausing=T, hsv=F, title="path", imgType=F, bounds=c(0, 1)) {
+getHistList <- function(images, bins=3, binAvg=TRUE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), normPix=FALSE, plotting=FALSE, pausing=TRUE, hsv=FALSE, title="path", imgType=FALSE, bounds=c(0, 1)) {
 
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
@@ -349,7 +367,7 @@ getHistList <- function(images, bins=3, binAvg=T, lower=c(0, 0.55, 0), upper=c(0
     setTxtProgressBar(pb, i)
 
     if (pausing & plotting & i < length(endList)) {
-      colordistance:::pause()
+      pause()
     }
 
   }

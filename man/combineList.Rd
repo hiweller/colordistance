@@ -7,7 +7,8 @@
 combineList(hist_list, method = "mean")
 }
 \arguments{
-\item{hist_list}{A list of cluster dataframes as returned by \code{\link{getHistList}}.}
+\item{hist_list}{A list of cluster dataframes as returned by
+\code{\link{getHistList}}.}
 
 \item{method}{Method for combining color histograms. Default is
 \code{"mean"}, but other generic functions (\code{"median"}, \code{"sum"},
@@ -20,14 +21,15 @@ according to the specified method.
 }
 \note{
 While the function can also accept clusters generated using kmeans
-(\code{\link{getKMeansList}} followed by \code{\link{extractClusters}}), this
-is not recommended, as kmeans does not provide explicit analogous pairs of
-clusters, and clusters are combined by row number (all row 1 clusters are
-treated as analagous, etc). Color histograms are appropriate because the bins
-are defined the same way for each image.
+  (\code{\link{getKMeansList}} followed by \code{\link{extractClusters}}),
+  this is not recommended, as kmeans does not provide explicit analogous
+  pairs of clusters, and clusters are combined by row number (all row 1
+  clusters are treated as analagous, etc). Color histograms are appropriate
+  because the bins are defined the same way for each image.
 }
 \examples{
-hist_list <- getHistList("Heliconius/")
+hist_list <- getHistList(system.file("extdata", "Heliconius/Heliconius_A",
+package="colordistance"), lower=rep(0.8, 3), upper=rep(1, 3))
 median_clusters <- combineList(hist_list, method="median")
 
 }

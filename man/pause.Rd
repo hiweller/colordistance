@@ -7,13 +7,15 @@
 pause()
 }
 \description{
-Tiny little function wrapper, mostly used for looping or when several plots are output by a single function. Waits for user keystroke to move on to next image or exit.
+Tiny little function wrapper, mostly used for looping or when several plots
+are output by a single function. Waits for user keystroke to move on to next
+image or exit.
 }
 \examples{
 for (i in c(1:5)) {
   print(i)
   if (i < 5) {
-    pause()
+    colordistance:::pause()
   }
 }
 }

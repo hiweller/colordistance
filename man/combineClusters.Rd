@@ -7,7 +7,8 @@
 combineClusters(folder, method = "mean", ...)
 }
 \arguments{
-\item{folder}{Path to the folder containing subdirectories of images. Must be a character vector.}
+\item{folder}{Path to the folder containing subdirectories of images. Must be
+a character vector.}
 
 \item{method}{Method for combining color histograms. Default is
 \code{"mean"}, but other generic functions (\code{"median"}, \code{"sum"},
@@ -18,8 +19,11 @@ R function is accepted.}
 including number of bins, HSV flag, etc.}
 }
 \description{
-Calculates color histograms for images in immediate subdirectories of a folder, and averages histograms for images in the same subdirectory.
+Calculates color histograms for images in immediate subdirectories of a
+folder, and averages histograms for images in the same subdirectory.
 }
 \examples{
-combineClusters("path/to/folder", method="median", bins=2)
+combined_clusters <- colordistance::combineClusters(system.file("extdata",
+"Heliconius", package="colordistance"), method="median", bins=2,
+lower=rep(0.8, 3), upper=rep(1, 3))
 }

@@ -19,17 +19,27 @@ A list with identical data to the input list, but with rows in each
 \description{
 Reorders clusters to minimize color distance using the
 \href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm}
-as implemented by \code{\link[clue]{solve_LSAP}}. Briefly: Euclidean
-distances between every possible pair of clusters across two dataframes are
-calculated, and pairs of clusters are chosen in order to minimize the total
-sum of color distances between the cluster pairs (i.e. A1-B1, A2-B2, etc).
+as implemented by \code{\link[clue]{solve_LSAP}}.
+}
+\details{
+Briefly: Euclidean distances between every possible pair of clusters
+across two dataframes are calculated, and pairs of clusters are chosen in
+order to minimize the total sum of color distances between the cluster pairs
+(i.e. A1-B1, A2-B2, etc).
+
 For example, if dataframe A has a black cluster, a white cluster, and a blue
 cluster, in that order, and dataframe B has a white cluster, a blue cluster,
 and a grey cluster, in that order, the final pairs might be A1-B3 (black and
-grey), A2-B2 (blue and blue), and A3-B1 (white and white). Rows are reordered
-so that paired rows are in the same row index (in the example, dataframe B
-would be reshuffled to go grey, blue, white instead of white, grey, blue).
+grey), A2-B2 (blue and blue), and A3-B1 (white and white).
+
+Rows are reordered so that paired rows are in the same row index (in the
+example, dataframe B would be reshuffled to go grey, blue, white instead of
+white, grey, blue).
 }
 \examples{
-orderClusters(extractClusters(getKMeansList("Heliconius/")))
+clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+"Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
+upper=rep(1, 3)))
+clusterList <- colordistance::extractClusters(clusterList)
+colordistance:::orderClusters(clusterList)
 }

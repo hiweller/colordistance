@@ -4,23 +4,36 @@
 \alias{exportTree}
 \title{Export a distance matrix as a tree object}
 \usage{
-exportTree(getColorDistanceMatrixObject, file, returnTree = F)
+exportTree(getColorDistanceMatrixObject, file, returnTree = FALSE)
 }
 \arguments{
-\item{getColorDistanceMatrixObject}{A distance matrix, especially as returned by \code{\link{getColorDistanceMatrix}}, but any numeric symmetrical matrix will work.}
+\item{getColorDistanceMatrixObject}{A distance matrix, especially as returned
+by \code{\link{getColorDistanceMatrix}}, but any numeric symmetrical matrix
+will work.}
 
-\item{file}{Character vector of desired filename for saving tree. Should end in ".newick".}
+\item{file}{Character vector of desired filename for saving tree. Should end
+in ".newick".}
 
-\item{returnTree}{Logical. Should the tree object be returned to the working environment in addition to being saved as a file?}
+\item{returnTree}{Logical. Should the tree object be returned to the working
+environment in addition to being saved as a file?}
 }
 \value{
-Newick tree saved in specified location and \code{as.phylo} tree object if \code{returnTree=TRUE}.
+Newick tree saved in specified location and \code{as.phylo} tree
+  object if \code{returnTree=TRUE}.
 }
 \description{
-Converts a symmetrical distance matrix to a tree and saves it in newick format. Uses \code{\link[stats]{hclust}} to form clusters.
+Converts a symmetrical distance matrix to a tree and saves it in newick
+format. Uses \code{\link[stats]{hclust}} to form clusters.
 }
 \examples{
-clusterList <- getHistList("Heliconius/")
-CDM <- getColorDistanceMatrix(clusterList, method="emd", plotting=F)
-heliconius_tree <- exportTree(CDM, "./HeliconiusColorTree.newick", returnTree=T)
+clusterList <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
+upper=rep(1, 3))
+CDM <- colordistance::getColorDistanceMatrix(clusterList, method="emd",
+plotting=FALSE)
+
+# Tree is both saved in current working directory and stored in
+# heliconius_tree variable
+heliconius_tree <- colordistance::exportTree(CDM,
+"./HeliconiusColorTree.newick", returnTree=TRUE)
 }

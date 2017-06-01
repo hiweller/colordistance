@@ -287,6 +287,7 @@ newDF <- newList[[1]]
     tempDF$Image <- rep(names(newList)[i], dim(newList[[i]])[1])
     newDF <- rbind(newDF, tempDF)
   }
+  require(magrittr, quietly=T)
 colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
   plotly::plot_ly(newDF, x = ~newDF[, 1], y = ~newDF[, 2], z = ~newDF[, 3], size=~Pct, text = ~paste("Image: ", Image)) %>%
     plotly::add_markers(color=I(colExp), size=~Pct, sizes=c(10, 5000)) %>%
@@ -308,6 +309,7 @@ newDF <- newList[[1]]
     tempDF$Image <- rep(names(newList)[i], dim(newList[[i]])[1])
     newDF <- rbind(newDF, tempDF)
   }
+  require(magrittr, quietly = TRUE)
 colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
   plotly::plot_ly(newDF, x = ~newDF[, 1], y = ~newDF[, 2], z = ~newDF[, 3], size=~Pct, text = ~paste("Image: ", Image)) %>%
     plotly::add_markers(color=I(colExp), size=~Pct, sizes=c(10, 5000)) %>%

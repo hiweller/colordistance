@@ -19,9 +19,12 @@ Sum of Euclidean distances between each pair of points (rows) in the
 }
 \description{
 Calculates the Euclidean distance between each pair of points in two
- dataframes as returned by extractClusters or getImageHist and returns the
- sum of the distances.
+dataframes as returned by extractClusters or getImageHist and returns the sum
+of the distances.
 }
 \examples{
-colorDistance(clusterList[[1]], clusterList[[2]])
+clusterList <- colordistance::getHistList(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+upper=rep(1, 3))
+colordistance:::colorDistance(clusterList[[1]], clusterList[[2]])
 }

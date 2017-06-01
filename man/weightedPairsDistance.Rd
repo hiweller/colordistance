@@ -4,13 +4,13 @@
 \alias{weightedPairsDistance}
 \title{Distance between color clusters with user-specified color/size weights}
 \usage{
-weightedPairsDistance(T1, T2, ordering = F, sizeWeight = 0.5,
+weightedPairsDistance(T1, T2, ordering = FALSE, sizeWeight = 0.5,
   colorWeight = 0.5)
 }
 \arguments{
 \item{T1}{Dataframe (especially a dataframe as returned by
-\code{extractClusters} or \code{getImageHist}, but first three columns
-must be coordinates).}
+\code{extractClusters} or \code{getImageHist}, but first three columns must
+be coordinates).}
 
 \item{T2}{Another dataframe like T1.}
 
@@ -29,12 +29,21 @@ Similarity score based on size and color similarity of each pair of
   points in provided dataframes.
 }
 \description{
-Distance metric with optional user input for specifying how much the bin
- size similarity and color similarity should be weighted when pairing
- clusters from different color cluster sets. (For example, if
- \code{sizeWeight} = 1 and \code{colorWeight} = 0, two clusters of identical
- color but different sizes would not be compared). Use with caution.
+Distance metric with optional user input for specifying how much the bin size
+similarity and color similarity should be weighted when pairing clusters from
+different color cluster sets.
+}
+\note{
+Use with caution, since weights can easily swing distance scores more
+  dramatically than might be expected. For example, if \code{sizeWeight} = 1
+  and \code{colorWeight} = 0, two clusters of identical color but different
+  sizes would not be compared.
 }
 \examples{
-weightedPairsDistance(clusterList[[1]], clusterList[[2]])
+clusterList <- colordistance::getKMeansList(system.file("extdata",
+"Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
+upper=rep(1, 3))
+clusterList <- colordistance::extractClusters(clusterList, ordering=TRUE)
+colordistance:::weightedPairsDistance(clusterList[[1]], clusterList[[2]],
+sizeWeight=0.8, colorWeight=0.2)
 }

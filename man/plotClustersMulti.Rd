@@ -4,7 +4,7 @@
 \alias{plotClustersMulti}
 \title{Plot several different cluster sets together}
 \usage{
-plotClustersMulti(clusterList, hsv = F, p = "all", title = "")
+plotClustersMulti(clusterList, hsv = FALSE, p = "all", title = "")
 }
 \arguments{
 \item{clusterList}{A list of identically sized dataframes with 4 columns each
@@ -26,14 +26,26 @@ A single \code{\link{plotly}{plot_ly}} plot of every cluster in a
 }
 \description{
 Plots cluster sets from several different dataframes on a single plot for
-easy comparison. Each cluster plotted is colored according to its actual
-color, and labeled according to the image from which it originated.
+easy comparison.
+}
+\note{
+Each cluster plotted is colored according to its actual color, and
+labeled according to the image from which it originated.
 }
 \examples{
-clusterList <- getHistList("Heliconius/", plotting=F)
-plotClustersMulti(clusterList, p=c(1:4), title="Orange and black Heliconius")
-plotClustersMulti(clusterList, p=c(5:8), title="Black, yellow, and red Heliconius")
+clusterList <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
+lower=rep(0.8, 3), upper=rep(1, 3))
 
-clusterListHSV <- getHistList("Heliconius/", hsv=T, plotting=F)
-plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=T)
+colordistance::plotClustersMulti(clusterList, p=c(1:4), title="Orange and
+black Heliconius")
+
+colordistance::plotClustersMulti(clusterList, p=c(5:8), title="Black, yellow,
+and red Heliconius")
+
+clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,
+plotting=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
+
+colordistance::plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE)
 }

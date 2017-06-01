@@ -4,12 +4,17 @@
 \alias{getKMeansList}
 \title{Get KMeans clusters for every image in a set}
 \usage{
-getKMeansList(images, bins = 10, sampleSize = 20000, plotting = F,
+getKMeansList(images, bins = 10, sampleSize = 20000, plotting = FALSE,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, imgType = F)
+  nstart = 5, imgType = FALSE)
 }
 \arguments{
-\item{images}{A character vector of directories, image paths, or a combination of both. Takes either absolute or relative filepaths.}
+\item{images}{A character vector of directories, image paths, or a
+combination of both. Takes either absolute or relative filepaths.}
+
+\item{bins}{Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
+this represents the actual final number of bins, rather than the number of
+breaks in each channel.}
 
 \item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel
 array for performing fit. If set to \code{FALSE}, all pixels are fit, but
@@ -23,19 +28,15 @@ pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
 \item{iter.max}{Inherited from \code{\link[stats]{kmeans}}. The maximum
 number of iterations allowed.}
@@ -45,19 +46,19 @@ sets should be chosen?}
 
 \item{imgType}{Logical. Should the image extension (.PNG or .JPG) be retained
 in the list names?}
-
-\item{n}{Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
-this represents the actual final number of bins, rather than the number of
-breaks in each channel.}
 }
 \value{
 A list of kmeans fit objects, where the list element names are the
   original image names.
 }
 \description{
-Performs \code{\link{getKMeanColors}} on every image in a set of images and returns a list of kmeans fit objects, where each dataframe contains the RGB coordinates of the clusters and the percentage of pixels in the image assigned to that cluster.
+Performs \code{\link{getKMeanColors}} on every image in a set of images and
+returns a list of kmeans fit objects, where each dataframe contains the RGB
+coordinates of the clusters and the percentage of pixels in the image
+assigned to that cluster.
 }
 \examples{
-getKMeansList(c("Heliconius/", "Chaetodontidae/Chaetodon_01.png"),
-plotting=T, sampleSize=10000, n=20)
+kmeans_list <- colordistance::getKMeansList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), bins=3,
+lower=rep(0.8, 3), upper=rep(1, 3), plotting=TRUE)
 }

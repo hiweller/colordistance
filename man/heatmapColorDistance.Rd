@@ -10,11 +10,16 @@ heatmapColorDistance(clusterList_or_matrixObject, main = NULL,
 \arguments{
 \item{clusterList_or_matrixObject}{Either a list of identically sized
 dataframes with 4 columns each (R, G, B, Pct or H, S, V, Pct) as output by
-\code{\link{extractClusters}} or \code{\link{getHistList}}, or a symmetrical distance matrix as output by \code{\link{getColorDistanceMatrix}}.}
+\code{\link{extractClusters}} or \code{\link{getHistList}}, or a
+symmetrical distance matrix as output by
+\code{\link{getColorDistanceMatrix}}.}
 
 \item{main}{Title for heatmap plot.}
 
-\item{col}{Color scale for heatmap from low to high. Default is \code{colorRampPalette(c("royalblue4", "ghostwhite", "goldenrod2"))(n=299)}, where yellow is more dissimilar and blue is more similar.}
+\item{col}{Color scale for heatmap from low to high. Default is
+\code{colorRampPalette(c("royalblue4", "ghostwhite",
+"goldenrod2"))(n=299)}, where yellow is more dissimilar and blue is more
+similar.}
 
 \item{margins}{Margins for column and row labels.}
 
@@ -29,8 +34,14 @@ similarity/dissimilarity in scores. Values are clustered by similarity using
 \code{\link[stats]{hclust}}.
 }
 \examples{
-clusterList <- getHistList("Heliconius/")
-CDM <- getColorDistanceMatrix(clusterList, plotting=F)
-heatmapColorDistance(CDM, main="Heliconius color similarity")
-heatmapColorDistance(clusterList, col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
+clusterList <- colordistance::getHistList(dir(system.file("extdata",
+"Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
+upper=rep(1, 3))
+
+CDM <- colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
+
+colordistance::heatmapColorDistance(CDM, main="Heliconius color similarity")
+colordistance::heatmapColorDistance(clusterList,
+col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
+
 }

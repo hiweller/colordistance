@@ -4,9 +4,9 @@
 \alias{getKMeanColors}
 \title{Fit pixels to clusters using KMeans clustering}
 \usage{
-getKMeanColors(path, n = 10, sampleSize = 20000, plotting = T,
+getKMeanColors(path, n = 10, sampleSize = 20000, plotting = TRUE,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, returnClust = T)
+  nstart = 5, returnClust = TRUE)
 }
 \arguments{
 \item{path}{Path to an image (JPG or PNG).}
@@ -15,34 +15,36 @@ getKMeanColors(path, n = 10, sampleSize = 20000, plotting = T,
 this represents the actual final number of bins, rather than the number of
 breaks in each channel.}
 
-\item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel array for performing fit. If set to \code{FALSE}, all pixels are fit, but this can be time-consuming, especially for large images.}
+\item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel
+array for performing fit. If set to \code{FALSE}, all pixels are fit, but
+this can be time-consuming, especially for large images.}
 
-\item{plotting}{Logical. Should the results of the KMeans fit (original image + histogram of colors and bin sizes) be plotted?}
+\item{plotting}{Logical. Should the results of the KMeans fit (original image
++ histogram of colors and bin sizes) be plotted?}
 
 \item{lower}{RGB or HSV triplet specifying the lower bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
 \item{upper}{RGB or HSV triplet specifying the upper bounds for background
-  pixels. Default upper and lower bounds are set to values that work well for
-  a bright green background (RGB [0, 1, 0]). Determining these bounds may
-  take some trial and error, but the following bounds may work for certain
-  common background colors:
-\itemize{
-\item Black: lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1)
-\item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1, 1)
-\item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24)
-\item Blue: lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1)
-}
-If no background filtering is needed, set bounds to some non-numeric value
-(\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
-interpreted as \code{NULL}.}
+pixels. Default upper and lower bounds are set to values that work well for
+a bright green background (RGB [0, 1, 0]). Determining these bounds may
+take some trial and error, but the following bounds may work for certain
+common background colors: \itemize{ \item Black: lower=c(0, 0, 0);
+upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8, 0.8); upper=c(1, 1,
+1) \item Green: lower=c(0, 0.55, 0); upper=c(0.24, 1, 0.24) \item Blue:
+lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
+needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
+\code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
-\item{iter.max}{Inherited from \code{\link[stats]{kmeans}}. The maximum number of iterations allowed.}
+\item{iter.max}{Inherited from \code{\link[stats]{kmeans}}. The maximum
+number of iterations allowed.}
 
-\item{nstart}{Inherited from \code{\link[stats]{kmeans}}. How many random sets should be chosen?}
+\item{nstart}{Inherited from \code{\link[stats]{kmeans}}. How many random
+sets should be chosen?}
 
-\item{returnClust}{Logical. Should clusters be returned? If \code{FALSE}, results are plotted but not returned.}
+\item{returnClust}{Logical. Should clusters be returned? If \code{FALSE},
+results are plotted but not returned.}
 }
 \value{
 A \code{\link[stats]{kmeans}} fit object.
@@ -54,5 +56,7 @@ between pixels and their assigned clusters. Useful for parsing common color
 motifs in an object.
 }
 \examples{
-getKMeanColors("Heliconius/Heliconius_01.png", n=15, returnClust=F)
+colordistance::getKMeanColors(system.file("extdata",
+"Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"), n=3,
+returnClust=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 }
