@@ -77,6 +77,8 @@ treated as unrelated just because there's a lot of yellow in your image; you
 just get a very large yellow cluster and empty non-yellow bins.
 }
 \examples{
+\dontrun{
+# Takes >10 seconds if you run all examples
 clusterList <- colordistance::getHistList(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
 lower=rep(0.8, 3))
@@ -89,5 +91,6 @@ upper=rep(1, 3), lower=rep(0.8, 3))
 clusterList <- colordistance::getHistList(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
 upper=rep(1, 3), lower=rep(0.8, 3))
+}
 
 }

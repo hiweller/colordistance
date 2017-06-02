@@ -17,6 +17,8 @@
 #'   specified colorspace for each cluster dataframe provided.
 #'
 #' @examples
+#' \dontrun{
+#' # Takes >10 seconds
 #' clusterList <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 #' lower=rep(0.8, 3), upper=rep(1, 3))
@@ -29,6 +31,7 @@
 #'
 #' colordistance::plotClusters(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE,
 #' pausing=FALSE)
+#' }
 #' @export
 plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
 
@@ -101,6 +104,9 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
 #' labeled according to the image from which it originated.
 #'
 #' @examples
+#'
+#' \dontrun{
+#' # Takes >10 seconds
 #' clusterList <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 #' lower=rep(0.8, 3), upper=rep(1, 3))
@@ -116,6 +122,7 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
 #' plotting=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 #'
 #' colordistance::plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE)
+#' }
 #' @export
 plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
 
@@ -182,6 +189,8 @@ plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
 #' @return Heatmap representation of distance matrix.
 #'
 #' @examples
+#' \dontrun{
+#' # Takes a few seconds to run
 #' clusterList <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
 #' upper=rep(1, 3))
@@ -191,6 +200,7 @@ plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
 #' colordistance::heatmapColorDistance(CDM, main="Heliconius color similarity")
 #' colordistance::heatmapColorDistance(clusterList,
 #' col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
+#' }
 #'
 #' @export
 heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="default", margins=c(6, 8), ...) {

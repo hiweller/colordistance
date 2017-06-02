@@ -27,8 +27,10 @@ both color disparity and size disparity. Recommended unless \code{binAvg} is
 off for histogram generation.
 }
 \examples{
+\dontrun{
 clusterList <- colordistance::getHistList(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
 upper=rep(1, 3))
 colordistance:::EMDistance(clusterList[[1]], clusterList[[2]])
+}
 }

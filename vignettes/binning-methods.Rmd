@@ -7,7 +7,7 @@ bibliography: "bibliography.bib"
 vignette: >
   %\VignetteIndexEntry{Pixel Binning Methods}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 ```{r, echo=F}
 knitr::opts_chunk$set(
@@ -42,20 +42,23 @@ This vignette is intended to explain the implications of different binning metho
 
     For example, take the following picture of a *Heliconius* butterfly (@Meyer2006): 
 
-    ```{r, out.width="400px", echo=F}
-    knitr::include_graphics("Heliconius/Heliconius_08.jpeg")
+    ```{r, out.width="400px", echo=FALSE}
+    knitr::include_graphics(system.file("extdata", "Heliconius/Heliconius_B/Heliconius_08.jpeg", package="colordistance"))
     ```
 
     We could very reasonably say that there are only 3 real colors on this butterfly: black, red, and yellow. But when we plot the individual pixels in the actual image...
 
     ```{r, fig.width=5, fig.height=4, fig.cap="(See the introduction for more information on the `plotPixels()` function.)"}
-    colordistance::plotPixels("Heliconius/Heliconius_08.jpeg", lower=rep(0.8, 3), upper=rep(1, 3))
+    # Note: any valid filepath will work; this line is specific to 
+    # example data that comes with the package
+    Heliconius_08 <- system.file("extdata", "Heliconius/Heliconius_B/Heliconius_08.jpeg", package="colordistance")
+    colordistance::plotPixels(Heliconius_08, lower=rep(0.8, 3), upper=rep(1, 3))
     ```
 
     As you might expect, although we can see black, red, and yellow pixels, they're not all centered in a single place because of noise, lighting variation, and of course actual minor color differences in the animal itself when it was photographed. But if we define a certain range for black pixels in RGB color space, we can just count the proportion of pixels in that range:
 
     ```{r, fig.cap="(For more information in `getImageHist()`, see the 'Histogram method' section.)"}
-    binnedButterfly <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=2,   lower=rep(0.8, 3), upper=rep(1, 3), plotting=T)
+    binnedButterfly <- colordistance::getImageHist(Heliconius_08, bins=2,   lower=rep(0.8, 3), upper=rep(1, 3), plotting=TRUE)
     ```
 
     And we can confidently say that 75% of the pixels in the butterfly were in the "black" range we defined. We're treating all pixels in that bin as if they're the same color, but in this case we can say that the simplification doesn't sacrifice important information. It's pretty accurate to say that the majority of the butterfly is black; that some of the pixels in the black regions are dark brown or dark grey is not meaningful biological variation for this image. Of course, there are situations where those more subtle color variations *do* matter, in which case you'd need smaller bins to break those pixels up into tighter ranges.
@@ -78,16 +81,16 @@ par(mfrow=c(2,2))
 # Short version: getting rid of any pixels where R, G, and B values are ALL between 0.8 and 1 (aka white)
 lower <- rep(0.8, 3)
 upper <- rep(1, 3)
-defaultHist <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, title="3 bins per channel, RGB")
+defaultHist <- colordistance::getImageHist(Heliconius_08, lower=lower, upper=upper, title="3 bins per channel, RGB")
 
 # We already did 8 bins above, so let's do 1 bin just for sarcasm
-oneBin <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, bins=1, title="1 bin (pointless but didactic?)")
+oneBin <- colordistance::getImageHist(Heliconius_08, lower=lower, upper=upper, bins=1, title="1 bin (pointless but didactic?)")
 
 # Use 2 red and green bins, but only 1 blue bin
-unevenBins <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, bins=c(2, 2, 1), title="Non-uniform channel divisions")
+unevenBins <- colordistance::getImageHist(Heliconius_08, lower=lower, upper=upper, bins=c(2, 2, 1), title="Non-uniform channel divisions")
 
 # HSV instead of RGB
-hsvBins <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, hsv=T, title="HSV, not RGB")
+hsvBins <- colordistance::getImageHist(Heliconius_08, lower=lower, upper=upper, hsv=TRUE, title="HSV, not RGB")
 ```
 
 In addition to plotting the histogram, the function also returns a dataframe of bin centers and sizes:
@@ -100,7 +103,8 @@ The first three columns of each row are the coordinates in color space of the bi
 If you want to get the bin centers and sizes for a set of images at once, use the `getHistList()` function, which just calls on `getImageHist()` for all of the images it finds in a folder or set of folders.
 
 ```{r, results=F}
-histList <- colordistance::getHistList("Heliconius/", bins=2, plotting=F)
+images <- dir(system.file("extdata", "Heliconius/", package="colordistance"), full.names=TRUE)
+histList <- colordistance::getHistList(images, bins=2, plotting=FALSE)
 ```
 ```{r}
 # Output of getHistList() is (you guessed it) a list of dataframes as returned by getImageHist()
@@ -143,20 +147,20 @@ The input for the k-means functions are therefore slightly simpler, because rath
 ```{r, fig.width=4, fig.height=5}
 lower <- rep(0.8, 3)
 upper <- rep(1, 3)
-kmeans01 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, n = 3)
+kmeans01 <- colordistance::getKMeanColors(Heliconius_08, lower=lower, upper=upper, n = 3)
 ```
 
 Other than the number of clusters, you can also adjust the sample size of pixels on which the fit is performed. Because k-means is iterative and has to perform a fit multiple times for clusters to converge, fitting hundreds of thousands of pixels is computationally expensive. `getKmeanColors()` gets around this by randomly selecting a number of object pixels equal to `sampleSize`, which is set to a default of 20,000 pixels. 
 
 ```{r}
 # Using default sample size
-system.time(colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, n = 3, plotting=F))
+system.time(colordistance::getKMeanColors(Heliconius_08, lower=lower, upper=upper, n = 3, plotting=FALSE))
 
 # Using 10,000 instead of 20,000 pixels is slightly faster, but not by much
-system.time(colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, n = 3, plotting=F, sampleSize=10000))
+system.time(colordistance::getKMeanColors(Heliconius_08, lower=lower, upper=upper, n = 3, plotting=FALSE, sampleSize=10000))
 
 # Using all pixels instead of sample takes 5x longer - and this is a very low-res image!
-system.time(colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, n = 3, plotting=F, sampleSize=FALSE))
+system.time(colordistance::getKMeanColors(Heliconius_08, lower=lower, upper=upper, n = 3, plotting=FALSE, sampleSize=FALSE))
 ```
 
 Unlike the histogram method, k-means will not return the exact same clusters every time you run it, even if you perform the fit on the whole image rather than a subset of pixels -- this is also a feature of the iterative behavior. You can minimize the differences by increasing the values of `iter.max` and `nstart`, which are passed to the `kmeans()` function of the `stats` package. (As you might guess, this makes the function slower.) Unless the image has extremely high color complexity, however, the differences should be minor and in my experience don't affect analyses. 
@@ -172,7 +176,7 @@ Looks pretty similar to the one returned by `getImageHist()` above, with the obv
 
 ```{r, results=F}
 # In order to see the clusters for each image, set plotting to TRUE and optionally pausing to TRUE as well
-kmeans02 <- colordistance::getKMeansList("Heliconius/", bins=3, lower=lower, upper=upper, plotting=F)
+kmeans02 <- colordistance::getKMeansList(images, bins=3, lower=lower, upper=upper, plotting=F)
 ```
 ```{r}
 kmeansClusters <- colordistance::extractClusters(kmeans02, ordering=T)
@@ -196,7 +200,7 @@ The result is nearly identical in structure to the result of `getHistList()`, bu
 * *Divides dominant colors into near-identical clusters.* The flip side of leaving out details is that dominant colors are over-represented. When a color takes up a large portion of an image, it tends to get broken up into several clusters, because the greatest decrease in pixel-cluster distance can be achieved by adding another cluster in a pixel-dense region. 3 clusters worked well for the butterfly picture earlier, but when we use the default of `n=10`, we get several black/dark brown clusters, several orange/red ones, and several yellow ones, even though it doesn't make intuitive sense to divide these colors up this way.
 
 ```{r, fig.width=4, fig.height=5}
-colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", lower=lower, upper=upper, returnClust = F)
+colordistance::getKMeanColors(Heliconius_08, lower=lower, upper=upper, returnClust = FALSE)
 ```
 
 * *Comparisons for dissimilar objects difficult.* If we have two black and white objects, we know it makes sense to compare the amount of black in one to the amount of black in the other and same for the white, rather than the black in one to the white in the other. But what if you're comparing a black and white object to a blue and yellow one? Or an all-black object to one with 10 distinct colors? Unlike the histogram method, which uses empty bins to register the lack of a color in an image, k-means only returns clusters which are present in an image.
@@ -221,17 +225,17 @@ The nice thing about color clustering is that, unlike most statistical analyses,
 ```{r, fig.width=6, fig.height=3}
 par(mfrow=c(1, 3))
 # Get and plot histogram for a single image
-hist01 <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=2, plotting=T, title="RGB, 2 bins per channel", lower=lower, upper=upper)
+hist01 <- colordistance::getImageHist(Heliconius_08, bins=2, plotting=TRUE, title="RGB, 2 bins per channel", lower=lower, upper=upper)
 
 # Use the bin center as the cluster value instead of the average pixel location (note the difference between this and when binAvg=F)
-hist02 <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=2, plotting=T, title="binAvg = F", lower=lower, upper=upper, binAvg=F)
+hist02 <- colordistance::getImageHist(Heliconius_08, bins=2, plotting=TRUE, title="binAvg = F", lower=lower, upper=upper, binAvg=FALSE)
 
 # Use different number of bins for each channel; use HSV instead of RGB
-hist03 <- colordistance::getImageHist("Heliconius/Heliconius_08.jpeg", bins=c(8, 1, 2), plotting=T, hsv=T, title="HSV, 8 hue, 1 sat, 2 val", lower=lower, upper=upper)
+hist03 <- colordistance::getImageHist(Heliconius_08, bins=c(8, 1, 2), plotting=TRUE, hsv=TRUE, title="HSV, 8 hue, 1 sat, 2 val", lower=lower, upper=upper)
 ```
 ```{r, results=F, eval=F}
 # Get histograms for a set of images
-histMulti <- colordistance::getHistList("Heliconius/", bins=2, plotting=F, lower=lower, upper=upper)
+histMulti <- colordistance::getHistList(images, bins=2, plotting=FALSE, lower=lower, upper=upper)
 ```
 
 **K-means method**
@@ -240,81 +244,35 @@ lower <- rep(0.8, 3)
 upper <- rep(1, 3)
 
 # Use defaults
-kmeans01 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, lower=lower, upper=upper)
+kmeans01 <- colordistance::getKMeanColors(Heliconius_08, n=3, plotting=FALSE, lower=lower, upper=upper)
 kmeansDF <- colordistance::extractClusters(kmeans01)
 
 # Use a larger sample size
-kmeans02 <- colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=3, plotting=F, sampleSize = 30000, lower=lower, upper=upper)
+kmeans02 <- colordistance::getKMeanColors(Heliconius_08, n=3, plotting=FALSE, sampleSize = 30000, lower=lower, upper=upper)
 kmeansDF2 <- colordistance::extractClusters(kmeans02)
 
 # Don't return clusters as a dataframe
-colordistance::getKMeanColors("Heliconius/Heliconius_08.jpeg", n=15, plotting=F, returnClust=F, lower=lower, upper=upper)
+colordistance::getKMeanColors(Heliconius_08, n=15, plotting=FALSE, returnClust=FALSE, lower=lower, upper=upper)
 ```
 ```{r, results=F, eval=F}
 # For whole dataset
-kmeans03 <- colordistance::getKMeansList("Heliconius/", n=3, plotting=F, lower=lower, upper=upper)
+kmeans03 <- colordistance::getKMeansList(images, n=3, plotting=FALSE, lower=lower, upper=upper)
 kmeansList <- colordistance::extractClusters(kmeans03)
 ```
 
 
 **Quick comparison**
-```{r, results=F}
+```{r, results=F, eval=F}
 # If we use the same number of clusters for both the histogram and k-means methods, how different do the clusters look?
-histExample <- colordistance::getHistList("Heliconius/", lower=lower, upper=upper)
+# Not run in this vignette, but produces 3D, interactive plots!
+histExample <- colordistance::getHistList(images, lower=lower, upper=upper)
 
-kmeansExample <- colordistance::extractClusters(colordistance::getKMeansList("Heliconius", bins=27, lower=lower, upper=upper))
+kmeansExample <- colordistance::extractClusters(colordistance::getKMeansList(images, bins=27, lower=lower, upper=upper))
 
 colordistance::plotClustersMulti(histExample, title="Histogram method")
 
 colordistance::plotClustersMulti(kmeansExample, title="K-means method")
 ```
-```{r, fig.width=5, fig.height=5, echo=F}
-scene <- list(xaxis=list(title="Red", linecolor=plotly::toRGB("red"), linewidth=6, range=c(0, 1)), yaxis=list(title="Green", linecolor=plotly::toRGB("green"), linewidth=6, range=c(0, 1)), zaxis=list(title="Blue", linecolor=plotly::toRGB("blue"), linewidth=6, range=c(0, 1)), camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
-
-clusterList <- histExample
-p <- names(clusterList)
-newList <- vector("list", length(p))
-for (i in 1:length(p)) {
-    newList[[i]] <- clusterList[[i]]
-    names(newList)[i] <- p[i]
-}
-newDF <- newList[[1]]
-  newDF$Image <- rep(names(newList)[1], dim(newList[[1]])[1])
-
-  # Add an "image" ID column for plotting
-  for (i in 2:length(newList)) {
-    tempDF <- newList[[i]]
-    tempDF$Image <- rep(names(newList)[i], dim(newList[[i]])[1])
-    newDF <- rbind(newDF, tempDF)
-  }
-  require(magrittr, quietly=T)
-colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
-  plotly::plot_ly(newDF, x = ~newDF[, 1], y = ~newDF[, 2], z = ~newDF[, 3], size=~Pct, text = ~paste("Image: ", Image)) %>%
-    plotly::add_markers(color=I(colExp), size=~Pct, sizes=c(10, 5000)) %>%
-    plotly::layout(scene = scene, title="Histogram method")
-
-clusterList <- kmeansExample
-p <- names(clusterList)
-newList <- vector("list", length(p))
-for (i in 1:length(p)) {
-    newList[[i]] <- clusterList[[i]]
-    names(newList)[i] <- p[i]
-}
-newDF <- newList[[1]]
-  newDF$Image <- rep(names(newList)[1], dim(newList[[1]])[1])
-
-  # Add an "image" ID column for plotting
-  for (i in 2:length(newList)) {
-    tempDF <- newList[[i]]
-    tempDF$Image <- rep(names(newList)[i], dim(newList[[i]])[1])
-    newDF <- rbind(newDF, tempDF)
-  }
-  require(magrittr, quietly = TRUE)
-colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
-  plotly::plot_ly(newDF, x = ~newDF[, 1], y = ~newDF[, 2], z = ~newDF[, 3], size=~Pct, text = ~paste("Image: ", Image)) %>%
-    plotly::add_markers(color=I(colExp), size=~Pct, sizes=c(10, 5000)) %>%
-    plotly::layout(scene = scene, title="K-means method")
-
 
 ```
 

@@ -302,6 +302,8 @@ getHistColors <- function(bins, hsv=FALSE) {
 #' just get a very large yellow cluster and empty non-yellow bins.
 #'
 #' @examples
+#' \dontrun{
+#' # Takes >10 seconds if you run all examples
 #' clusterList <- colordistance::getHistList(system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
 #' lower=rep(0.8, 3))
@@ -314,6 +316,7 @@ getHistColors <- function(bins, hsv=FALSE) {
 #' clusterList <- colordistance::getHistList(system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
 #' upper=rep(1, 3), lower=rep(0.8, 3))
+#' }
 #'
 #' @export
 getHistList <- function(images, bins=3, binAvg=TRUE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), normPix=FALSE, plotting=FALSE, pausing=TRUE, hsv=FALSE, title="path", imgType=FALSE, bounds=c(0, 1)) {

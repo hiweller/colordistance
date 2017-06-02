@@ -29,6 +29,6 @@ imDir <- colordistance::getImagePaths(system.file("extdata",
 \dontrun{
 imDir <- colordistance::getImagePaths("some/nonexistent/directory")
 }
-imDir <- colordistance::getImagePaths("./")
+imDir <- colordistance::getImagePaths(getwd())
 
 }

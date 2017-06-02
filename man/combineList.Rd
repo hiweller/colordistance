@@ -24,7 +24,7 @@ While the function can also accept clusters generated using kmeans
   (\code{\link{getKMeansList}} followed by \code{\link{extractClusters}}),
   this is not recommended, as kmeans does not provide explicit analogous
   pairs of clusters, and clusters are combined by row number (all row 1
-  clusters are treated as analagous, etc). Color histograms are appropriate
+  clusters are treated as analogous, etc). Color histograms are appropriate
   because the bins are defined the same way for each image.
 }
 \examples{

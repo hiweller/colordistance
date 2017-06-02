@@ -66,10 +66,12 @@ colorDistance <- function(T1, T2) {
 #'   bin similarity for a pair of 3-dimensional histograms).
 #'
 #' @examples
+#' \dontrun{
 #' clusterList <- colordistance::getHistList(system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
 #' upper=rep(1, 3))
 #' colordistance:::EMDistance(clusterList[[1]], clusterList[[2]])
+#' }
 EMDistance <- function(T1, T2) {
   T1 <- as.matrix(cbind(T1[, 4], T1[, 1:3]))
   T2 <- as.matrix(cbind(T2[, 4], T2[, 1:3]))
@@ -175,6 +177,7 @@ weightedPairsDistance <- function(T1, T2, ordering=FALSE, sizeWeight=0.5, colorW
 #' question, but generally give poorer results.
 #'
 #' @examples
+#' \dontrun{
 #' clusterList <- colordistance::getHistList(c(system.file("extdata",
 #' "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3),
@@ -201,6 +204,7 @@ weightedPairsDistance <- function(T1, T2, ordering=FALSE, sizeWeight=0.5, colorW
 #' # Color distance only
 #' colordistance::getColorDistanceMatrix(clusterList, method="color.dist",
 #' ordering=TRUE, main="Color distance only")
+#' }
 #' @export
 getColorDistanceMatrix <- function(clusterList, method="emd", ordering="default", sizeWeight=0.5, colorWeight=0.5, plotting=TRUE, ...) {
 
