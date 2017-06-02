@@ -1,4 +1,4 @@
-# colordistance 0.8.0
+# colordistance 0.8.0.9000
 
 An R package with functions for quantifying the differences between colorful objects.
 
