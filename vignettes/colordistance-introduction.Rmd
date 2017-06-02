@@ -9,7 +9,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 * Introduction to `colordistance`
@@ -186,7 +186,7 @@ histList$Heliconius_01
 
 The first three columns are the coordinates of each cluster, and the last column represents the relative size of each cluster as a proportion. Note that when the bin has a size of 0, the cluster coordinates are given as the center of the bin, since there were no pixels in that bin to shift the coordinates away from the center. This format (3 cluster coordinate columns + size column) is necessary for using most of the color comparison functions in this package.
 
-Of the four metrics, [Earth mover's distance](https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/rubner-jcviu-00.pdf) (@Rubner2000) tends to perform best in my experience, although the metric you choose will depend on what you want to prioritize in your analysis. Briefly, the EMD between a pair of histograms is the minimum cost of transforming one distribution into another -- so in 3D color space, it's the amount of work required to move pixels from one image to match those of another image. The farther the pixels are apart in color space or the larger the size discrepancy between clusters, the higher the cost will be.
+Of the four metrics, Earth mover's distance (@Rubner2000) tends to perform best in my experience, although the metric you choose will depend on what you want to prioritize in your analysis. Briefly, the EMD between a pair of histograms is the minimum cost of transforming one distribution into another -- so in 3D color space, it's the amount of work required to move pixels from one image to match those of another image. The farther the pixels are apart in color space or the larger the size discrepancy between clusters, the higher the cost will be.
 
 Regardless what metric you're using, `getColorDistanceMatrix()` is the function for calculating a color distance matrix:
 
