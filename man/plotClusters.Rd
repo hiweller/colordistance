@@ -29,6 +29,8 @@ colors for each image in a list of cluster dataframes in order to visualize
 cluster output.
 }
 \examples{
+\dontrun{
+# Takes >10 seconds
 clusterList <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 lower=rep(0.8, 3), upper=rep(1, 3))
@@ -41,4 +43,5 @@ plotting=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 
 colordistance::plotClusters(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE,
 pausing=FALSE)
+}
 }

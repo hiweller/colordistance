@@ -61,6 +61,7 @@ Weighted pairs or color distance may be appropriate depending on the
 question, but generally give poorer results.
 }
 \examples{
+\dontrun{
 clusterList <- colordistance::getHistList(c(system.file("extdata",
 "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3),
@@ -87,4 +88,5 @@ colorWeight=0.1, sizeWeight=0.9, main="Weighted pairs")
 # Color distance only
 colordistance::getColorDistanceMatrix(clusterList, method="color.dist",
 ordering=TRUE, main="Color distance only")
+}
 }

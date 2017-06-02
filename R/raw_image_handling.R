@@ -19,7 +19,7 @@
 #' \dontrun{
 #' imDir <- colordistance::getImagePaths("some/nonexistent/directory")
 #' }
-#' imDir <- colordistance::getImagePaths("./")
+#' imDir <- colordistance::getImagePaths(getwd())
 #'
 #' @export
 getImagePaths <- function(path) {

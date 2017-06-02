@@ -33,6 +33,9 @@ Each cluster plotted is colored according to its actual color, and
 labeled according to the image from which it originated.
 }
 \examples{
+
+\dontrun{
+# Takes >10 seconds
 clusterList <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 lower=rep(0.8, 3), upper=rep(1, 3))
@@ -48,4 +51,5 @@ clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
 plotting=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 
 colordistance::plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE)
+}
 }
