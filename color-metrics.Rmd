@@ -83,7 +83,7 @@ The metrics above are listed in order of recommendation -- EMD will do the best 
 Unlike the binning methods, all of the distance metrics take approximately the same amount of time -- choosing one over the other shouldn't dramatically impact the calculation time for a distance matrix once the clusters have been calculated. For larger datasets (either many images or many bins), however, $\chi^{2}$ will almost invariably be fastest because it ignores spatial color information, performs fewer calculations, and those calculations it does perform are one-dimensional. There may therefore be cases where it does equally as well as EMD, but much faster. Otherwise, start off using EMD, and if it's not returning useful results, test out the other metrics.
 
 ## Cheatsheet
-```{r, fig.width=5, fig.height=4}
+```{r, fig.width=6, fig.height=5, results="hide"}
 
 # First get the cluster sets
 clusters <- colordistance::getHistList("Heliconius/", lower=rep(0.8, 3), upper=rep(1, 3))
