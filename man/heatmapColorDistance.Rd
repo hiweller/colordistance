@@ -34,6 +34,8 @@ similarity/dissimilarity in scores. Values are clustered by similarity using
 \code{\link[stats]{hclust}}.
 }
 \examples{
+\dontrun{
+# Takes a few seconds to run
 clusterList <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
 upper=rep(1, 3))
@@ -43,5 +45,6 @@ CDM <- colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
 colordistance::heatmapColorDistance(CDM, main="Heliconius color similarity")
 colordistance::heatmapColorDistance(clusterList,
 col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
+}
 
 }

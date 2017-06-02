@@ -14,7 +14,7 @@ There was 1 NOTE:
 
 	New submission
 
-  First submission of package results in ‘new submission’ NOTE.
+  First submission of package, so ‘new submission’ NOTE is unavoidable.
 
 
 ## Downstream dependencies

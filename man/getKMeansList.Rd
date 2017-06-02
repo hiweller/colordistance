@@ -58,7 +58,10 @@ coordinates of the clusters and the percentage of pixels in the image
 assigned to that cluster.
 }
 \examples{
+\dontrun{
+# Takes a few seconds to run
 kmeans_list <- colordistance::getKMeansList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), bins=3,
 lower=rep(0.8, 3), upper=rep(1, 3), plotting=TRUE)
+}
 }

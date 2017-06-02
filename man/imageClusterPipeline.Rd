@@ -139,10 +139,12 @@ plotting -> return/save distance matrix. Sort of railroads you, but good for
 testing different combinations of clustering methods and distance metrics.
 }
 \examples{
+\dontrun{
 colordistance::imageClusterPipeline(dir(system.file("extdata", "Heliconius/",
 package="colordistance"), full.names=TRUE), hsv=TRUE, lower=rep(0.8,
 3), upper=rep(1, 3), clusterMethod="hist", distanceMethod="emd",
 histBins=3, plotBins=TRUE, saveTree="example_tree.newick",
 saveDistanceMatrix="example_DM.csv")
+}
 
 }
