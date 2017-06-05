@@ -33,6 +33,8 @@ To install the development version of `colordistance` in R:
     ```
  3. You can access help documents by running `help(package="colordistance")` and clicking on the html files or, if you set `build_vignettes=TRUE` during install, run `vignette("colordistance-introduction")`.
 
+To install the release version on CRAN (https://CRAN.R-project.org/package=colordistance), just run `install.packages("colordistance")`.
+
 ## Documentation
 
 All of the `colordistance` vignettes that (optionally) come with the package are also available online at <https://hiweller.github.io/colordistance/>. I recommend reading at least the introduction before getting started.
