@@ -222,7 +222,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 
   # Convert to "dist" object for hclust method and plot heatmap
   clust <- as.dist(obj)
-  gplots::heatmap.2(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main, trace="none", density.info="none", key.xlab="Color distance score", key.title=NA, keysize=1, srtRow=30, srtCol=35, na.color="#969696", margins=margins, offsetRow=0, offsetCol=0, ...)
+  gplots::heatmap.2(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main, trace="none", density.info="none", key.xlab="Color distance score", key.title=NA, keysize=1, revC=T, srtCol=35, na.color="grey", margins=margins, offsetRow=0, offsetCol=0, ...)
 
 }
 
