@@ -219,6 +219,7 @@ plotImage <- function(img) {
 #'   colorspace?
 #' @param rev Logical. Should the plot be rotated to view pixels which may be
 #'   obscured when rev is \code{F}?
+#' @param ... Optional parameters passed to \code{\link[sscatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3d plot of pixels in either RGB or HSV colorspace, colored according
 #'   to their color in the image. Uses
@@ -233,7 +234,7 @@ plotImage <- function(img) {
 #'   important details.
 #'
 #' @export
-plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=FALSE, rev=FALSE) {
+plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25), hsv=FALSE, rev=FALSE, ...) {
 
   # If a filepath is passed, load the image from that filepath
   if (is.character(img)) {
@@ -270,6 +271,6 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24)
   if (rev) {
     pix <- -pix
   }
-  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=paste(tail(strsplit(img$path, split="/")[[1]], 1), n, "points"))
+  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=paste(tail(strsplit(img$path, split="/")[[1]], 1), n, "points"), ...)
 
 }

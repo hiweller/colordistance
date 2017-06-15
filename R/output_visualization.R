@@ -242,6 +242,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'   histogram?
 #' @param hsv Logical. Should provided color coordinates be interpreted as HSV?
 #'   If \code{FALSE}, RGB is assumed.
+#' @param ... Optional arguments passed to the \code{\link[graphics]{barplot}} function.
 #'
 #' @examples
 #' color_df <- as.data.frame(matrix(rep(seq(0, 1, length.out=3), 3), nrow=3,
@@ -251,7 +252,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'
 #' colordistance::plotHist(color_df)
 #' @export
-plotHist <- function(histogram, pausing=TRUE, hsv=FALSE) {
+plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, ...) {
   if (is.null(dim(histogram))) {
 
     for (i in 1:length(histogram)) {
@@ -262,7 +263,7 @@ plotHist <- function(histogram, pausing=TRUE, hsv=FALSE) {
         colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
       }
 
-      barplot(as.vector(clusters[ , 4]), col=colExp, main=names(histogram)[i])
+      barplot(as.vector(clusters[ , 4]), col=colExp, main=names(histogram)[i], ...)
 
       if (pausing & i < length(histogram)) {
         pause()
@@ -277,7 +278,7 @@ plotHist <- function(histogram, pausing=TRUE, hsv=FALSE) {
     } else {
       colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
     }
-    barplot(as.vector(clusters[ , 4]), col=colExp)
+    barplot(as.vector(clusters[ , 4]), col=colExp, ...)
   }
 }
 
