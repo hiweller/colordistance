@@ -252,7 +252,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'
 #' colordistance::plotHist(color_df)
 #' @export
-plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, ...) {
+plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, main="default", ...) {
   if (is.null(dim(histogram))) {
 
     for (i in 1:length(histogram)) {
@@ -263,7 +263,10 @@ plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, ...) {
         colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
       }
 
-      barplot(as.vector(clusters[ , 4]), col=colExp, main=names(histogram)[i], ...)
+      if (main=="default") {
+        main <- names(histogram)[i]
+        }
+      barplot(as.vector(clusters[ , 4]), col=colExp, main=main, ...)
 
       if (pausing & i < length(histogram)) {
         pause()
