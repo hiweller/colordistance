@@ -1,6 +1,14 @@
 # colordistance 0.8.0
 
-An R package with functions for quantifying the differences between colorful objects.
+An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
+  colors, bins pixels by color using either data-dependent or automatically
+  generated color bins, quantitatively measures color similarity among images
+  using one of several distance metrics for comparing pixel color clusters, and
+  clusters images by object color similarity. Originally written for use with
+  organism coloration (reef fish color diversity, butterfly mimicry, etc), but
+  easily applicable for any image set.
+
+April 19, 2018: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
 
 **Input**: Set(s) of JPEG or PNG images of colorful objects, optionally with backgrounds masked out.
 
@@ -16,7 +24,7 @@ An R package with functions for quantifying the differences between colorful obj
 
 ## Installation
 
-The development version of `colordistance` can be found at <https://github.com/hiweller/colordistance>. 
+The development version of `colordistance` can be found at <https://github.com/hiweller/colordistance>.
 
 To install the development version of `colordistance` in R:
 
@@ -27,13 +35,13 @@ To install the development version of `colordistance` in R:
     ```R
     # Without vignettes
     devtools::install_github("hiweller/colordistance")
-  
+
     # With vignettes
     devtools::install_github("hiweller/colordistance", build_vignettes=TRUE)
     ```
  3. You can access help documents by running `help(package="colordistance")` and clicking on the html files or, if you set `build_vignettes=TRUE` during install, run `vignette("colordistance-introduction")`.
 
-To install the release version on CRAN (https://CRAN.R-project.org/package=colordistance), just run `install.packages("colordistance")`.
+To install the stable release version on CRAN (https://CRAN.R-project.org/package=colordistance), just run `install.packages("colordistance")`.
 
 ## Documentation
 
