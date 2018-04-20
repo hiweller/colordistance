@@ -18,6 +18,9 @@ histogram?}
 \item{hsv}{Logical. Should provided color coordinates be interpreted as HSV?
 If \code{FALSE}, RGB is assumed.}
 
+\item{main}{Title for plot. If \code{"default"}, the name of the cluster
+histogram is used.}
+
 \item{...}{Optional arguments passed to the \code{\link[graphics]{barplot}} function.}
 }
 \description{
@@ -32,5 +35,5 @@ ncol=3))
 
 color_df$Pct <- c(0.2, 0.5, 0.3)
 
-colordistance::plotHist(color_df)
+colordistance::plotHist(color_df, main="Example plot")
 }
