@@ -32,5 +32,5 @@ ncol=3))
 
 color_df$Pct <- c(0.2, 0.5, 0.3)
 
-colordistance::plotHist(color_df, main="Example histogram with color-specified bars")
+colordistance::plotHist(color_df)
 }

@@ -65,10 +65,10 @@
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
 #' upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE, plotting=TRUE)
 #'
-#' # generate RGB histogram and specify y-axis range and label
+#' # generate RGB histogram
 #' colordistance::getImageHist(system.file("extdata",
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
-#' upper=rep(1, 3), lower=rep(0.8, 3), bins=2, ylim=c(0:1), ylab="Proportion of non-background pixels")
+#' upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 #' @export
 getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), as.vec=FALSE, normPix=FALSE, plotting=TRUE, hsv=FALSE, title="path", bounds=c(0, 1), ...) {
   # If filepath was provided, check to make sure it exists or throw an error

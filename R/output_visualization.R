@@ -250,7 +250,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'
 #' color_df$Pct <- c(0.2, 0.5, 0.3)
 #'
-#' colordistance::plotHist(color_df, main="Example histogram with color-specified bars")
+#' colordistance::plotHist(color_df)
 #' @export
 plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, main="default", ...) {
   if (is.null(dim(histogram))) {

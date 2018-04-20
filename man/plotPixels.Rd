@@ -33,9 +33,9 @@ needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 colorspace?}
 
 \item{rev}{Logical. Should the plot be rotated to view pixels which may be
-obscured when rev is \code{F}?}
+obscured when rev is \code{FALSE}?}
 
-\item{...}{Optional parameters passed to \code{\link[sscatterplot3d]{scatterplot3d}}.}
+\item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
 }
 \value{
 3D plot of pixels in either RGB or HSV colorspace, colored according

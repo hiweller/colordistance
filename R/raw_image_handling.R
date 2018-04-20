@@ -218,8 +218,8 @@ plotImage <- function(img) {
 #' @param hsv Logical. Should pixels be plotted in HSV instead of RGB
 #'   colorspace?
 #' @param rev Logical. Should the plot be rotated to view pixels which may be
-#'   obscured when rev is \code{F}?
-#' @param ... Optional parameters passed to \code{\link[sscatterplot3d]{scatterplot3d}}.
+#'   obscured when rev is \code{FALSE}?
+#' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3D plot of pixels in either RGB or HSV colorspace, colored according
 #'   to their color in the image. Uses

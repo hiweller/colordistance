@@ -90,8 +90,8 @@ colordistance::getImageHist(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
 upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE, plotting=TRUE)
 
-# generate RGB histogram and specify y-axis range and label
+# generate RGB histogram
 colordistance::getImageHist(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
-upper=rep(1, 3), lower=rep(0.8, 3), bins=2, ylim=c(0:1), ylab="Proportion of non-background pixels")
+upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 }
