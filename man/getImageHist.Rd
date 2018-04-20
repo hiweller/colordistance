@@ -7,7 +7,7 @@
 getImageHist(image, bins = 3, binAvg = TRUE, defaultClusters = NULL,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = FALSE,
   normPix = FALSE, plotting = TRUE, hsv = FALSE, title = "path",
-  bounds = c(0, 1))
+  bounds = c(0, 1), ...)
 }
 \arguments{
 \item{image}{Path to a valid image (PNG or JPG) or a \code{\link{loadImage}}
@@ -57,6 +57,8 @@ to the image name.}
 
 \item{bounds}{Upper and lower limits for the channels; R reads in images with
 intensities on a 0-1 scale, but 0-255 is common.}
+
+\item{...}{Optional arguments passed to the \code{\link[graphics]{barplot}} function.}
 }
 \value{
 A vector or dataframe (depending on whether \code{as.vec=T}) of bin
@@ -83,11 +85,13 @@ to that bin would be [1, 0, 0]. The latter option is obviously more
 informative, but takes longer (about 1.5-2x longer depending on the images).
 }
 \examples{
+# generate HSV histogram for a single image
 colordistance::getImageHist(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
-upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE)
+upper=rep(1, 3), lower=rep(0.8, 3), bins=c(8, 3, 3), hsv=TRUE, plotting=TRUE)
 
+# generate RGB histogram and specify y-axis range and label
 colordistance::getImageHist(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
-upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
+upper=rep(1, 3), lower=rep(0.8, 3), bins=2, ylim=c(0:1), ylab="Proportion of non-background pixels")
 }

@@ -23,7 +23,7 @@
 #' "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 #' lower=rep(0.8, 3), upper=rep(1, 3))
 #'
-#' colordistance::plotClusters(clusterList, p=c(1:3, 7:8))
+#' colordistance::plotClusters(clusterList, p=c(1:3, 7:8), pausing=FALSE)
 #'
 #' clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,
@@ -95,7 +95,7 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
 #'   of the cluster sets provided will be plotted together.
 #' @param title Optional title for the plot.
 #'
-#' @return A single \code{\link{plotly}{plot_ly}} plot of every cluster in a
+#' @return A single \code{\link[plotly]{plot_ly}} plot of every cluster in a
 #'   list of cluster sets. Each cluster is colored by cluster color,
 #'   proportional to cluster size, and labeled according to the image from which
 #'   it originated.
@@ -250,7 +250,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'
 #' color_df$Pct <- c(0.2, 0.5, 0.3)
 #'
-#' colordistance::plotHist(color_df)
+#' colordistance::plotHist(color_df, main="Example histogram with color-specified bars")
 #' @export
 plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, main="default", ...) {
   if (is.null(dim(histogram))) {

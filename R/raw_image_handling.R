@@ -221,7 +221,7 @@ plotImage <- function(img) {
 #'   obscured when rev is \code{F}?
 #' @param ... Optional parameters passed to \code{\link[sscatterplot3d]{scatterplot3d}}.
 #'
-#' @return 3d plot of pixels in either RGB or HSV colorspace, colored according
+#' @return 3D plot of pixels in either RGB or HSV colorspace, colored according
 #'   to their color in the image. Uses
 #'   \code{\link[scatterplot3d]{scatterplot3d}} function.
 #' @examples

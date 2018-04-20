@@ -4,7 +4,7 @@
 \alias{plotHist}
 \title{Color histogram of binned image}
 \usage{
-plotHist(histogram, pausing = TRUE, hsv = FALSE)
+plotHist(histogram, pausing = TRUE, hsv = FALSE, main = "default", ...)
 }
 \arguments{
 \item{histogram}{A single dataframe or a list of dataframes as returned by
@@ -17,6 +17,8 @@ histogram?}
 
 \item{hsv}{Logical. Should provided color coordinates be interpreted as HSV?
 If \code{FALSE}, RGB is assumed.}
+
+\item{...}{Optional arguments passed to the \code{\link[graphics]{barplot}} function.}
 }
 \description{
 Plots a color histogram from a dataframe as returned by
@@ -30,5 +32,5 @@ ncol=3))
 
 color_df$Pct <- c(0.2, 0.5, 0.3)
 
-colordistance::plotHist(color_df)
+colordistance::plotHist(color_df, main="Example histogram with color-specified bars")
 }

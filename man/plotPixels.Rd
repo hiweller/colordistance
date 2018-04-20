@@ -4,8 +4,8 @@
 \alias{plotPixels}
 \title{Plot pixels in colorspace}
 \usage{
-plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.24, 1,
-  0.24), hsv = FALSE, rev = FALSE)
+plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.25, 1,
+  0.25), hsv = FALSE, rev = FALSE, ...)
 }
 \arguments{
 \item{img}{Either a path to an image or a \code{\link{loadImage}} object.}
@@ -34,9 +34,11 @@ colorspace?}
 
 \item{rev}{Logical. Should the plot be rotated to view pixels which may be
 obscured when rev is \code{F}?}
+
+\item{...}{Optional parameters passed to \code{\link[sscatterplot3d]{scatterplot3d}}.}
 }
 \value{
-3d plot of pixels in either RGB or HSV colorspace, colored according
+3D plot of pixels in either RGB or HSV colorspace, colored according
   to their color in the image. Uses
   \code{\link[scatterplot3d]{scatterplot3d}} function.
 }

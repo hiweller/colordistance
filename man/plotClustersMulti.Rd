@@ -19,7 +19,7 @@ of the cluster sets provided will be plotted together.}
 \item{title}{Optional title for the plot.}
 }
 \value{
-A single \code{\link{plotly}{plot_ly}} plot of every cluster in a
+A single \code{\link[plotly]{plot_ly}} plot of every cluster in a
   list of cluster sets. Each cluster is colored by cluster color,
   proportional to cluster size, and labeled according to the image from which
   it originated.

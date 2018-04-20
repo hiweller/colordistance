@@ -35,7 +35,7 @@ clusterList <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 lower=rep(0.8, 3), upper=rep(1, 3))
 
-colordistance::plotClusters(clusterList, p=c(1:3, 7:8))
+colordistance::plotClusters(clusterList, p=c(1:3, 7:8), pausing=FALSE)
 
 clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,
