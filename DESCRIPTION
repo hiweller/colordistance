@@ -11,7 +11,7 @@ Description: Loads and displays images, selectively masks specified background
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d, plotly, gplots, abind, magrittr
-Depends: R (>= 3.3.2)
+Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
