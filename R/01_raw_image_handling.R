@@ -62,6 +62,14 @@ getImagePaths <- function(path) {
 #' @param hsv Logical. Should HSV pixel array also be calculated? Setting to
 #'   \code{FALSE} will shave some time off the analysis, but not much (a few
 #'   microseconds per image).
+#' @param CIELab Logical. Should CIEL*a*b color space pixels be calculated from
+#'   RGB? Requires specification of a reference white (see details).
+#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
+#'   array for conversion. If not numeric, all pixels are converted, but this
+#'   can be time-consuming, especially for large images. See details for speed.
+#' @param refWhite String; white reference for converting from RGB to CIEL*a*b
+#'   color space. Accepts any of the standard white references for
+#'   \code{\link{convertColor}} (see details).
 #'
 #' @return A list with original image ($original.rgb, 3D array), 2D matrix with
 #'   background pixels removed ($filtered.rgb.2d and $filtered.hsv.2d), and path
@@ -96,8 +104,25 @@ getImagePaths <- function(path) {
 #' pixel would be ignored because 0 <= 0.1 <= 0.2, 0.6 <= 0.9 <= 1, and 0 <= 0.2
 #' <= 0.2. But a pixel with the RGB channel values [0.3, 0.9, 0.2] would not be
 #' considered background because 0.3 >= 0.2.
+#'
+#' CIEL*a*b color space requires a reference 'white light' color (dimly and
+#' brightly lit photographs of the same object will have very different RGB
+#' palettes, but similar Lab palettes if appropriate white references are used).
+#' The idea here is that the apparent colors in an image depend not just on the
+#' "absolute" color of an object (whatever that means), but also on the
+#' available light in the scene. There are seven CIE standardized illuminants
+#' available in \code{colordistance} (A, B, C, E, and D50, D55, and D60), but
+#' the most common are: \itemize{ \item \code{"A"}: Standard incandescent
+#' lightbulb \item \code{"D65"}: Average daylight \item \code{"D50"}: Direct
+#' sunlight}
+#'
+#' Color conversions will be highly dependent on the reference white used, which
+#' is why no default is provided. Users should look into
+#' \href{https://en.wikipedia.org/wiki/Standard_illuminant}{standard
+#' illuminants} to choose an appropriate reference for a dataset.
+#'
 #' @export
-loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRUE) {
+loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRUE, CIELab=FALSE, sampleSize=100000, refWhite=NULL) {
 
   # Read in the file as either JPG or PNG (or, if neither, stop execution and return error message)
   if (!is.character(path)) {
@@ -133,14 +158,69 @@ loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRU
   if (length(idx)!=0) {
     pix <- pix[-idx, ] # remove background pixels
   }
+
+  # Initialize and name empty list depending on flagged color spaces
+  # At minimum, includes original image path, 3D RGB array, 2D RGB array with background pixels removed
+  # Optional flags: HSV pixels, CIELab pixels
+  endList <- vector("list", length=(3 + sum(c(hsv, CIELab))))
+  endList_names <- c("path", "original.rgb", "filtered.rgb.2d")
+  if (hsv) {
+    endList_names <- c(endList_names, "filtered.hsv.2d")
+  }
+
+  if (CIELab & !is.null(refWhite)) {
+    endList_names <- c(endList_names, "filtered.lab.2d")
+  }
+
+  names(endList) <- endList_names
+
+  endList[1:3] <- list(path, img, pix)
+
   # Return a list with the path to the image, the original RGB image (3d array), and the reshaped matrix with background pixels removed (for clustering analysis)
   if (hsv) {
-    pixHSV <- t(rgb2hsv(t(pix), maxColorValue = 1))
-    endList <- list(path, img, pix, pixHSV)
-    names(endList) <- c("path", "original.rgb", "filtered.rgb.2d", "filtered.hsv.2d")
-  } else {
-    endList <- list(path, img, pix)
-    names(endList) <- c("path", "original.rgb", "filtered.rgb.2d")
+    endList$filtered.hsv.2d <- t(rgb2hsv(t(pix), maxColorValue = 1))
+  }
+
+  if (CIELab) {
+    refWhites <- c("A", "B", "C", "E", "D50", "D55", "D65")
+
+    # If user did not choose a reference white, skip conversion
+    if (is.null(refWhite)) {
+
+      warning("CIELab reference white not specified; skipping CIELab color space conversion")
+
+    } else if (!(refWhite %in% refWhites)) {
+
+      warning("Reference white is not a standard CIE illuminant (see function documentation); skipping CIELab color space conversion")
+
+    } else {
+
+      # If an appropriate reference white was provided, convert
+      # Convert sampleSize of pixels unless sampleSize > pixel count
+      # In which case, convert all pixels
+      # And STORE REFERENCE WHITE! This must always accompany any RGB <-> Lab
+      # conversion!
+      if (is.numeric(sampleSize)) {
+        if (sampleSize < nrow(pix)) {
+          message(paste("Converting", sampleSize, "randomly selected pixels to CIELab color space \n Reference white:", refWhite))
+          endList$filtered.lab.2d <- convertColor(pix[sample(nrow(pix), sampleSize), ], from="sRGB", to="Lab", from.ref.white=refWhite)
+          endList$ref.white <- refWhite
+
+        } else if (sampleSize >= nrow(pix)) {
+
+          message(paste("Subset of pixels for CIELab conversion greater than number of non-background pixels in image \n Converting all non-background pixels to CIELab color space \n Reference white:", refWhite))
+          endList$filtered.lab.2d <- convertColor(pix, from="sRGB", to="Lab", from.ref.white=refWhite)
+          endList$ref.white <- refWhite
+
+        }
+      } else {
+
+        message(paste("Converting all non-background pixels to CIELab color space \n Reference white:", refWhite, "reference white \n Estimated time: ", (5.054e-05*nrow(pix)), "seconds"))
+        endList$filtered.lab.2d <- convertColor(pix, from="sRGB", to="Lab", from.ref.white=refWhite)
+        endList$ref.white <- refWhite
+
+      }
+    }
   }
 
   return(endList)
@@ -192,7 +272,7 @@ plotImage <- function(img) {
   }
 }
 
-#' Plot pixels in colorspace
+#' Plot pixels in color space
 #'
 #' Plots non-background pixels according to their color coordinates, and colors
 #' them according to their RGB or HSV values. Dimensions are either RGB or HSV
@@ -216,12 +296,12 @@ plotImage <- function(img) {
 #'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 #'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param hsv Logical. Should pixels be plotted in HSV instead of RGB
-#'   colorspace?
+#'   color space?
 #' @param rev Logical. Should the plot be rotated to view pixels which may be
 #'   obscured when rev is \code{FALSE}?
 #' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
-#' @return 3D plot of pixels in either RGB or HSV colorspace, colored according
+#' @return 3D plot of pixels in either RGB or HSV color space, colored according
 #'   to their color in the image. Uses
 #'   \code{\link[scatterplot3d]{scatterplot3d}} function.
 #' @examples

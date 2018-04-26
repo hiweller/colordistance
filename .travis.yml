@@ -1,2 +1,5 @@
 language: r
 cache: packages
+notifications:
+    email:
+        hannahiweller@gmail.com
