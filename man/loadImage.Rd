@@ -38,7 +38,7 @@ can be time-consuming, especially for large images. See details for speed.}
 
 \item{refWhite}{String; white reference for converting from RGB to CIEL*a*b
 color space. Accepts any of the standard white references for
-\code{\link{convertColor}} (see details).}
+\code{\link[grDevices]{convertColor}} (see details).}
 }
 \value{
 A list with original image ($original.rgb, 3D array), 2D matrix with

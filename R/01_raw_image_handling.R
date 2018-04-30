@@ -69,7 +69,7 @@ getImagePaths <- function(path) {
 #'   can be time-consuming, especially for large images. See details for speed.
 #' @param refWhite String; white reference for converting from RGB to CIEL*a*b
 #'   color space. Accepts any of the standard white references for
-#'   \code{\link{convertColor}} (see details).
+#'   \code{\link[grDevices]{convertColor}} (see details).
 #'
 #' @return A list with original image ($original.rgb, 3D array), 2D matrix with
 #'   background pixels removed ($filtered.rgb.2d and $filtered.hsv.2d), and path
@@ -194,34 +194,12 @@ loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRU
       warning("Reference white is not a standard CIE illuminant (see function documentation); skipping CIELab color space conversion")
 
     } else {
-
-      # If an appropriate reference white was provided, convert
-      # Convert sampleSize of pixels unless sampleSize > pixel count
-      # In which case, convert all pixels
-      # And STORE REFERENCE WHITE! This must always accompany any RGB <-> Lab
-      # conversion!
-      if (is.numeric(sampleSize)) {
-        if (sampleSize < nrow(pix)) {
-          message(paste("Converting", sampleSize, "randomly selected pixels to CIELab color space \n Reference white:", refWhite))
-          endList$filtered.lab.2d <- convertColor(pix[sample(nrow(pix), sampleSize), ], from="sRGB", to="Lab", from.ref.white=refWhite)
-          endList$ref.white <- refWhite
-
-        } else if (sampleSize >= nrow(pix)) {
-
-          message(paste("Subset of pixels for CIELab conversion greater than number of non-background pixels in image \n Converting all non-background pixels to CIELab color space \n Reference white:", refWhite))
-          endList$filtered.lab.2d <- convertColor(pix, from="sRGB", to="Lab", from.ref.white=refWhite)
+      
+      endList$filtered.lab.2d <- colordistance::convertColorSpace(pix, from="sRGB", to="Lab", to.ref.white=refWhite)
           endList$ref.white <- refWhite
 
         }
-      } else {
-
-        message(paste("Converting all non-background pixels to CIELab color space \n Reference white:", refWhite, "reference white \n Estimated time: ", (5.054e-05*nrow(pix)), "seconds"))
-        endList$filtered.lab.2d <- convertColor(pix, from="sRGB", to="Lab", from.ref.white=refWhite)
-        endList$ref.white <- refWhite
-
-      }
-    }
-  }
+      } 
 
   return(endList)
 
