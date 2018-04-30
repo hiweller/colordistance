@@ -39,7 +39,7 @@
 #' img <- colordistance::loadImage(system.file("extdata",
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 #' img_hist <- colordistance::getImageHist(img, bins=2, plotting=FALSE)
-#' lab_clusters <- colordistance::convertColorSpace(img_hist, to.ref.white="D55")
+#' lab_clusters <- convertColorSpace(img_hist, to.ref.white="D55")
 #' 
 #' @details Color spaces are all passed to
 #'   \code{\link[grDevices]{convertColor}}, and can be any of: \code{"XYZ"},
@@ -73,6 +73,7 @@
 #' Macbook with 8 GB of RAM. Time scales about linearly with number of rows
 #' converted.
 #' 
+#' @export
 convertColorSpace <- function(colorCoordinateMatrix, from="sRGB", to="Lab", sampleSize=100000, from.ref.white, to.ref.white) {
   
   # Check whether colorCoordinateMatrix is of an appropriate type for color

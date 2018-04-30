@@ -85,6 +85,6 @@ from="sRGB", to="XYZ", sampleSize=5000)
 img <- colordistance::loadImage(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 img_hist <- colordistance::getImageHist(img, bins=2, plotting=FALSE)
-lab_clusters <- colordistance::convertColorSpace(img_hist, to.ref.white="D55")
+lab_clusters <- convertColorSpace(img_hist, to.ref.white="D55")
 
 }

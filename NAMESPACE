@@ -2,6 +2,7 @@
 
 export(combineClusters)
 export(combineList)
+export(convertColorSpace)
 export(exportTree)
 export(extractClusters)
 export(getColorDistanceMatrix)
