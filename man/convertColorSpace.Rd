@@ -13,14 +13,14 @@ and channels as columns. If a color histogram (e.g. as returned by
 \code{\link{getImageHist}}) is passed, the 'Pct' column is ignored.}
 
 \item{from, to}{Input and output color spaces, passed to
-\code{\link[grDevices]}{convertColor}. See details.}
+\code{\link[grDevices]{convertColor}}. See details.}
 
 \item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel
 array for conversion. If not numeric or larger than number of colors
 provided (i.e. cluster matrix), all colors are converted. See details.}
 
 \item{from.ref.white, to.ref.white}{Reference whites passed to
-\code{\link[grDevices]}{convertColor}. Unlike \code{convertColor}, no
+\code{\link[grDevices]{convertColor}}. Unlike \code{convertColor}, no
 default is provided. See details for explanation of different reference
 whites.}
 }
@@ -61,10 +61,10 @@ illuminants} to choose an appropriate reference for a dataset.
 
 The conversion from RGB to a standardized color space (XYZ, Lab, or Luv) is
 approximate, non-linear, and relatively time-consuming. Converting a large
-number of pixels can be very time consuming, so \code{convertColorSpace} will
-randomly sample a specified number of rows. The default sample size, 100,000
+number of pixels can be computationally expensive, so \code{convertColorSpace} will
+randomly sample a specified number of rows to reduce the time. The default sample size, 100,000
 rows, takes about 5 seconds convert from sRGB to Lab space on an early 2015
-Macbook with 8 GB of RAM, and time scales linearly with number of rows
+Macbook with 8 GB of RAM. Time scales about linearly with number of rows
 converted.
 }
 \examples{

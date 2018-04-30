@@ -8,12 +8,12 @@
 #'   and channels as columns. If a color histogram (e.g. as returned by
 #'   \code{\link{getImageHist}}) is passed, the 'Pct' column is ignored.
 #' @param from,to Input and output color spaces, passed to
-#'   \code{\link[grDevices]}{convertColor}. See details.
+#'   \code{\link[grDevices]{convertColor}}. See details.
 #' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
 #'   array for conversion. If not numeric or larger than number of colors
 #'   provided (i.e. cluster matrix), all colors are converted. See details.
 #' @param from.ref.white,to.ref.white Reference whites passed to
-#'   \code{\link[grDevices]}{convertColor}. Unlike \code{convertColor}, no
+#'   \code{\link[grDevices]{convertColor}}. Unlike \code{convertColor}, no
 #'   default is provided. See details for explanation of different reference
 #'   whites.
 #' 
