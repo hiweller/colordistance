@@ -1,4 +1,4 @@
-# colordistance 0.8.0
+# colordistance 1.0.0
 
 An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
   colors, bins pixels by color using either data-dependent or automatically
