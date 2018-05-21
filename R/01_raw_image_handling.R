@@ -194,12 +194,12 @@ loadImage <- function(path, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), hsv=TRU
       warning("Reference white is not a standard CIE illuminant (see function documentation); skipping CIELab color space conversion")
 
     } else {
-      
+
       endList$filtered.lab.2d <- colordistance::convertColorSpace(pix, from="sRGB", to="Lab", to.ref.white=refWhite)
           endList$ref.white <- refWhite
 
         }
-      } 
+      }
 
   return(endList)
 
@@ -292,7 +292,7 @@ plotImage <- function(img) {
 #'   important details.
 #'
 #' @export
-plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25), hsv=FALSE, rev=FALSE, ...) {
+plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25), hsv=FALSE, rev=FALSE, pch=20, main="default", ...) {
 
   # If a filepath is passed, load the image from that filepath
   if (is.character(img)) {
@@ -303,6 +303,10 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
   } else if (!is.list(img)) {
     stop("'img' must be either a valid filepath to an image or a loadImage object")
     }
+
+  if (main=="default") {
+    main <-  paste(basename(img$path)
+  }
 
   # Set pixels and generate color vector
   if (hsv) {
@@ -329,6 +333,6 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
   if (rev) {
     pix <- -pix
   }
-  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=paste(tail(strsplit(img$path, split="/")[[1]], 1), n, "points"), ...)
+  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=main, n, "points"), ...)
 
 }
