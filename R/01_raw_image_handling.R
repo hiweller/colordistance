@@ -277,6 +277,8 @@ plotImage <- function(img) {
 #'   color space?
 #' @param rev Logical. Should the plot be rotated to view pixels which may be
 #'   obscured when rev is \code{FALSE}?
+#' @param pch Passed to \code{\link[scatterplot3d]{scatterplot3d}}.
+#' @param main Plot title. If left as "default", image name is used.
 #' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3D plot of pixels in either RGB or HSV color space, colored according
@@ -303,11 +305,11 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
   } else if (!is.list(img)) {
     stop("'img' must be either a valid filepath to an image or a loadImage object")
   }
-  
+
   if (main=="default") {
     main <- paste(basename(img$path), ",", n, "points")
   }
-  
+
   # Set pixels and generate color vector
   if (hsv) {
     pix <- img$filtered.hsv.2d
