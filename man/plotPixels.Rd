@@ -5,7 +5,7 @@
 \title{Plot pixels in color space}
 \usage{
 plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.25, 1,
-  0.25), hsv = FALSE, rev = FALSE, ...)
+  0.25), hsv = FALSE, rev = FALSE, pch = 20, main = "default", ...)
 }
 \arguments{
 \item{img}{Either a path to an image or a \code{\link{loadImage}} object.}
@@ -34,6 +34,10 @@ color space?}
 
 \item{rev}{Logical. Should the plot be rotated to view pixels which may be
 obscured when rev is \code{FALSE}?}
+
+\item{pch}{Passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
+
+\item{main}{Plot title. If left as "default", image name is used.}
 
 \item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
 }
