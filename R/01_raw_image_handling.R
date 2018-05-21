@@ -305,7 +305,7 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
   }
   
   if (main=="default") {
-    main <- basename(img$path)
+    main <- paste(basename(img$path), ",", n, "points")
   }
   
   # Set pixels and generate color vector
@@ -333,6 +333,6 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
   if (rev) {
     pix <- -pix
   }
-  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=paste(main, ",", n, "points"), ...)
+  scatterplot3d::scatterplot3d(pix, pch=20, color=colExp, xlab=xlab, ylab=ylab, zlab=zlab, main=main, ...)
 
 }
