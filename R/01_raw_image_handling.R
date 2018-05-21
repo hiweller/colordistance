@@ -304,10 +304,9 @@ plotPixels <- function(img, n=10000, lower=c(0, 0.55, 0), upper=c(0.25, 1, 0.25)
     stop("'img' must be either a valid filepath to an image or a loadImage object")
     }
 
-  if (main=="default") {
-    main <- paste(basename(img$path)
+    if (main=="default") {
+        main <- basename(img$path)
     }
-
   # Set pixels and generate color vector
   if (hsv) {
     pix <- img$filtered.hsv.2d
