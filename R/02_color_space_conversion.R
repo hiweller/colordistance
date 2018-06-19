@@ -9,7 +9,7 @@
 #'   \code{\link{getImageHist}}) is passed, the 'Pct' column is ignored.
 #' @param from,to Input and output color spaces, passed to
 #'   \code{\link[grDevices]{convertColor}}. See details.
-#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
+#' @param sample.size Number of pixels to be randomly sampled from filtered pixel
 #'   array for conversion. If not numeric or larger than number of colors
 #'   provided (i.e. cluster matrix), all colors are converted. See details.
 #' @param from.ref.white,to.ref.white Reference whites passed to
@@ -33,13 +33,13 @@
 #' img <- colordistance::loadImage(system.file("extdata",
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 #' lab_pixels <- colordistance::convertColorSpace(img$filtered.rgb.2d,
-#' from="sRGB", to="XYZ", sampleSize=5000)
+#' from="sRGB", to="XYZ", sample.size=5000)
 #' 
 #' # Convert clusters
 #' img <- colordistance::loadImage(system.file("extdata",
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 #' img_hist <- colordistance::getImageHist(img, bins=2, plotting=FALSE)
-#' lab_clusters <- convertColorSpace(img_hist, to.ref.white="D55")
+#' lab_clusters <- colordistance::convertColorSpace(img_hist, to.ref.white="D55")
 #' 
 #' @details Color spaces are all passed to
 #'   \code{\link[grDevices]{convertColor}}, and can be any of: \code{"XYZ"},
@@ -56,7 +56,7 @@
 #'   colors in an image depend not just on the "absolute" color of an object,
 #'   but also on the available light in the scene. There are seven CIE
 #'   standardized illuminants available in \code{colordistance} (A, B, C, E, and
-#'   D50, D55, and D60), but the most common are: \itemize{ \item \code{"A"}:
+#'   D50, D55, and D65), but the most common are: \itemize{ \item \code{"A"}:
 #'   Standard incandescent lightbulb \item \code{"D65"}: Average daylight \item
 #'   \code{"D50"}: Direct sunlight}
 #'   
@@ -74,7 +74,8 @@
 #' converted.
 #' 
 #' @export
-convertColorSpace <- function(colorCoordinateMatrix, from="sRGB", to="Lab", sampleSize=100000, from.ref.white, to.ref.white) {
+#' 
+convertColorSpace <- function(colorCoordinateMatrix, from="sRGB", to="Lab", sample.size=100000, from.ref.white, to.ref.white) {
   
   # Check whether colorCoordinateMatrix is of an appropriate type for color
   # conversion (rows as colors)
@@ -103,58 +104,83 @@ convertColorSpace <- function(colorCoordinateMatrix, from="sRGB", to="Lab", samp
   
   refWhites <- c("A", "B", "C", "E", "D50", "D55", "D65")
   
+  # Explicitly state which reference whites are NULL for printing to the
+  # console
+  if (missing(from.ref.white)) {
+    from.ref.white <- NULL
+  }
+  
+  if (missing(to.ref.white)) {
+    to.ref.white <- NULL
+  }
+  
   # If either of the color spaces requires a reference white, make sure they
   # were actually specified
   if (sum(c(from, to) %in% c("Lab", "Luv")) > 0) {
     
-    if (missing(from.ref.white) & missing(to.ref.white)) {
+    if (is.null(from.ref.white) & is.null(to.ref.white)) {
+      
       stop("'Lab' or 'Luv' color space conversions require specification of a reference white")
+      
       # If either were specified but not a standard reference white, stop function
-    } else if (!missing(from.ref.white)) {
+    } else if (!is.null(from.ref.white)) {
+      
       if (!(from.ref.white %in% refWhites)) {
+        
         stop(paste(from.ref.white, "is not a standard CIE illuminant (see function documentation)"))
-      } else if (!missing(to.ref.white)) {
+        
+      } else if (!is.null(to.ref.white)) {
+        
         if(!(to.ref.white %in% refWhites)) {
+          
           stop(paste(to.ref.white, "is not a standard CIE illuminant (see function documentation)"))
+          
         }
       }
     }
-  }
+    
+    message(paste("From reference white:", from.ref.white, 
+                  "\nTo reference white:", to.ref.white))
+    
+    }
   
   # If reference whites are appropriate (or not required), proceed
-  # Convert sampleSize of colors unless sampleSize > pixel count
+  # Convert sample.size of colors unless sample.size > pixel count
   # In which case, convert all colors
-  if (is.numeric(sampleSize)) {
+  if (is.numeric(sample.size)) {
     
-    # Explicitly state which reference whites are NULL for printing to the
-    # console
-    if (missing(from.ref.white)) {
-      from.ref.white <- NULL
-    }
-    
-    if (missing(to.ref.white)) {
-      to.ref.white <- NULL
-    }
-    
-    if (sampleSize < nrow(colorCoordinateMatrix)) {
-      message(paste("Converting", sampleSize, "randomly selected pixels from", from, "color space to", to, "color space \n From reference white:", from.ref.white, "\n To reference white:", to.ref.white))
+    if (sample.size <= nrow(colorCoordinateMatrix)) {
+      message(paste("Converting", sample.size, 
+                    "randomly selected pixel(s) from", 
+                    from, "color space to", to, "color space"))
+      
+      ccm <- colorCoordinateMatrix[sample(nrow(colorCoordinateMatrix), sample.size), ]
+      # Convert colors, using specified parameters
+      outputColorMatrix <- convertColor(ccm, from = from, to = to,
+                                        from.ref.white = from.ref.white, 
+                                        to.ref.white = to.ref.white)
+      outputColorMatrix <- as.data.frame(outputColorMatrix)
+    } else if (sample.size > nrow(colorCoordinateMatrix)) {
+      
+      message(paste("Subset of pixels for color conversion greater than number of colors provided \nConverting all rows from", from, "color space to", to, "color space"))
       
       # Convert colors, using specified parameters
-      outputColorMatrix <- as.data.frame(convertColor(colorCoordinateMatrix[sample(nrow(colorCoordinateMatrix), sampleSize), ], from=from, to=to, from.ref.white=from.ref.white, to.ref.white=to.ref.white))
-      
-    } else if (sampleSize >= nrow(colorCoordinateMatrix)) {
-      
-      message(paste("Subset of pixels for color conversion greater than number of colors provided \n Converting all rows from", from, "color space to", to, "color space \n From reference white:", from.ref.white, "\n To reference white:", to.ref.white))
-      
-      # Convert colors, using specified parameters
-      outputColorMatrix <- as.data.frame(convertColor(colorCoordinateMatrix, from=from, to=to, from.ref.white=from.ref.white, to.ref.white=to.ref.white))
+      outputColorMatrix <- as.data.frame(convertColor(colorCoordinateMatrix,
+                           from=from, to=to, from.ref.white=from.ref.white, 
+                           to.ref.white=to.ref.white))
       
     }
   } else {
     
-    message(paste("Converting all rows from", from, "color space to", to, "color space \n From reference white:", from.ref.white, "\n To reference white:", to.ref.white, "\n Estimated time: ", (5.054e-05*nrow(colorCoordinateMatrix)), "seconds"))
+    message(paste("Converting all rows from", from, 
+                  "color space to", to, "color space \n Estimated time: ",
+                  round( (5.054e-05 * nrow(colorCoordinateMatrix) ), 0), 
+                  "seconds"))
     
-    outputColorMatrix <- as.data.frame(convertColor(colorCoordinateMatrix, from=from, to=to, from.ref.white=from.ref.white, to.ref.white=to.ref.white))
+    outputColorMatrix <- as.data.frame(convertColor(colorCoordinateMatrix,
+                                       from = from, to = to, 
+                                       from.ref.white = from.ref.white, 
+                                       to.ref.white = to.ref.white))
   }
   
   # Keep Pct column if it existed in the first place

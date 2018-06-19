@@ -5,7 +5,8 @@
 \title{Plot pixels in color space}
 \usage{
 plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.25, 1,
-  0.25), hsv = FALSE, rev = FALSE, pch = 20, main = "default", ...)
+  0.25), color.space = "rgb", ref.white = NULL, rev = FALSE, pch = 20,
+  main = "default", ...)
 }
 \arguments{
 \item{img}{Either a path to an image or a \code{\link{loadImage}} object.}
@@ -29,9 +30,6 @@ lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
-\item{hsv}{Logical. Should pixels be plotted in HSV instead of RGB
-color space?}
-
 \item{rev}{Logical. Should the plot be rotated to view pixels which may be
 obscured when rev is \code{FALSE}?}
 
@@ -40,6 +38,9 @@ obscured when rev is \code{FALSE}?}
 \item{main}{Plot title. If left as "default", image name is used.}
 
 \item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
+
+\item{hsv}{Logical. Should pixels be plotted in HSV instead of RGB
+color space?}
 }
 \value{
 3D plot of pixels in either RGB or HSV color space, colored according

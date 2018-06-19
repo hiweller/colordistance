@@ -5,7 +5,7 @@
 \title{Import image and generate filtered 2D pixel array(s)}
 \usage{
 loadImage(path, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24),
-  hsv = TRUE, CIELab = FALSE, sampleSize = 1e+05, refWhite = NULL)
+  hsv = TRUE, CIELab = FALSE, sample.size = 1e+05, ref.white = NULL)
 }
 \arguments{
 \item{path}{Path to image (a string).}
@@ -32,11 +32,11 @@ microseconds per image).}
 \item{CIELab}{Logical. Should CIEL*a*b color space pixels be calculated from
 RGB? Requires specification of a reference white (see details).}
 
-\item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel
+\item{sample.size}{Number of pixels to be randomly sampled from filtered pixel
 array for conversion. If not numeric, all pixels are converted, but this
 can be time-consuming, especially for large images. See details for speed.}
 
-\item{refWhite}{String; white reference for converting from RGB to CIEL*a*b
+\item{ref.white}{String; white reference for converting from RGB to CIEL*a*b
 color space. Accepts any of the standard white references for
 \code{\link[grDevices]{convertColor}} (see details).}
 }

@@ -5,7 +5,7 @@
 \title{Convert between color spaces}
 \usage{
 convertColorSpace(colorCoordinateMatrix, from = "sRGB", to = "Lab",
-  sampleSize = 1e+05, from.ref.white, to.ref.white)
+  sample.size = 1e+05, from.ref.white, to.ref.white)
 }
 \arguments{
 \item{colorCoordinateMatrix}{A color coordinate matrix with rows as colors
@@ -15,7 +15,7 @@ and channels as columns. If a color histogram (e.g. as returned by
 \item{from, to}{Input and output color spaces, passed to
 \code{\link[grDevices]{convertColor}}. See details.}
 
-\item{sampleSize}{Number of pixels to be randomly sampled from filtered pixel
+\item{sample.size}{Number of pixels to be randomly sampled from filtered pixel
 array for conversion. If not numeric or larger than number of colors
 provided (i.e. cluster matrix), all colors are converted. See details.}
 
@@ -50,7 +50,7 @@ Color spaces are all passed to
   colors in an image depend not just on the "absolute" color of an object,
   but also on the available light in the scene. There are seven CIE
   standardized illuminants available in \code{colordistance} (A, B, C, E, and
-  D50, D55, and D60), but the most common are: \itemize{ \item \code{"A"}:
+  D50, D55, and D65), but the most common are: \itemize{ \item \code{"A"}:
   Standard incandescent lightbulb \item \code{"D65"}: Average daylight \item
   \code{"D50"}: Direct sunlight}
   
@@ -79,12 +79,12 @@ rgb_again <- colordistance::convertColorSpace(lab_color,
 img <- colordistance::loadImage(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 lab_pixels <- colordistance::convertColorSpace(img$filtered.rgb.2d,
-from="sRGB", to="XYZ", sampleSize=5000)
+from="sRGB", to="XYZ", sample.size=5000)
 
 # Convert clusters
 img <- colordistance::loadImage(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"))
 img_hist <- colordistance::getImageHist(img, bins=2, plotting=FALSE)
-lab_clusters <- convertColorSpace(img_hist, to.ref.white="D55")
+lab_clusters <- colordistance::convertColorSpace(img_hist, to.ref.white="D55")
 
 }
