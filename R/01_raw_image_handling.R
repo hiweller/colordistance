@@ -321,6 +321,9 @@ plotImage <- function(img) {
 #' @param main Plot title. If left as "default", image name is used.
 #' @param from Original color space of image if plotting in CIE Lab space,
 #'   probably either "sRGB" or "Apple RGB", depending on your computer.
+#' @param xlim,ylim,zlim Ranges for the X, Y, and Z axes. If "default", the
+#'   widest ranges for each axis according to the specified color space (0-1 for
+#'   RGB and HSV, 0-100 for L of Lab, -128-127 for a and b of Lab) are used.
 #' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3D plot of pixels in either RGB or HSV color space, colored according
@@ -344,7 +347,8 @@ plotImage <- function(img) {
 plotPixels <- function(img, n = 10000, lower = c(0, 0.55, 0), 
                        upper = c(0.25, 1, 0.25), color.space = "rgb", 
                        ref.white = NULL, pch = 20, main = "default", 
-                       from = "sRGB", ...) {
+                       from = "sRGB", xlim = "default",
+                       ylim = "default", zlim = "default", ...) {
 
   # If a filepath is passed, load the image from that filepath
   if (is.character(img)) {
@@ -423,9 +427,22 @@ plotPixels <- function(img, n = 10000, lower = c(0, 0.55, 0),
     }
   }
   
+  if (xlim == "default") {
+    xlim <- xb
+  }
+  
+  if (ylim == "default") {
+    ylim <- yb
+  }
+  
+  if (zlim == "default") {
+    zlim <- zb
+  }
+  
   # Plot 3d scatterplot
   scatterplot3d::scatterplot3d(pix, pch = 20, color = colExp,
                                xlab = xlab, ylab = ylab, zlab = zlab,
-                               main = main, xlim = xb, ylim = yb, zlim = zb,
+                               main = main, 
+                               xlim = xlim, ylim = ylim, zlim = zlim,
                                ...)
 }
