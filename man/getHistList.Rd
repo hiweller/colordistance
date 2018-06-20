@@ -4,9 +4,9 @@
 \alias{getHistList}
 \title{Generate a list of cluster sets for multiple images}
 \usage{
-getHistList(images, bins = 3, binAvg = TRUE, lower = c(0, 0.55, 0),
-  upper = c(0.24, 1, 0.24), normPix = FALSE, plotting = FALSE,
-  pausing = TRUE, hsv = FALSE, title = "path", imgType = FALSE,
+getHistList(images, bins = 3, bin.avg = TRUE, lower = c(0, 0.55, 0),
+  upper = c(0.24, 1, 0.24), norm.pix = FALSE, plotting = FALSE,
+  pausing = TRUE, hsv = FALSE, title = "path", img.type = FALSE,
   bounds = c(0, 1))
 }
 \arguments{
@@ -16,8 +16,8 @@ getHistList(images, bins = 3, binAvg = TRUE, lower = c(0, 0.55, 0),
 for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
 result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.}
 
-\item{binAvg}{Logical. Should the returned color clusters be the average of
-the pixels in that bin (binAvg=\code{TRUE}) or the center of the bin
+\item{bin.avg}{Logical. Should the returned color clusters be the average of
+the pixels in that bin (bin.avg=\code{TRUE}) or the center of the bin
 ({FALSE})? If a bin is empty, the center of the bin is returned as the
 cluster color regardless.}
 
@@ -36,7 +36,7 @@ lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
-\item{normPix}{Logical. Should RGB or HSV cluster values be normalized using
+\item{norm.pix}{Logical. Should RGB or HSV cluster values be normalized using
 \code{\link{normalizeRGB}}?}
 
 \item{plotting}{Logical. Should the histogram generated for each image be
@@ -51,7 +51,7 @@ Useful for data/histogram inspection.}
 \item{title}{String for what the title the plots if plotting is on; defaults
 to the image name.}
 
-\item{imgType}{Logical. Should the file extension for the images be retained
+\item{img.type}{Logical. Should the file extension for the images be retained
 when naming the output list elements? If \code{FALSE}, just the image name
 is used (so "Heliconius_01.png" becomes "Heliconius_01").}
 
@@ -80,17 +80,17 @@ just get a very large yellow cluster and empty non-yellow bins.
 \dontrun{
 # Takes >10 seconds if you run all examples
 clusterList <- colordistance::getHistList(system.file("extdata",
-"Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
-lower=rep(0.8, 3))
+"Heliconius/Heliconius_B", package="colordistance"), upper = rep(1, 3),
+lower = rep(0.8, 3))
 
 clusterList <- colordistance::getHistList(c(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), system.file("extdata",
-"Heliconius/Heliconius_A", package="colordistance")), pausing=FALSE,
-upper=rep(1, 3), lower=rep(0.8, 3))
+"Heliconius/Heliconius_A", package="colordistance")), pausing = FALSE,
+upper = rep(1, 3), lower = rep(0.8, 3))
 
 clusterList <- colordistance::getHistList(system.file("extdata",
-"Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
-upper=rep(1, 3), lower=rep(0.8, 3))
+"Heliconius/Heliconius_B", package = "colordistance"), plotting = TRUE,
+upper = rep(1, 3), lower = rep(0.8, 3))
 }
 
 }

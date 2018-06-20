@@ -8,8 +8,8 @@ getHistColors(bins, hsv = FALSE)
 }
 \arguments{
 \item{bins}{Number of bins for each channel OR a vector of length 3 with bins
-for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
-result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.}
+for each channel. Bins = 3 will result in 3^3 = 27 bins; bins = c(2, 2, 3) will
+result in 2 * 2 * 3 = 12 bins (2 red, 2 green, 3 blue), etc.}
 
 \item{hsv}{Logical. Should HSV be used instead of RGB?}
 }
@@ -21,6 +21,6 @@ Gets a vector of colors for plotting histograms from
 \code{\link{getImageHist}} in helpful ways.
 }
 \examples{
-colordistance:::getHistColors(bins=3)
-colordistance:::getHistColors(bins=c(8, 3, 3), hsv=TRUE)
+colordistance:::getHistColors(bins = 3)
+colordistance:::getHistColors(bins = c(8, 3, 3), hsv = TRUE)
 }

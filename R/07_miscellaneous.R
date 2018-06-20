@@ -12,7 +12,7 @@
 #'   }
 #' }
 pause <- function(){
-  invisible(readline(prompt="Press [enter] to continue or [esc] to exit"))
+  invisible(readline(prompt = "Press [enter] to continue or [esc] to exit"))
 }
 
 #' Export a distance matrix as a tree object
@@ -25,11 +25,11 @@ pause <- function(){
 #'   will work.
 #' @param file Character vector of desired filename for saving tree. Should end
 #'   in ".newick".
-#' @param returnTree Logical. Should the tree object be returned to the working
+#' @param return.tree Logical. Should the tree object be returned to the working
 #'   environment in addition to being saved as a file?
 #'
 #' @return Newick tree saved in specified location and \code{as.phylo} tree
-#'   object if \code{returnTree=TRUE}.
+#'   object if \code{return.tree=TRUE}.
 #'
 #' @examples
 #' clusterList <- colordistance::getHistList(dir(system.file("extdata",
@@ -41,12 +41,12 @@ pause <- function(){
 #' # Tree is both saved in current working directory and stored in
 #' # heliconius_tree variable
 #' heliconius_tree <- colordistance::exportTree(CDM,
-#' "./HeliconiusColorTree.newick", returnTree=TRUE)
+#' "./HeliconiusColorTree.newick", return.tree=TRUE)
 #' @export
-exportTree <- function(getColorDistanceMatrixObject, file, returnTree=FALSE) {
+exportTree <- function(getColorDistanceMatrixObject, file, return.tree = FALSE) {
   tree <- ape::as.phylo(stats::hclust(stats::as.dist(getColorDistanceMatrixObject)))
-  ape::write.tree(tree, file=file)
-  if (returnTree) {
+  ape::write.tree(tree, file = file)
+  if (return.tree) {
     return(tree)
   }
 }

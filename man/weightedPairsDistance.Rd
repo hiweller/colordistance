@@ -4,8 +4,8 @@
 \alias{weightedPairsDistance}
 \title{Distance between color clusters with user-specified color/size weights}
 \usage{
-weightedPairsDistance(T1, T2, ordering = FALSE, sizeWeight = 0.5,
-  colorWeight = 0.5)
+weightedPairsDistance(T1, T2, ordering = FALSE, size.weight = 0.5,
+  color.weight = 0.5)
 }
 \arguments{
 \item{T1}{Dataframe (especially a dataframe as returned by
@@ -17,10 +17,10 @@ be coordinates).}
 \item{ordering}{Logical. Should clusters by paired in order to minimize
 overall distance scores or evaluated in the order given?}
 
-\item{sizeWeight}{Weight of size similarity in determining overall score and
+\item{size.weight}{Weight of size similarity in determining overall score and
 ordering (if ordering=T).}
 
-\item{colorWeight}{Weight of color similarity in determining overall score
+\item{color.weight}{Weight of color similarity in determining overall score
 and ordering (if ordering=T). Color and size weights do not necessarily
 have to sum to 1.}
 }
@@ -35,15 +35,15 @@ different color cluster sets.
 }
 \note{
 Use with caution, since weights can easily swing distance scores more
-  dramatically than might be expected. For example, if \code{sizeWeight} = 1
-  and \code{colorWeight} = 0, two clusters of identical color but different
+  dramatically than might be expected. For example, if \code{size.weight} = 1
+  and \code{color.weight} = 0, two clusters of identical color but different
   sizes would not be compared.
 }
 \examples{
-clusterList <- colordistance::getKMeansList(system.file("extdata",
+cluster.list <- colordistance::getKMeansList(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
 upper=rep(1, 3))
-clusterList <- colordistance::extractClusters(clusterList, ordering=TRUE)
-colordistance:::weightedPairsDistance(clusterList[[1]], clusterList[[2]],
-sizeWeight=0.8, colorWeight=0.2)
+cluster.list <- colordistance::extractClusters(cluster.list, ordering=TRUE)
+colordistance:::weightedPairsDistance(cluster.list[[1]], cluster.list[[2]],
+size.weight=0.8, color.weight=0.2)
 }

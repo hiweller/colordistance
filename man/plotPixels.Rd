@@ -5,8 +5,8 @@
 \title{Plot pixels in color space}
 \usage{
 plotPixels(img, n = 10000, lower = c(0, 0.55, 0), upper = c(0.25, 1,
-  0.25), color.space = "rgb", ref.white = NULL, rev = FALSE, pch = 20,
-  main = "default", ...)
+  0.25), color.space = "rgb", ref.white = NULL, pch = 20,
+  main = "default", from = "sRGB", ...)
 }
 \arguments{
 \item{img}{Either a path to an image or a \code{\link{loadImage}} object.}
@@ -30,17 +30,21 @@ lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.}
 
-\item{rev}{Logical. Should the plot be rotated to view pixels which may be
-obscured when rev is \code{FALSE}?}
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) to use for plotting.}
+
+\item{ref.white}{The reference white passed to
+\code{\link[grDevices]{convertColor}}; must be specified if \code{img} does
+not already contain CIE Lab pixels. See \link{convertColorSpace}.}
 
 \item{pch}{Passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
 
 \item{main}{Plot title. If left as "default", image name is used.}
 
-\item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
+\item{from}{Original color space of image, probably either "sRGB" or "Apple
+RGB", depending on your computer.}
 
-\item{hsv}{Logical. Should pixels be plotted in HSV instead of RGB
-color space?}
+\item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
 }
 \value{
 3D plot of pixels in either RGB or HSV color space, colored according
@@ -57,9 +61,14 @@ If \code{n} is not numeric, then all pixels are plotted, but this is
   not recommended. Unless the image has a low pixel count, it takes much
   longer, and plotting this many points in the plot window can obscure
   important details.
+  
+  There are seven CIE standardized illuminants available in
+  \code{colordistance} (A, B, C, E, and D50, D55, and D65), but the most
+  common are: \itemize{ \item \code{"A"}: Standard incandescent lightbulb
+  \item \code{"D65"}: Average daylight \item \code{"D50"}: Direct sunlight}
 }
 \examples{
 colordistance::plotPixels(system.file("extdata",
 "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
-n=20000, upper=rep(1, 3), lower=rep(0.8, 3))
+n=20000, upper=rep(1, 3), lower=rep(0.8, 3), color.space = "rgb", angle = -45)
 }

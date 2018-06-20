@@ -8,8 +8,8 @@
 #' @param bins Number of bins for each channel OR a vector of length 3 with bins
 #'   for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
 #'   result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.
-#' @param binAvg Logical. Should the returned color clusters be the average of
-#'   the pixels in that bin (binAvg=\code{TRUE}) or the center of the bin
+#' @param bin.avg Logical. Should the returned color clusters be the average of
+#'   the pixels in that bin (bin.avg=\code{TRUE}) or the center of the bin
 #'   (\code{FALSE})? If a bin is empty, the center of the bin is returned as the
 #'   cluster color regardless.
 #' @param defaultClusters Optional dataframe of default color clusters to be
@@ -30,12 +30,12 @@
 #'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
 #' @param as.vec Logical. Should the bin sizes just be returned as a vector?
 #'   Much faster if only using \code{\link{chisqDistance}} for comparison metric.
-#' @param normPix Logical. Should RGB or HSV cluster values be normalized using
+#' @param norm.pix Logical. Should RGB or HSV cluster values be normalized using
 #'   \code{\link{normalizeRGB}}?
 #' @param plotting Logical. Should a histogram of the bin colors and sizes be
 #'   plotted?
 #' @param hsv Logical. Should HSV be used instead of RGB?
-#' @param title String for what the title the plots if plotting is on; defaults
+#' @param title String for what to title the plots if plotting is on; defaults
 #'   to the image name.
 #' @param bounds Upper and lower limits for the channels; R reads in images with
 #'   intensities on a 0-1 scale, but 0-255 is common.
@@ -70,22 +70,29 @@
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
 #' upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 #' @export
-getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), as.vec=FALSE, normPix=FALSE, plotting=TRUE, hsv=FALSE, title="path", bounds=c(0, 1), ...) {
+getImageHist <- function(image, bins=3, bin.avg=TRUE,
+                         defaultClusters=NULL, lower=c(0, 0.55, 0),
+                         upper=c(0.24, 1, 0.24), as.vec=FALSE,
+                         norm.pix=FALSE, plotting=TRUE, hsv=FALSE,
+                         title="path", bounds=c(0, 1), ...) {
   
-  message("RGB and HSV are device-dependent, perceptually non-uniform color spaces. See 'Color spaces' vignette for more information.")
+  message("RGB and HSV are device-dependent,", 
+          " perceptually non-uniform color spaces.",
+          " See 'Color spaces' vignette for more information.")
 
   # If filepath was provided, check to make sure it exists or throw an error
   if (is.character(image)) {
     if (file.exists(image)) {
-      image <- loadImage(image, lower=lower, upper=upper, hsv=hsv)
+      image <- loadImage(image, lower = lower, upper = upper, hsv = hsv)
     }
   } else if (!is.list(image)) {
-    stop("'image' must be either a path to the image or a list object returned by loadImage")
+    stop("'image' must be either a path to the image", 
+         " or a list object returned by loadImage")
     }
 
   # If hsv=T, use hsv column
   if (hsv) {
-    if (exists("filtered.hsv.2d", where=image)) {
+    if (exists("filtered.hsv.2d", where = image)) {
       pix <- image$filtered.hsv.2d
     } else {
       stop("'image' does not have a valid HSV element")
@@ -95,14 +102,17 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
     }
 
   # Create vector of bins
-  if (length(bins)==1 | length(bins)==3) {
-    if (length(bins)==1) {
-      message(paste("Using ", bins, "^3 = ", paste(bins^3), " total bins", sep = ""))
+  if (length(bins) == 1 | length(bins) == 3) {
+    if (length(bins) == 1) {
+      message(paste("Using ", bins, "^3 = ", 
+                    paste(bins ^ 3), " total bins", sep = ""))
       bins <- rep(bins, 3)
     } else {
-      message(paste("Using ", bins[1], "*", bins[2], "*", bins[3], " = ", bins[1]*bins[2]*bins[3], " bins", sep = ""))
+      message(paste("Using ", bins[1], "*", bins[2], "*", bins[3],
+                    " = ", bins[1] * bins[2] * bins[3], " bins", sep = ""))
     }
-    breaks <- lapply(bins + 1, function(x) seq(bounds[1], bounds[2], length = x))
+    breaks <- lapply(bins + 1, 
+                function(x) seq(bounds[1], bounds[2], length = x))
   } else {
     stop("Bins must be a numeric vector of length 1 or length 3")
     }
@@ -119,7 +129,9 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
   # I know this line is confusing
   # Don't worry about that
     if (is.null(defaultClusters)) {
-        defaultClusters <- as.matrix(expand.grid(lapply(breaks, function(i) sapply(c(1:(length(i) - 1)), function(j) mean(c(i[j], i[j + 1]))))))
+        defaultClusters <- as.matrix(expand.grid(lapply(breaks,
+                           function(i) sapply(c(1:(length(i) - 1)),
+                           function(j) mean(c(i[j], i[j + 1]))))))
 
         # Set clusters as defaultClusters - values only overwritten if there are
         # pixels in that bin, otherwise center is cluster value and Pct is 0
@@ -132,12 +144,12 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
         }
     }
 
-  # If binAvg is flagged and as.vec is off, return a matrix with average color
+  # If bin.avg is flagged and as.vec is off, return a matrix with average color
   # of all pixels assigned to each bin and the percentage of pixels in that bin
   # (if none, retain bin center as cluster color)
-  # If binAvg is flagged by as.vec is TRUE, don't waste time calculating the
+  # If bin.avg is flagged by as.vec is TRUE, don't waste time calculating the
   # average bin color, since it won't be returned anyways
-    if (binAvg & !as.vec) {
+    if (bin.avg & !as.vec) {
 
     # Get list of all filled bins + their sizes
     d <- mgcv::uniquecombs(binnedImage, T)
@@ -149,29 +161,36 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
     possibleBins <- expand.grid(c(1:bins[1]), c(1:bins[2]), c(1:bins[3]))
 
     # For every identified cluster, get the average R, G, and B values
-    # If only one pixel was assigned there (unlikely, but, you know), just plop that pixel in as the average color
+    # If only one pixel was assigned there (unlikely, but, you know), just plop
+    # that pixel in as the average color
     for (j in 1:dim(d)[1]) {
       pixTemp <- pix[which(ind == j), ]
       if (is.matrix(pixTemp)) {
-        clusters[which(apply(possibleBins, 1, function(x) all(x==d[j, ]))), 1:3] <- apply(pixTemp, 2, mean)
-        clusters[which(apply(possibleBins, 1, function(x) all(x==d[j, ]))), 4] <- dim(pixTemp)[1] / dim(pix)[1]
+        clusters[which(apply(possibleBins, 1, 
+          function(x) all(x == d[j, ]))), 1:3] <- apply(pixTemp, 2, mean)
+        clusters[which(apply(possibleBins, 1, 
+          function(x) all(x == d[j, ]))), 4] <- dim(pixTemp)[1] / dim(pix)[1]
       } else {
-        clusters[which(apply(possibleBins, 1, function(x) all(x==d[j,]))), 1:3] <- pixTemp
-        clusters[which(apply(possibleBins, 1, function(x) all(x==d[j, ]))), 4] <- length(pixTemp) / dim(pix)[1]
+        clusters[which(apply(possibleBins, 1,
+          function(x) all(x == d[j, ]))), 1:3] <- pixTemp
+        clusters[which(apply(possibleBins, 1, 
+          function(x) all(x == d[j, ]))), 4] <- length(pixTemp) / dim(pix)[1]
       }
     }
   } else {
 
-    # Count up pixels per bin without keeping track of which pixel was assigned to which bin
+    # Count up pixels per bin without keeping track of which pixel was assigned
+    # to which bin
     Pct <- as.vector(xtabs(~ ., binnedImage))
-    clusters$Pct <- Pct/max(sum(Pct))
+    clusters$Pct <- Pct / max(sum(Pct))
 
   }
 
-  if (!as.vec & normPix) {
+  if (!as.vec & norm.pix) {
     # Normalize cluster coordinates if flagged
-    if (normPix) {
-      clusters <- cbind(t(apply(clusters, 1, function(x) x[1:3]/sum(x[1:3]))), clusters$Pct)
+    if (norm.pix) {
+      clusters <- cbind(t(apply(clusters, 1, 
+                  function(x) x[1:3] / sum(x[1:3]))), clusters$Pct)
     }
   }
 
@@ -182,19 +201,25 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
     } else {
         pixelBins <- clusters
         }
-    if (binAvg) {
+    if (bin.avg) {
       if (hsv) {
-        colExp <- apply(clusters, 1, function(x) grDevices::hsv(h=x[1], s=x[2], v=x[3]))
+        colExp <- apply(clusters, 1, 
+                  function(x) grDevices::hsv(h = x[1],
+                                             s = x[2], 
+                                             v = x[3]))
       } else {
-        colExp <- apply(clusters, 1, function(x) grDevices::rgb(red=x[1], green=x[2], blue=x[3]))
+        colExp <- apply(clusters, 1, 
+                  function(x) grDevices::rgb(red = x[1], 
+                                             green = x[2], 
+                                             blue = x[3]))
         }
     } else {
-      colExp <- getHistColors(bins, hsv=hsv)
+      colExp <- getHistColors(bins, hsv = hsv)
       }
-    if (title=="path") {
+    if (title == "path") {
       title <- strsplit(tail(strsplit(image$path, "/")[[1]], 1), "[.]")[[1]][1]
       }
-    barplot(as.vector(pixelBins), col=colExp, main=title, ...)
+    barplot(as.vector(pixelBins), col = colExp, main = title, ...)
   }
 
   if (as.vec) {
@@ -211,24 +236,24 @@ getImageHist <- function(image, bins=3, binAvg=TRUE, defaultClusters=NULL, lower
 #' \code{\link{getImageHist}} in helpful ways.
 #'
 #' @param bins Number of bins for each channel OR a vector of length 3 with bins
-#'   for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
-#'   result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.
+#'   for each channel. Bins = 3 will result in 3^3 = 27 bins; bins = c(2, 2, 3) will
+#'   result in 2 * 2 * 3 = 12 bins (2 red, 2 green, 3 blue), etc.
 #' @param hsv Logical. Should HSV be used instead of RGB?
 #'
 #' @return A vector of hex codes for bin colors.
 #'
 #' @examples
-#' colordistance:::getHistColors(bins=3)
-#' colordistance:::getHistColors(bins=c(8, 3, 3), hsv=TRUE)
-getHistColors <- function(bins, hsv=FALSE) {
+#' colordistance:::getHistColors(bins = 3)
+#' colordistance:::getHistColors(bins = c(8, 3, 3), hsv = TRUE)
+getHistColors <- function(bins, hsv = FALSE) {
 
   # If only 1 number given, use that number of bins for each channel
-  if (length(bins)==1) {
+  if (length(bins) == 1) {
     bins <- rep(bins, 3)
   }
 
-  breaks <- lapply(bins, function(x) seq(0, 1, by=1/x))
-  outlist <- vector("list", length=length(breaks))
+  breaks <- lapply(bins, function(x) seq(0, 1, by = 1 / x))
+  outlist <- vector("list", length = length(breaks))
 
   # Make a list of the bin midpoints in each channel
   for (i in 1:length(breaks)) {
@@ -239,14 +264,20 @@ getHistColors <- function(bins, hsv=FALSE) {
     outlist[[i]] <- value
   }
 
-  # Get every possible combination of the above midpoints to get the cube centers
+  # Get every possible combination of the above midpoints to get the cube
+  # centers
   d <- as.matrix(expand.grid(outlist))
 
-  # And convert each of those possible centers into colors using either hsv() or rgb()
+  # And convert each of those possible centers into colors using either hsv or
+  # rgb
   if (hsv) {
-    colExp <- apply(d, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+    colExp <- apply(d, 1, function(x) hsv(h = x[1],
+                                          s = x[2],
+                                          v = x[3]))
   } else {
-    colExp <- apply(d, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+    colExp <- apply(d, 1, function(x) rgb(red = x[1],
+                                          green = x[2],
+                                          blue = x[3]))
   }
 
   return(colExp)
@@ -262,8 +293,8 @@ getHistColors <- function(bins, hsv=FALSE) {
 #' @param bins Number of bins for each channel OR a vector of length 3 with bins
 #'   for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
 #'   result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.
-#' @param binAvg Logical. Should the returned color clusters be the average of
-#'   the pixels in that bin (binAvg=\code{TRUE}) or the center of the bin
+#' @param bin.avg Logical. Should the returned color clusters be the average of
+#'   the pixels in that bin (bin.avg=\code{TRUE}) or the center of the bin
 #'   ({FALSE})? If a bin is empty, the center of the bin is returned as the
 #'   cluster color regardless.
 #' @param lower RGB or HSV triplet specifying the lower bounds for background
@@ -279,7 +310,7 @@ getHistColors <- function(bins, hsv=FALSE) {
 #'   lower=c(0, 0, 0.55); upper=c(0.24, 0.24, 1) } If no background filtering is
 #'   needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 #'   \code{"off"}, etc); any non-numeric value is interpreted as \code{NULL}.
-#' @param normPix Logical. Should RGB or HSV cluster values be normalized using
+#' @param norm.pix Logical. Should RGB or HSV cluster values be normalized using
 #'   \code{\link{normalizeRGB}}?
 #' @param plotting Logical. Should the histogram generated for each image be
 #'   displayed?
@@ -289,7 +320,7 @@ getHistColors <- function(bins, hsv=FALSE) {
 #' @param hsv Logical. Should HSV be used instead of RGB?
 #' @param title String for what the title the plots if plotting is on; defaults
 #'   to the image name.
-#' @param imgType Logical. Should the file extension for the images be retained
+#' @param img.type Logical. Should the file extension for the images be retained
 #'   when naming the output list elements? If \code{FALSE}, just the image name
 #'   is used (so "Heliconius_01.png" becomes "Heliconius_01").
 #' @param bounds Upper and lower limits for the channels; R reads in images with
@@ -311,89 +342,111 @@ getHistColors <- function(bins, hsv=FALSE) {
 #' \dontrun{
 #' # Takes >10 seconds if you run all examples
 #' clusterList <- colordistance::getHistList(system.file("extdata",
-#' "Heliconius/Heliconius_B", package="colordistance"), upper=rep(1, 3),
-#' lower=rep(0.8, 3))
+#' "Heliconius/Heliconius_B", package="colordistance"), upper = rep(1, 3),
+#' lower = rep(0.8, 3))
 #'
 #' clusterList <- colordistance::getHistList(c(system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance"), system.file("extdata",
-#' "Heliconius/Heliconius_A", package="colordistance")), pausing=FALSE,
-#' upper=rep(1, 3), lower=rep(0.8, 3))
+#' "Heliconius/Heliconius_A", package="colordistance")), pausing = FALSE,
+#' upper = rep(1, 3), lower = rep(0.8, 3))
 #'
 #' clusterList <- colordistance::getHistList(system.file("extdata",
-#' "Heliconius/Heliconius_B", package="colordistance"), plotting=TRUE,
-#' upper=rep(1, 3), lower=rep(0.8, 3))
+#' "Heliconius/Heliconius_B", package = "colordistance"), plotting = TRUE,
+#' upper = rep(1, 3), lower = rep(0.8, 3))
 #' }
 #'
 #' @export
-getHistList <- function(images, bins=3, binAvg=TRUE, 
-                        lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), 
-                        normPix=FALSE, plotting=FALSE, pausing=TRUE, 
-                        hsv=FALSE, title="path", imgType=FALSE, bounds=c(0, 1)) {
+getHistList <- function(images, bins = 3, bin.avg = TRUE, 
+                        lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), 
+                        norm.pix = FALSE, plotting = FALSE, pausing = TRUE, 
+                        hsv = FALSE, title = "path", img.type = FALSE, 
+                        bounds = c(0, 1)) {
   
-  warning("RGB and HSV are device-dependent, perceptually non-uniform color spaces. See 'Color spaces' vignette for more information.")
+  warning("RGB and HSV are device-dependent, perceptually non-uniform color", 
+          " spaces. See 'Color spaces' vignette for more information.")
   
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
-    stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
+    stop("'images' argument must be a string (folder containing the images),", 
+         " a vector of strings (paths to individual images),",
+         " or a combination of both")
     }
 
-  imPaths <- c()
+  im.paths <- c()
 
   # Extract image paths from any folders
   if (length(which(dir.exists(images))) >= 1) {
-    imPaths <- unlist(sapply(images[dir.exists(images)], colordistance::getImagePaths), use.names=F)
+    im.paths <- unlist(sapply(images[dir.exists(images)], 
+                colordistance::getImagePaths), use.names = FALSE)
   }
 
-  # For any paths that aren't folders, append to imPaths if they are existing image paths
-  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we're taking any paths that are not folders but which do exist
-  imPaths <- c(imPaths, images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
+  # For any paths that aren't folders, append to im.paths if they are existing
+  # image paths
+  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths
+  # that are not directories; then from there we take only ones for which
+  # file.exists=TRUE, so we're taking any paths that are not folders but which
+  # do exist
+  im.paths <- c(im.paths, 
+        images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
 
   # Grab only valid image types (jpegs and pngs)
-  imPaths <- imPaths[grep(x=imPaths, pattern="[.][jpg.|jpeg.|png.]", ignore.case=T)]
+  im.paths <- im.paths[grep(x = im.paths, 
+                            pattern = "[.][jpg.|jpeg.|png.]",
+                            ignore.case = TRUE)]
 
   # Before we embark on this lengthy journey, make sure bins argument is valid
-  # Convert bins to a vector of length 3 or throw an error if bins argument is not valid
-  if (length(bins)==1 | length(bins)==3) {
-    if (length(bins)==1) {
-      message(paste("Using ", bins, "^3 = ", paste(bins^3), " total bins", sep=""))
+  # Convert bins to a vector of length 3 or throw an error if bins argument is
+  # not valid
+  if (length(bins) == 1 | length(bins) == 3) {
+    if (length(bins) == 1) {
+      message(paste("Using ", bins, "^3 = ", paste(bins ^ 3),
+                    " total bins", sep = ""))
       bins <- rep(bins, 3)
     } else {
-      message(paste("Using ", bins[1], "*", bins[2], "*", bins[3], " = ", bins[1]*bins[2]*bins[3], " bins", sep = ""))
+      message(paste("Using ", bins[1], "*", bins[2], "*",
+                    bins[3], " = ", bins[1] * bins[2] * bins[3],
+                    " bins", sep = ""))
     }
   } else {
     stop("Bins must be a numeric vector of length 1 or length 3")
     }
 
-  if (length(imPaths)==0) {
+  if (length(im.paths) == 0) {
     stop("No images found")
   }
   # Empty list for histogram output
-  endList <- vector("list", length(imPaths))
+  end.list <- vector("list", length(im.paths))
 
-  # If pausing is on (and plotting is also on because otherwise this is pointless), fill in one element at a time, plot it, then wait for user input
+  # If pausing is on (and plotting is also on because otherwise this is
+  # pointless), fill in one element at a time, plot it, then wait for user input
 
   # Display progress bar
-  pb <- txtProgressBar(min=0, max=length(imPaths), style=3)
+  pb <- txtProgressBar(min = 0, max = length(im.paths), style = 3)
 
-  for (i in 1:length(endList)) {
-    endList[[i]] <- suppressMessages(getImageHist(imPaths[i], bins=bins, binAvg=binAvg, lower=lower, upper=upper, normPix=normPix, plotting=plotting, hsv=hsv, title=title, bounds=bounds))
+  for (i in 1:length(end.list)) {
+    end.list[[i]] <- suppressMessages(getImageHist(im.paths[i], bins = bins,
+                      bin.avg = bin.avg, lower = lower, upper = upper, 
+                      norm.pix = norm.pix, plotting = plotting, 
+                      hsv = hsv, title = title, bounds = bounds))
 
     setTxtProgressBar(pb, i)
 
-    if (pausing & plotting & i < length(endList)) {
+    if (pausing & plotting & i < length(end.list)) {
       pause()
     }
 
   }
 
-  # Name each list element by image name and include file extension if imgType=TRUE
-  namePaths <- basename(imPaths)
-  if (imgType) {
-    names(endList) <- namePaths
+  # Name each list element by image name and include file extension if
+  # img.type is TRUE
+  name.paths <- basename(im.paths)
+  if (img.type) {
+    names(end.list) <- name.paths
   } else {
-    names(endList) <- sapply(namePaths, function(x) strsplit(x, split="[.]")[[1]][1])
+    names(end.list) <- sapply(name.paths, 
+                      function(x) strsplit(x, split = "[.]")[[1]][1])
   }
 
-  return(endList)
+  return(end.list)
 
 }

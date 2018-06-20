@@ -4,11 +4,11 @@
 \alias{convertColorSpace}
 \title{Convert between color spaces}
 \usage{
-convertColorSpace(colorCoordinateMatrix, from = "sRGB", to = "Lab",
+convertColorSpace(color.coordinate.matrix, from = "sRGB", to = "Lab",
   sample.size = 1e+05, from.ref.white, to.ref.white)
 }
 \arguments{
-\item{colorCoordinateMatrix}{A color coordinate matrix with rows as colors
+\item{color.coordinate.matrix}{A color coordinate matrix with rows as colors
 and channels as columns. If a color histogram (e.g. as returned by
 \code{\link{getImageHist}}) is passed, the 'Pct' column is ignored.}
 
@@ -26,7 +26,7 @@ whites.}
 }
 \value{
 A 3- or 4-column matrix depending on whether
-  \code{colorCoordinateMatrix} included a 'Pct' column (as from
+  \code{color.coordinate.matrix} included a 'Pct' column (as from
   \code{\link{getImageHist}}), with one column per channel.
 }
 \description{
@@ -61,11 +61,11 @@ illuminants} to choose an appropriate reference for a dataset.
 
 The conversion from RGB to a standardized color space (XYZ, Lab, or Luv) is
 approximate, non-linear, and relatively time-consuming. Converting a large
-number of pixels can be computationally expensive, so \code{convertColorSpace} will
-randomly sample a specified number of rows to reduce the time. The default sample size, 100,000
-rows, takes about 5 seconds convert from sRGB to Lab space on an early 2015
-Macbook with 8 GB of RAM. Time scales about linearly with number of rows
-converted.
+number of pixels can be computationally expensive, so
+\code{convertColorSpace} will randomly sample a specified number of rows to
+reduce the time. The default sample size, 100,000 rows, takes about 5 seconds
+convert from sRGB to Lab space on an early 2015 Macbook with 8 GB of RAM.
+Time scales about linearly with number of rows converted.
 }
 \examples{
 # Convert a single RGB triplet and then back convert it

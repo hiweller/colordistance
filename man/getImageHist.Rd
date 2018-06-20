@@ -4,9 +4,9 @@
 \alias{getImageHist}
 \title{Generate a 3D histogram based on color distribution in an image}
 \usage{
-getImageHist(image, bins = 3, binAvg = TRUE, defaultClusters = NULL,
+getImageHist(image, bins = 3, bin.avg = TRUE, defaultClusters = NULL,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = FALSE,
-  normPix = FALSE, plotting = TRUE, hsv = FALSE, title = "path",
+  norm.pix = FALSE, plotting = TRUE, hsv = FALSE, title = "path",
   bounds = c(0, 1), ...)
 }
 \arguments{
@@ -17,8 +17,8 @@ object.}
 for each channel. Bins=3 will result in 3^3 = 27 bins; bins=c(2, 2, 3) will
 result in 2*2*3=12 bins (2 red, 2 green, 3 blue), etc.}
 
-\item{binAvg}{Logical. Should the returned color clusters be the average of
-the pixels in that bin (binAvg=\code{TRUE}) or the center of the bin
+\item{bin.avg}{Logical. Should the returned color clusters be the average of
+the pixels in that bin (bin.avg=\code{TRUE}) or the center of the bin
 (\code{FALSE})? If a bin is empty, the center of the bin is returned as the
 cluster color regardless.}
 
@@ -44,7 +44,7 @@ needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 \item{as.vec}{Logical. Should the bin sizes just be returned as a vector?
 Much faster if only using \code{\link{chisqDistance}} for comparison metric.}
 
-\item{normPix}{Logical. Should RGB or HSV cluster values be normalized using
+\item{norm.pix}{Logical. Should RGB or HSV cluster values be normalized using
 \code{\link{normalizeRGB}}?}
 
 \item{plotting}{Logical. Should a histogram of the bin colors and sizes be
@@ -52,7 +52,7 @@ plotted?}
 
 \item{hsv}{Logical. Should HSV be used instead of RGB?}
 
-\item{title}{String for what the title the plots if plotting is on; defaults
+\item{title}{String for what to title the plots if plotting is on; defaults
 to the image name.}
 
 \item{bounds}{Upper and lower limits for the channels; R reads in images with

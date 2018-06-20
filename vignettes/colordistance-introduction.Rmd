@@ -250,16 +250,16 @@ But if you want to test a bunch of different methods and options, you can use th
 ```{r, fig.align="center", fig.width=7, fig.height=5, results=F}
 # Default: histogram binning, EMD color distance metric, 3 bins per channel (27 total)
 # Note that we get slightly different clustering each time
-default <- colordistance::imageClusterPipeline(images, upper=upper, lower=lower)
+default <- colordistance::imageClusterPipeline(images, upper = upper, lower = lower)
 
 # Using k-means instead of histogram
-kmeansBinning <- colordistance::imageClusterPipeline(images, clusterMethod="kmeans", upper=upper, lower=lower)
+kmeansBinning <- colordistance::imageClusterPipeline(images, cluster.method = "kmeans", upper = upper, lower = lower)
 
 # Using chisq instead of emd
-chisq <- colordistance::imageClusterPipeline(images, distanceMethod = "chisq", upper=upper, lower=lower)
+chisq <- colordistance::imageClusterPipeline(images, distance.method = "chisq", upper = upper, lower = lower)
 
 # Using HSV instead of RGB
-hsvPix <- colordistance::imageClusterPipeline(images, hsv=T, upper=upper, lower=lower)
+hsvPix <- colordistance::imageClusterPipeline(images, hsv = TRUE, upper = upper, lower = lower)
 ```
 
 Different options obviously have different effects on the final output, but are not necessarily more or less valid -- the options depend entirely on what kind of comparison is most meaningful for the dataset in question.

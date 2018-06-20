@@ -9,7 +9,7 @@
 #' @param n Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
 #'   this represents the actual final number of bins, rather than the number of
 #'   breaks in each channel.
-#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
+#' @param sample.size Number of pixels to be randomly sampled from filtered pixel
 #'   array for performing fit. If set to \code{FALSE}, all pixels are fit, but
 #'   this can be time-consuming, especially for large images.
 #' @param plotting Logical. Should the results of the KMeans fit (original image
@@ -31,7 +31,7 @@
 #'   number of iterations allowed.
 #' @param nstart Inherited from \code{\link[stats]{kmeans}}. How many random
 #'   sets should be chosen?
-#' @param returnClust Logical. Should clusters be returned? If \code{FALSE},
+#' @param return.clust Logical. Should clusters be returned? If \code{FALSE},
 #'   results are plotted but not returned.
 #'
 #' @return A \code{\link[stats]{kmeans}} fit object.
@@ -39,58 +39,68 @@
 #' @examples
 #' colordistance::getKMeanColors(system.file("extdata",
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"), n=3,
-#' returnClust=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
+#' return.clust=FALSE, lower=rep(0.8, 3), upper=rep(1, 3))
 #' @export
-getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=TRUE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, returnClust=TRUE) {
+getKMeanColors <- function(path, n = 10, sample.size = 20000,
+                           plotting = TRUE, lower = c(0, 0.55, 0),
+                           upper = c(0.24, 1, 0.24), iter.max = 50,
+                           nstart = 5, return.clust = TRUE) {
   # Load image, store original image and reshaped pixel matrix separately
-  imload <- loadImage(path, lower=lower, upper=upper)
+  imload <- loadImage(path, lower = lower, upper = upper)
   img <- imload$original.rgb
   pix <- imload$filtered.rgb.2d
 
-  # If sampleSize is a valid number, randomly select that number of pixels for fitting
-  if (is.numeric(sampleSize)) {
-    if (sampleSize <= dim(pix)[1]) {
-      # If sample size is smaller than number of pixels in image, randomly select subset
-      pixSample <- pix[sample(nrow(pix), sampleSize), ]
+  # If sample.size is a valid number, randomly select that number of pixels for
+  # fitting
+  if (is.numeric(sample.size)) {
+    if (sample.size <= dim(pix)[1]) {
+      # If sample size is smaller than number of pixels in image, randomly
+      # select subset
+      pix.sample <- pix[sample(nrow(pix), sample.size), ]
     } else {
       # If the image is smaller, just use all of them and throw an alert
-      pixSample <- pix[sample(nrow(pix), nrow(pix)), ]
-      message(paste(path, "has fewer than", sampleSize, "pixels; using entire image"))
+      pix.sample <- pix[sample(nrow(pix), nrow(pix)), ]
+      message(paste(path, "has fewer than", sample.size, 
+                    "pixels; using entire image"))
     }
   } else {
-    pixSample <- pix
+    pix.sample <- pix
     message("Performing fit on all pixels (slow for large images).")
   }
 
   # Perform KMeans fit on pixels
-  suppressWarnings(kmeansFit <- kmeans(pixSample, n, iter.max=iter.max, nstart=nstart))
+  suppressWarnings(kmeans.fit <- kmeans(pix.sample, n,
+                   iter.max = iter.max, nstart = nstart))
 
   # If plotting is on, plot original image + color histogram
   if (plotting) {
-    # Plot both original image and kmeans in the same window and then return to original parameters
-    currentPar <- par()
+    # Plot both original image and kmeans in the same window and then return to
+    # original parameters
+    current.par <- par()
 
-    par(mfrow=c(2, 1), mar=rep(1, 4) + 0.1)
-    asp <- dim(img)[1]/dim(img)[2]
-    plot(0:1, 0:1, type="n", axes=F, asp=asp)
+    par(mfrow = c(2, 1), mar = rep(1, 4) + 0.1)
+    asp <- dim(img)[1] / dim(img)[2]
+    plot(0:1, 0:1, type = "n", axes = FALSE, asp = asp)
     title(tail(strsplit(path, "/")[[1]], 1))
     rasterImage(img, 0, 0, 1, 1)
 
-    centers <- kmeansFit$centers
-    rgbExp <- apply(centers, 1, function(x) rgb(x[1], x[2], x[3]))
+    centers <- kmeans.fit$centers
+    rgb.exp <- apply(centers, 1, function(x) rgb(x[1], x[2], x[3]))
 
-    counts <- table(kmeansFit$cluster, rep("", length(kmeansFit$cluster)))
+    counts <- table(kmeans.fit$cluster, rep("", length(kmeans.fit$cluster)))
     orders <- rev(order(counts[, 1]))
     counts[, 1] <- counts[orders, ]
-    rgbExp <- rgbExp[orders]
-    barplot(counts, col=rgbExp, axes=F, space=0, border=NA, horiz=T, asp=5000)
-    title(paste("KMeans color clusters (", n, " clusters)", sep=""), line=-1)
+    rgb.exp <- rgb.exp[orders]
+    barplot(counts, col = rgb.exp, axes = FALSE, space = 0,
+            border = NA, horiz = T, asp = 5000)
+    title(paste("KMeans color clusters (", n, " clusters)",
+                sep = ""), line = -1)
 
-    par(mfrow=currentPar$mfrow, mar=currentPar$mar)
+    par(mfrow = current.par$mfrow, mar = current.par$mar)
   }
 
-  if (returnClust) {
-    return(kmeansFit)
+  if (return.clust) {
+    return(kmeans.fit)
     }
 }
 
@@ -106,7 +116,7 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=TRUE, lower=c(
 #' @param bins Number of KMeans clusters to fit. Unlike \code{\link{getImageHist}},
 #'   this represents the actual final number of bins, rather than the number of
 #'   breaks in each channel.
-#' @param sampleSize Number of pixels to be randomly sampled from filtered pixel
+#' @param sample.size Number of pixels to be randomly sampled from filtered pixel
 #'   array for performing fit. If set to \code{FALSE}, all pixels are fit, but
 #'   this can be time-consuming, especially for large images.
 #' @param plotting Logical. Should the results of the KMeans fit (original image
@@ -128,7 +138,7 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=TRUE, lower=c(
 #'   number of iterations allowed.
 #' @param nstart Inherited from \code{\link[stats]{kmeans}}. How many random
 #'   sets should be chosen?
-#' @param imgType Logical. Should the image extension (.PNG or .JPG) be retained
+#' @param img.type Logical. Should the image extension (.PNG or .JPG) be retained
 #'   in the list names?
 #'
 #' @return A list of kmeans fit objects, where the list element names are the
@@ -142,48 +152,67 @@ getKMeanColors <- function(path, n=10, sampleSize=20000, plotting=TRUE, lower=c(
 #' lower=rep(0.8, 3), upper=rep(1, 3), plotting=TRUE)
 #' }
 #' @export
-getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=FALSE, lower=c(0, 0.55, 0), upper=c(0.24, 1, 0.24), iter.max=50, nstart=5, imgType=FALSE) {
-  # If argument isn"t a string/vector of strings, throw an error
+getKMeansList <- function(images, bins = 10, sample.size = 20000,
+                          plotting = FALSE, lower = c(0, 0.55, 0),
+                          upper = c(0.24, 1, 0.24), iter.max = 50,
+                          nstart = 5, img.type = FALSE) {
+  # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
-    stop("'images' argument must be a string (folder containing the images), a vector of strings (paths to individual images), or a combination of both")
+    stop("'images' argument must be a string (folder containing the",
+         " images), a vector of strings (paths to individual images),",
+         " or a combination of both")
     }
 
-  imPaths <- c()
+  im.paths <- c()
 
   # Extract image paths from any folders
-  if (length(which(dir.exists(images)))>=1) {
-    imPaths <- unlist(sapply(images[dir.exists(images)], getImagePaths), use.names=F)
+  if (length(which(dir.exists(images))) >= 1) {
+    im.paths <- unlist(sapply(images[dir.exists(images)],
+                              getImagePaths), use.names = FALSE)
   }
 
-  # For any paths that aren"t folders, append to imPaths if they are existing image paths
-  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths that are not directories; then from there we take only ones for which file.exists=TRUE, so we"re taking any paths that are not folders but which do exist
-  imPaths <- c(imPaths, images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
+  # For any paths that aren't folders, append to im.paths if they are existing
+  # image paths
+  # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths
+  # that are not directories; then from there we take only ones for which
+  # file.exists=TRUE, so we"re taking any paths that are not folders but which
+  # do exist
+  im.paths <- c(im.paths, 
+        images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
 
   # grab only valid image types (jpegs and pngs)
-  imPaths <- imPaths[grep(x=imPaths, pattern="[.][jpg.|jpeg.|png.]", ignore.case=T)]
+  im.paths <- im.paths[grep(x = im.paths, 
+                            pattern = "[.][jpg.|jpeg.|png.]",
+                            ignore.case = T)]
 
-  # Now that we have our list of valid images, get kmeans fit objects for each one
-  endList <- vector("list", length(imPaths))
+  # Now that we have our list of valid images, get kmeans fit objects for each
+  # one
+  end.list <- vector("list", length(im.paths))
 
   # Use a progress bar
-  pb <- txtProgressBar(min=0, max=length(imPaths), style=3)
-  for (i in 1:length(imPaths)) {
-    endList[[i]] <- getKMeanColors(imPaths[i], n=bins, sampleSize=sampleSize, plotting=plotting, lower=lower, upper=upper, iter.max=iter.max, nstart=nstart, returnClust=T)
+  pb <- txtProgressBar(min = 0, max = length(im.paths), style = 3)
+  for (i in 1:length(im.paths)) {
+    end.list[[i]] <- getKMeanColors(im.paths[i], n = bins, 
+                                    sample.size = sample.size, 
+                                    plotting = plotting,
+                                    lower = lower, upper = upper,
+                                    iter.max = iter.max, nstart = nstart, 
+                                    return.clust = T)
     setTxtProgressBar(pb, i)
   }
 
   # Get just image names (not entire filepath) as labels for list
-  listNames <- basename(imPaths)
+  listNames <- basename(im.paths)
 
-  # Unless the imgType flag = T, drop the file extension from the labels
-  if (!imgType) {
+  # Unless the img.type flag = T, drop the file extension from the labels
+  if (!img.type) {
     listNames <- sapply(listNames, function(x) strsplit(x, "[.]")[[1]][1])
   }
 
-  names(endList) <- listNames
+  names(end.list) <- listNames
 
   # And give it back!
-  return(endList)
+  return(end.list)
 }
 
 #' Extract cluster values and sizes from kmeans fit objects
@@ -214,28 +243,36 @@ getKMeansList <- function(images, bins=10, sampleSize=20000, plotting=FALSE, low
 #'
 #' colordistance::extractClusters(clusterList)
 #' @export
-extractClusters <- function(getKMeansListObject, ordering=TRUE, normalize=FALSE) {
+extractClusters <- function(getKMeansListObject, 
+                            ordering=TRUE, normalize=FALSE) {
 
-  if (class(getKMeansListObject)!="kmeans") {
+  if (class(getKMeansListObject) != "kmeans") {
     # Extract cluster size and centers
-    endList <- lapply(getKMeansListObject, function(x) data.frame(R=x$centers[, 1], G=x$centers[, 2], B=x$centers[, 3], Pct=x$size/sum(x$size)))
+    end.list <- lapply(getKMeansListObject, 
+                       function(x) data.frame(R = x$centers[, 1], 
+                                              G = x$centers[, 2], 
+                                              B = x$centers[, 3], 
+                                     Pct = x$size / sum(x$size)))
 
     # Retain names
-    names(endList) <- names(getKMeansListObject)
+    names(end.list) <- names(getKMeansListObject)
 
     # Reorder clusters if ordering=TRUE
     if (ordering) {
-      endList <- orderClusters(endList)
+      end.list <- orderClusters(end.list)
     }
   } else {
-    endList <- data.frame(R=getKMeansListObject$centers[, 1], G=getKMeansListObject$centers[, 2], B=getKMeansListObject$centers[, 3], Pct=getKMeansListObject$size/sum(getKMeansListObject$size))
+    end.list <- data.frame(R = getKMeansListObject$centers[, 1], 
+                           G = getKMeansListObject$centers[, 2], 
+                           B = getKMeansListObject$centers[, 3], 
+                Pct = getKMeansListObject$size / sum(getKMeansListObject$size))
   }
 
   # Same with normalization
   if (normalize) {
-    endList <- normalizeRGB(endList)
+    end.list <- normalizeRGB(end.list)
   }
 
-  return(endList)
+  return(end.list)
 
 }

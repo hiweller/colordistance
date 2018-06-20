@@ -23,8 +23,8 @@ combineClusters <- function(folder, method="mean", ...) {
   primary <- normalizePath(folder)
 
   # Get a list of all immediate subdirectories
-  subdirs <- dir(primary, full.names=T)
-  subdirNames <- basename(subdirs)
+  subdirs <- dir(primary, full.names = TRUE)
+  subdir.names <- basename(subdirs)
   subdirs <- subdirs[dir.exists(subdirs)]
 
   # List of all images in each subdirectory, by subdirectory name
@@ -32,14 +32,17 @@ combineClusters <- function(folder, method="mean", ...) {
 
   # Fill using getHistList - kmeans doesn't make a lot of sense for this
   hist_list <- vector("list", length(images))
-  names(hist_list) <- subdirNames
+  names(hist_list) <- subdir.names
   for (i in 1:length(images)) {
-    message(paste(subdirNames[i], ": ", length(images[[i]]), " images", sep=""))
-    hist_list[[i]] <- suppressMessages(colordistance::getHistList(images[[i]], ...))
+    message(paste(subdir.names[i], ": ", 
+                  length(images[[i]]), " images", sep = ""))
+    hist_list[[i]] <- suppressMessages(colordistance::getHistList(images[[i]],
+                                                                  ...))
   }
 
   # Combine colors in specified way
-  combined_list <- lapply(hist_list, function(x) colordistance::combineList(x, method=method))
+  combined_list <- lapply(hist_list, 
+                   function(x) colordistance::combineList(x, method = method))
 
   return(combined_list)
 }
@@ -69,9 +72,9 @@ combineClusters <- function(folder, method="mean", ...) {
 #'   because the bins are defined the same way for each image.
 #' @export
 combineList <- function(hist_list, method="mean") {
-  requireNamespace(package="abind")
-  temp <- do.call(abind::abind, c(hist_list, list(along=3)))
+  requireNamespace(package = "abind")
+  temp <- do.call(abind::abind, c(hist_list, list(along = 3)))
   df <- as.data.frame(apply(temp, 1:2, eval(method)))
-  df[, 4] <- df[, 4]/sum(df[, 4])
+  df[, 4] <- df[, 4] / sum(df[, 4])
   return(df)
 }

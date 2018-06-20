@@ -63,7 +63,7 @@ It's essentially the opposite of the $\chi^{2}$ metric above, which ignores colo
 
 In order for this metric to have any meaning, it is necessary to compare the most similar colors in images to each other. So unordered k-means clusters (using `ordering=FAlSE` for `extractClusters()`) would not produce useful results with this metric, since bin 1 in image 1 may be yellow while bin 1 in image 2 is pink, even though both images contain both yellow and pink clusters, etc; this would artificially inflate the distance sum and make the images look more similar than they are. 
 
-On the other hand, if you use histogram binning and use the bin centers for the cluster values (if `binAvg=FALSE` for `getImageHist()` or `getHistList()`), you'll always end up with a distance of 0 between images, because the cluster centers are always going to have the same coordinates. 
+On the other hand, if you use histogram binning and use the bin centers for the cluster values (if `bin.avg=FALSE` for `getImageHist()` or `getHistList()`), you'll always end up with a distance of 0 between images, because the cluster centers are always going to have the same coordinates. 
 
 Color distance is generally appropriate only if you specifically want to ignore size information. But in many cases, specifically with dominant colors, natural color clusters will still get broken up into several different clusters -- a mostly yellow image might have yellow pixels present in 3 different clusters, for example. Using color distance would then compare each of the three yellow clusters against individual clusters from another image, so yellow would be overrepresented, and so on. That said, color distance will downplay the cluster size much more than the other methods.
 

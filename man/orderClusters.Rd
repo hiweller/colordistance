@@ -37,9 +37,9 @@ example, dataframe B would be reshuffled to go grey, blue, white instead of
 white, grey, blue).
 }
 \examples{
-clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+cluster.list <- colordistance::getKMeansList(c(system.file("extdata",
 "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
 upper=rep(1, 3)))
-clusterList <- colordistance::extractClusters(clusterList)
-colordistance:::orderClusters(clusterList)
+cluster.list <- colordistance::extractClusters(cluster.list)
+colordistance:::orderClusters(cluster.list)
 }

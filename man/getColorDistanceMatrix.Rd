@@ -4,11 +4,11 @@
 \alias{getColorDistanceMatrix}
 \title{Distance matrix for a list of color cluster sets}
 \usage{
-getColorDistanceMatrix(clusterList, method = "emd", ordering = "default",
-  sizeWeight = 0.5, colorWeight = 0.5, plotting = TRUE, ...)
+getColorDistanceMatrix(cluster.list, method = "emd", ordering = "default",
+  size.weight = 0.5, color.weight = 0.5, plotting = TRUE, ...)
 }
 \arguments{
-\item{clusterList}{A list of identically sized dataframes with 4 columns each
+\item{cluster.list}{A list of identically sized dataframes with 4 columns each
 (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
 \code{getHistList}.}
 
@@ -27,9 +27,9 @@ would make chi-squared meaningless); "color.dist" and "weighted.pairs" use
 ordering. To override defaults, set to either \code{T} (for ordering) or
 \code{F} (for no ordering).}
 
-\item{sizeWeight}{Same as in \code{\link{weightedPairsDistance}}.}
+\item{size.weight}{Same as in \code{\link{weightedPairsDistance}}.}
 
-\item{colorWeight}{Same as in \code{\link{weightedPairsDistance}}.}
+\item{color.weight}{Same as in \code{\link{weightedPairsDistance}}.}
 
 \item{plotting}{Logical. Should a heatmap of the distance matrix be displayed
 once the function finishes running?}
@@ -62,31 +62,31 @@ question, but generally give poorer results.
 }
 \examples{
 \dontrun{
-clusterList <- colordistance::getHistList(c(system.file("extdata",
+cluster.list <- colordistance::getHistList(c(system.file("extdata",
 "Heliconius/Heliconius_A", package="colordistance"), system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance")), lower=rep(0.8, 3),
 upper=rep(1, 3))
 
 # Default values - recommended!
-colordistance::getColorDistanceMatrix(clusterList, main="EMD")
+colordistance::getColorDistanceMatrix(cluster.list, main="EMD")
 
 # Without plotting
-colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
+colordistance::getColorDistanceMatrix(cluster.list, plotting=FALSE)
 
 # Use chi-squared instead
-colordistance::getColorDistanceMatrix(clusterList, method="chisq", main="Chi-squared")
+colordistance::getColorDistanceMatrix(cluster.list, method="chisq", main="Chi-squared")
 
 # Override ordering (throws a warning if you're trying to do this with
 # chisq!)
-colordistance::getColorDistanceMatrix(clusterList, method="chisq",
+colordistance::getColorDistanceMatrix(cluster.list, method="chisq",
 ordering=TRUE, main="Chi-squared w/ ordering")
 
 # Specify high size weight/low color weight for weighted pairs
-colordistance::getColorDistanceMatrix(clusterList, method="weighted.pairs",
-colorWeight=0.1, sizeWeight=0.9, main="Weighted pairs")
+colordistance::getColorDistanceMatrix(cluster.list, method="weighted.pairs",
+color.weight=0.1, size.weight=0.9, main="Weighted pairs")
 
 # Color distance only
-colordistance::getColorDistanceMatrix(clusterList, method="color.dist",
+colordistance::getColorDistanceMatrix(cluster.list, method="color.dist",
 ordering=TRUE, main="Color distance only")
 }
 }

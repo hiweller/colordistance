@@ -33,17 +33,30 @@
 #' pausing=FALSE)
 #' }
 #' @export
-plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
+plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
 
   # Set plotting parameters
   if (hsv) {
-    scene <- list(xaxis=list(title="Hue", range=c(0, 1)), yaxis=list(title="Saturation", range=c(0, 1)), zaxis=list(title="Value", range=c(0, 1)), camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+    scene <- list(xaxis = list(title = "Hue", range = c(0, 1)),
+                  yaxis = list(title = "Saturation", range = c(0, 1)),
+                  zaxis = list(title = "Value", range = c(0, 1)), 
+                  camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   } else {
-    scene <- list(xaxis=list(title="Red", linecolor=plotly::toRGB("red"), linewidth=6, range=c(0, 1)), yaxis=list(title="Green", linecolor=plotly::toRGB("green"), linewidth=6, range=c(0, 1)), zaxis=list(title="Blue", linecolor=plotly::toRGB("blue"), linewidth=6, range=c(0, 1)), camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+    scene <- list(xaxis = list(title = "Red", 
+                             linecolor = plotly::toRGB("red"),
+                             linewidth = 6, range = c(0, 1)),
+                  yaxis = list(title = "Green", 
+                               linecolor = plotly::toRGB("green"),
+                               linewidth = 6,
+                               range = c(0, 1)), 
+                  zaxis = list(title = "Blue", 
+                               linecolor = plotly::toRGB("blue"),
+                               linewidth = 6, range = c(0, 1)),
+                  camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   }
 
   # If p is all just create vector for cycling through every element
-  if (p[1]=="all") {
+  if (p[1] == "all") {
     p <- c(1:length(clusterList))
   }
 
@@ -54,21 +67,33 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
     p <- 1
   }
 
-  if (length(p)==1) {
+  if (length(p) == 1) {
     pausing <- FALSE
   }
   # Plot clusters for each cluster element
   if (is.numeric(p)) {
     for (i in p) {
       if (hsv) {
-        colExp <- apply(clusterList[[i]], 1, function(x) hsv(x[1], x[2], x[3]))
+        colExp <- apply(clusterList[[i]], 1, function(x) hsv(x[1],
+                                                             x[2],
+                                                             x[3]))
         } else {
-          colExp <- apply(clusterList[[i]], 1, function(x) rgb(x[1], x[2], x[3]))
+          colExp <- apply(clusterList[[i]], 1, function(x) rgb(x[1],
+                                                               x[2],
+                                                               x[3]))
       }
 
-      pl <- plotly::plot_ly(clusterList[[i]], x=~clusterList[[i]][, 1], y=~clusterList[[i]][, 2], z=~clusterList[[i]][, 3], size=~clusterList[[i]][, 4], color=~clusterList[[i]][, 4])
-      pl <- plotly::add_markers(pl, color=I(colExp), size=~clusterList[[i]][, 4], sizes=c(10, 5000))
-      pl <- plotly::layout(pl, scene=scene, title=names(clusterList)[i])
+      pl <- plotly::plot_ly(clusterList[[i]], 
+                            x = ~clusterList[[i]][, 1], 
+                            y = ~clusterList[[i]][, 2], 
+                            z = ~clusterList[[i]][, 3], 
+                            size = ~clusterList[[i]][, 4], 
+                            color = ~clusterList[[i]][, 4])
+      pl <- plotly::add_markers(pl, color = I(colExp), 
+                                size = ~clusterList[[i]][, 4], 
+                                sizes = c(10, 5000))
+      pl <- plotly::layout(pl, scene = scene, 
+                           title = names(clusterList)[i])
 
       print(pl)
 
@@ -77,7 +102,8 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
         }
     }
   } else {
-    stop("'p' must be either a numeric vector of indices for plotting or set to 'all' to plot all sets in cluster list")
+    stop("'p' must be either a numeric vector of indices for plotting",
+         " or set to 'all' to plot all sets in cluster list")
     }
 
 }
@@ -124,17 +150,30 @@ plotClusters <- function(clusterList, hsv=FALSE, p="all", pausing=TRUE) {
 #' colordistance::plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE)
 #' }
 #' @export
-plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
+plotClustersMulti <- function(clusterList, hsv = FALSE, 
+                              p = "all", title = "") {
 
   # Set plotting parameters
   if (hsv) {
-    scene <- list(xaxis=list(title="Hue", range=c(0, 1)), yaxis=list(title="Saturation", range=c(0, 1)), zaxis=list(title="Value", range=c(0, 1)), camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+    scene <- list(xaxis = list(title = "Hue", range = c(0, 1)),
+                  yaxis = list(title = "Saturation", range = c(0, 1)),
+                  zaxis = list(title = "Value", range = c(0, 1)),
+                  camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   } else {
-    scene <- list(xaxis=list(title="Red", linecolor=plotly::toRGB("red"), linewidth=6, range=c(0, 1)), yaxis=list(title="Green", linecolor=plotly::toRGB("green"), linewidth=6, range=c(0, 1)), zaxis=list(title="Blue", linecolor=plotly::toRGB("blue"), linewidth=6, range=c(0, 1)), camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+    scene <- list(xaxis = list(title = "Red", 
+                               linecolor = plotly::toRGB("red"), 
+                               linewidth = 6, range = c(0, 1)), 
+                  yaxis = list(title = "Green", 
+                             linecolor = plotly::toRGB("green"),
+                             linewidth = 6, range = c(0, 1)), 
+                  zaxis = list(title = "Blue", 
+                             linecolor = plotly::toRGB("blue"),
+                             linewidth = 6, range = c(0, 1)),
+                  camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   }
 
   # If p is set to "all" then use entire list
-  if (p[1]=="all") {
+  if (p[1] == "all") {
     p <- c(1:length(clusterList))
   }
 
@@ -161,9 +200,13 @@ plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
     } else {
       colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
   }
-  pl <- plotly::plot_ly(newDF, x = ~newDF[, 1], y = ~newDF[, 2], z = ~newDF[, 3], size=~Pct, text = ~paste("Image: ", Image))
-  pl <- plotly::add_markers(pl, color=I(colExp), size=~Pct, sizes=c(10, 5000))
-  pl <- plotly::layout(pl, scene = scene, title=title)
+  pl <- plotly::plot_ly(newDF, x = ~newDF[, 1],
+                        y = ~newDF[, 2],
+                        z = ~newDF[, 3],
+                        size = ~Pct, text = ~paste("Image: ", Image))
+  pl <- plotly::add_markers(pl, color = I(colExp), 
+                            size = ~Pct, sizes = c(10, 5000))
+  pl <- plotly::layout(pl, scene = scene, title = title)
   print(pl)
 }
 
@@ -203,26 +246,38 @@ plotClustersMulti <- function(clusterList, hsv=FALSE, p="all", title="") {
 #' }
 #'
 #' @export
-heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="default", margins=c(6, 8), ...) {
+heatmapColorDistance <- function(clusterList_or_matrixObject, 
+                                 main=NULL, col="default", 
+                                 margins=c(6, 8), ...) {
 
   # Shorter handle
   obj <- clusterList_or_matrixObject
 
-  # If a clusterList was provided, get the distance matrix; if it"s a matrix, just make the heatmap; if neither, throw an error
+  # If a clusterList was provided, get the distance matrix; if it"s a matrix,
+  # just make the heatmap; if neither, throw an error
   if (is.list(obj)) {
     obj <- getColorDistanceMatrix(obj)
   } else if (!is.matrix(obj)) {
-    stop("Argument is not a list (extractClusters or getHistList object) or a distance matrix (getColorDistanceMatrix object)")
+    stop("Argument is not a list (extractClusters or getHistList object)",
+         " or a distance matrix (getColorDistanceMatrix object)")
   }
 
-  # The default heatmap colors are genuinely offensive to the eyes so make the default something more palatable; otherwise use user-provided vector
-  if (col[1]=="default") {
-    col <- colorRampPalette(c("royalblue4", "ghostwhite", "goldenrod2"))(n=299)
+  # The default heatmap colors are genuinely offensive to the eyes so make the
+  # default something more palatable; otherwise use user-provided vector
+  if (col[1] == "default") {
+    col <- colorRampPalette(c("royalblue4", 
+                              "ghostwhite", 
+                              "goldenrod2"))(n = 299)
   }
 
   # Convert to "dist" object for hclust method and plot heatmap
   clust <- as.dist(obj)
-  gplots::heatmap.2(obj, symm=TRUE, col=col, Rowv=as.dendrogram(hclust(clust)), main=main, trace="none", density.info="none", key.xlab="Color distance score", key.title=NA, keysize=1, revC=T, srtCol=35, na.color="grey", margins=margins, offsetRow=0, offsetCol=0, ...)
+  gplots::heatmap.2(obj, symm = TRUE, col = col, 
+                    Rowv = as.dendrogram(hclust(clust)), main = main,
+                    trace = "none", density.info = "none", 
+                    key.xlab = "Color distance score", key.title = NA,
+                    keysize = 1, revC = T, srtCol = 35, na.color = "grey",
+                    margins = margins, offsetRow = 0, offsetCol = 0, ...)
 
 }
 
@@ -254,21 +309,26 @@ heatmapColorDistance <- function(clusterList_or_matrixObject, main=NULL, col="de
 #'
 #' colordistance::plotHist(color_df, main="Example plot")
 #' @export
-plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, main="default", ...) {
+plotHist <- function(histogram, pausing = TRUE, 
+                     hsv = FALSE, main = "default", ...) {
   if (is.null(dim(histogram))) {
 
     for (i in 1:length(histogram)) {
       clusters <- histogram[[i]]
       if (hsv) {
-        colExp <- apply(clusters, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+        colExp <- apply(clusters, 1, function(x) hsv(h = x[1],
+                                                     s = x[2],
+                                                     v = x[3]))
       } else {
-        colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+        colExp <- apply(clusters, 1, function(x) rgb(red = x[1],
+                                                     green = x[2],
+                                                     blue = x[3]))
       }
 
-      if (main=="default") {
+      if (main == "default") {
         main <- names(histogram)[i]
         }
-      barplot(as.vector(clusters[ , 4]), col=colExp, main=main, ...)
+      barplot(as.vector(clusters[, 4]), col = colExp, main = main, ...)
 
       if (pausing & i < length(histogram)) {
         pause()
@@ -279,11 +339,14 @@ plotHist <- function(histogram, pausing=TRUE, hsv=FALSE, main="default", ...) {
     clusters <- histogram
 
     if (hsv) {
-      colExp <- apply(clusters, 1, function(x) hsv(h=x[1], s=x[2], v=x[3]))
+      colExp <- apply(clusters, 1, function(x) hsv(h = x[1],
+                                                   s = x[2],
+                                                   v = x[3]))
     } else {
-      colExp <- apply(clusters, 1, function(x) rgb(red=x[1], green=x[2], blue=x[3]))
+      colExp <- apply(clusters, 1, function(x) rgb(red = x[1],
+                                                   green = x[2],
+                                                   blue = x[3]))
     }
-    barplot(as.vector(clusters[ , 4]), col=colExp, ...)
+    barplot(as.vector(clusters[, 4]), col = colExp, ...)
   }
 }
-

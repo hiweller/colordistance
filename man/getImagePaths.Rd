@@ -24,11 +24,11 @@ In the event that no compatible images are found in the directory, it
 returns a message to that effect instead of an empty vector.
 }
 \examples{
-imDir <- colordistance::getImagePaths(system.file("extdata",
+im.dir <- colordistance::getImagePaths(system.file("extdata",
 "Heliconius/Heliconius_A", package="colordistance"))
 \dontrun{
-imDir <- colordistance::getImagePaths("some/nonexistent/directory")
+im.dir <- colordistance::getImagePaths("some/nonexistent/directory")
 }
-imDir <- colordistance::getImagePaths(getwd())
+im.dir <- colordistance::getImagePaths(getwd())
 
 }

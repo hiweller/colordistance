@@ -35,9 +35,9 @@ clustering functions and specifying a low number of 'value' bins (e.g.
 \code{bins=c(8, 8, 2)}).
 }
 \examples{
-clusterList <- colordistance::getKMeansList(c(system.file("extdata",
+cluster.list <- colordistance::getKMeansList(c(system.file("extdata",
 "Heliconius/Heliconius_A", package="colordistance"), lower=rep(0.8, 3),
 upper=rep(1, 3)))
-clusterList <- colordistance::extractClusters(clusterList)
-colordistance:::normalizeRGB(clusterList)
+cluster.list <- colordistance::extractClusters(cluster.list)
+colordistance:::normalizeRGB(cluster.list)
 }
