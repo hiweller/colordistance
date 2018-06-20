@@ -7,11 +7,13 @@
 imageClusterPipeline(images, cluster.method = "hist",
   distance.method = "emd", lower = c(0, 140/255, 0), upper = c(60/255, 1,
   60/255), hist.bins = 3, kmeans.bins = 27, bin.avg = TRUE,
-  norm.pix = FALSE, plot.bins = FALSE, pausing = TRUE, hsv = FALSE,
-  bounds = c(0, 1), sample.size = 20000, iter.max = 50, nstart = 5,
-  img.type = FALSE, ordering = "default", size.weight = 0.5,
-  color.weight = 0.5, plot.heatmap = TRUE, return.distance.matrix = TRUE,
-  save.tree = FALSE, save.distance.matrix = FALSE)
+  norm.pix = FALSE, plot.bins = FALSE, pausing = TRUE,
+  color.space = "rgb", ref.white, from = "sRGB", bounds = c(0, 1),
+  sample.size = 20000, iter.max = 50, nstart = 5, img.type = FALSE,
+  ordering = "default", size.weight = 0.5, color.weight = 0.5,
+  plot.heatmap = TRUE, return.distance.matrix = TRUE, save.tree = FALSE,
+  save.distance.matrix = FALSE, a.bounds = c(-127, 128),
+  b.bounds = c(-127, 128))
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}
@@ -71,7 +73,15 @@ are calculated?}
 \item{pausing}{Logical. If \code{plot.bins=TRUE}, pause and wait for user
 keystroke before plotting bins for next image?}
 
-\item{hsv}{Logical. Use HSV instead of RGB for generating clusters?}
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) in which to plot pixels.}
+
+\item{ref.white}{The reference white passed to
+\code{\link{convertColorSpace}}; must be specified if using
+\code{color.space = "lab"}.}
+
+\item{from}{Display color space of image if clustering in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
 
 \item{bounds}{Upper and lower limits for the channels; R reads in images with
 intensities on a 0-1 scale, but 0-255 is common.}
@@ -120,6 +130,14 @@ set to \code{TRUE} is to save in current working directory as
 \item{save.distance.matrix}{Either logical or filepath for saving distance
 matrix; default if set to \code{TRUE} is to save in current working
 directory as "ColorDistanceMatrix.csv"}
+
+\item{a.bounds, b.bounds}{Passed to \code{\link{getLabHistList}}.Numeric
+ranges for the a (green-red) and b (blue-yellow) channels of Lab color
+space. Technically, a and b have infinite range, but in practice nearly all
+values fall between -128 and 127 (the default). Many images will have an
+even narrower range than this, depending on the lighting conditions and
+conversion; setting narrower ranges will result in finer-scale binning,
+without generating empty bins at the edges of the channels.}
 }
 \value{
 Color distance matrix, heatmap, and saved distance matrix and tree
@@ -141,7 +159,7 @@ testing different combinations of clustering methods and distance metrics.
 \examples{
 \dontrun{
 colordistance::imageClusterPipeline(dir(system.file("extdata", "Heliconius/",
-package="colordistance"), full.names=TRUE), hsv=TRUE, lower=rep(0.8,
+package="colordistance"), full.names=TRUE), color.space="hsv", lower=rep(0.8,
 3), upper=rep(1, 3), cluster.method="hist", distance.method="emd",
 hist.bins=3, plot.bins=TRUE, save.tree="example_tree.newick",
 save.distance.matrix="example_DM.csv")

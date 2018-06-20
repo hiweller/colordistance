@@ -14,10 +14,10 @@
 #'   this can be time-consuming, especially for large images.
 #' @param plotting Logical. Should the results of the KMeans fit (original image
 #'   + histogram of colors and bin sizes) be plotted?
-#' @param lower RGB or HSV triplet specifying the lower bounds for background
+#' @param lower RGB triplet specifying the lower bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]).
-#' @param upper RGB or HSV triplet specifying the upper bounds for background
+#' @param upper RGB triplet specifying the upper bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
@@ -33,6 +33,13 @@
 #'   sets should be chosen?
 #' @param return.clust Logical. Should clusters be returned? If \code{FALSE},
 #'   results are plotted but not returned.
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to cluster pixels.
+#' @param from  Display color space of image if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using CIE
+#'   Lab space. See \link{convertColorSpace}.
 #'
 #' @return A \code{\link[stats]{kmeans}} fit object.
 #'
@@ -44,11 +51,22 @@
 getKMeanColors <- function(path, n = 10, sample.size = 20000,
                            plotting = TRUE, lower = c(0, 0.55, 0),
                            upper = c(0.24, 1, 0.24), iter.max = 50,
-                           nstart = 5, return.clust = TRUE) {
+                           nstart = 5, return.clust = TRUE,
+                           color.space = "rgb", from = "sRGB", 
+                           ref.white) {
+  
+  color.space <- tolower(color.space)
+  
   # Load image, store original image and reshaped pixel matrix separately
-  imload <- loadImage(path, lower = lower, upper = upper)
+  imload <- loadImage(path, lower = lower, upper = upper, hsv = TRUE)
+  
+  # Use HSV pixels if specified, otherwise stick with RGB
+  if (color.space == "hsv") {
+    pix <- imload$filtered.hsv.2d
+  } else {
+    pix <- imload$filtered.rgb.2d
+  }
   img <- imload$original.rgb
-  pix <- imload$filtered.rgb.2d
 
   # If sample.size is a valid number, randomly select that number of pixels for
   # fitting
@@ -67,6 +85,12 @@ getKMeanColors <- function(path, n = 10, sample.size = 20000,
     pix.sample <- pix
     message("Performing fit on all pixels (slow for large images).")
   }
+  
+  if (color.space == "lab") {
+    pix.sample <- convertColorSpace(pix.sample, from = from, 
+                             sample.size = "all",
+                             from.ref.white = ref.white)
+  }
 
   # Perform KMeans fit on pixels
   suppressWarnings(kmeans.fit <- kmeans(pix.sample, n,
@@ -80,21 +104,32 @@ getKMeanColors <- function(path, n = 10, sample.size = 20000,
 
     par(mfrow = c(2, 1), mar = rep(1, 4) + 0.1)
     asp <- dim(img)[1] / dim(img)[2]
-    plot(0:1, 0:1, type = "n", axes = FALSE, asp = asp)
+    plot(0:1, 0:1, type = "n", axes = FALSE, asp = asp, xlab = "",
+         ylab ="")
     title(tail(strsplit(path, "/")[[1]], 1))
     rasterImage(img, 0, 0, 1, 1)
 
     centers <- kmeans.fit$centers
-    rgb.exp <- apply(centers, 1, function(x) rgb(x[1], x[2], x[3]))
+    if (color.space == "lab") {
+      centers <- suppressMessages(convertColorSpace(centers[, 1:3], 
+                                   from = "Lab", to = from, 
+                                   to.ref.white = ref.white))
+    } 
+    
+    if (color.space == "hsv") {
+      rgb.exp <- apply(centers, 1, function(x) hsv(x[1], x[2], x[3]))
+    } else {
+      rgb.exp <- apply(centers, 1, function(x) rgb(x[1], x[2], x[3]))
+    }
 
     counts <- table(kmeans.fit$cluster, rep("", length(kmeans.fit$cluster)))
     orders <- rev(order(counts[, 1]))
     counts[, 1] <- counts[orders, ]
     rgb.exp <- rgb.exp[orders]
     barplot(counts, col = rgb.exp, axes = FALSE, space = 0,
-            border = NA, horiz = T, asp = 5000)
+            border = NA, horiz = T)
     title(paste("KMeans color clusters (", n, " clusters)",
-                sep = ""), line = -1)
+                sep = ""), line = 0)
 
     par(mfrow = current.par$mfrow, mar = current.par$mar)
   }
@@ -121,10 +156,10 @@ getKMeanColors <- function(path, n = 10, sample.size = 20000,
 #'   this can be time-consuming, especially for large images.
 #' @param plotting Logical. Should the results of the KMeans fit (original image
 #'   + histogram of colors and bin sizes) be plotted for each image?
-#' @param lower RGB or HSV triplet specifying the lower bounds for background
+#' @param lower RGB triplet specifying the lower bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]).
-#' @param upper RGB or HSV triplet specifying the upper bounds for background
+#' @param upper RGB triplet specifying the upper bounds for background
 #'   pixels. Default upper and lower bounds are set to values that work well for
 #'   a bright green background (RGB [0, 1, 0]). Determining these bounds may
 #'   take some trial and error, but the following bounds may work for certain
@@ -140,6 +175,13 @@ getKMeanColors <- function(path, n = 10, sample.size = 20000,
 #'   sets should be chosen?
 #' @param img.type Logical. Should the image extension (.PNG or .JPG) be retained
 #'   in the list names?
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to cluster pixels.
+#' @param from  Original color space of images if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using CIE
+#'   Lab space. See \link{convertColorSpace}.
 #'
 #' @return A list of kmeans fit objects, where the list element names are the
 #'   original image names.
@@ -155,7 +197,9 @@ getKMeanColors <- function(path, n = 10, sample.size = 20000,
 getKMeansList <- function(images, bins = 10, sample.size = 20000,
                           plotting = FALSE, lower = c(0, 0.55, 0),
                           upper = c(0.24, 1, 0.24), iter.max = 50,
-                          nstart = 5, img.type = FALSE) {
+                          nstart = 5, img.type = FALSE,
+                          color.space = "rgb", from = "sRGB",
+                          ref.white) {
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
     stop("'images' argument must be a string (folder containing the",
@@ -175,7 +219,7 @@ getKMeansList <- function(images, bins = 10, sample.size = 20000,
   # image paths
   # ok this is confusing so to unpack: images[!dir.exists(images)] are all paths
   # that are not directories; then from there we take only ones for which
-  # file.exists=TRUE, so we"re taking any paths that are not folders but which
+  # file.exists=TRUE, so we're taking any paths that are not folders but which
   # do exist
   im.paths <- c(im.paths, 
         images[!dir.exists(images)][file.exists(images[!dir.exists(images)])])
@@ -183,7 +227,7 @@ getKMeansList <- function(images, bins = 10, sample.size = 20000,
   # grab only valid image types (jpegs and pngs)
   im.paths <- im.paths[grep(x = im.paths, 
                             pattern = "[.][jpg.|jpeg.|png.]",
-                            ignore.case = T)]
+                            ignore.case = TRUE)]
 
   # Now that we have our list of valid images, get kmeans fit objects for each
   # one
@@ -192,12 +236,14 @@ getKMeansList <- function(images, bins = 10, sample.size = 20000,
   # Use a progress bar
   pb <- txtProgressBar(min = 0, max = length(im.paths), style = 3)
   for (i in 1:length(im.paths)) {
-    end.list[[i]] <- getKMeanColors(im.paths[i], n = bins, 
-                                    sample.size = sample.size, 
+    end.list[[i]] <- suppressMessages(getKMeanColors(im.paths[i], 
+                                    n = bins, sample.size = sample.size, 
                                     plotting = plotting,
                                     lower = lower, upper = upper,
                                     iter.max = iter.max, nstart = nstart, 
-                                    return.clust = T)
+                                    color.space = color.space,
+                                    return.clust = TRUE, from = from,
+                                    ref.white = ref.white))
     setTxtProgressBar(pb, i)
   }
 

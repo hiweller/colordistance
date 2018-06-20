@@ -6,7 +6,8 @@
 \usage{
 getKMeanColors(path, n = 10, sample.size = 20000, plotting = TRUE,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, return.clust = TRUE)
+  nstart = 5, return.clust = TRUE, color.space = "rgb", from = "sRGB",
+  ref.white)
 }
 \arguments{
 \item{path}{Path to an image (JPG or PNG).}
@@ -22,11 +23,11 @@ this can be time-consuming, especially for large images.}
 \item{plotting}{Logical. Should the results of the KMeans fit (original image
 + histogram of colors and bin sizes) be plotted?}
 
-\item{lower}{RGB or HSV triplet specifying the lower bounds for background
+\item{lower}{RGB triplet specifying the lower bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
-\item{upper}{RGB or HSV triplet specifying the upper bounds for background
+\item{upper}{RGB triplet specifying the upper bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]). Determining these bounds may
 take some trial and error, but the following bounds may work for certain
@@ -45,6 +46,16 @@ sets should be chosen?}
 
 \item{return.clust}{Logical. Should clusters be returned? If \code{FALSE},
 results are plotted but not returned.}
+
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) in which to cluster pixels.}
+
+\item{from}{Display color space of image if clustering in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
+
+\item{ref.white}{The reference white passed to
+\code{\link{convertColorSpace}}; must be specified if using CIE
+Lab space. See \link{convertColorSpace}.}
 }
 \value{
 A \code{\link[stats]{kmeans}} fit object.

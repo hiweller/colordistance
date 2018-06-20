@@ -319,8 +319,8 @@ plotImage <- function(img) {
 #'   not already contain CIE Lab pixels. See \link{convertColorSpace}.
 #' @param pch Passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #' @param main Plot title. If left as "default", image name is used.
-#' @param from Original color space of image, probably either "sRGB" or "Apple
-#'   RGB", depending on your computer.
+#' @param from Original color space of image if plotting in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
 #' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3D plot of pixels in either RGB or HSV color space, colored according

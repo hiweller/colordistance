@@ -51,7 +51,13 @@
 #'   are calculated?
 #' @param pausing Logical. If \code{plot.bins=TRUE}, pause and wait for user
 #'   keystroke before plotting bins for next image?
-#' @param hsv Logical. Use HSV instead of RGB for generating clusters?
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to plot pixels.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using
+#'   \code{color.space = "lab"}.
+#' @param from  Display color space of image if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
 #' @param img.type Logical. Should file extensions be retained with labels?
 #' @param sample.size Only applicable if \code{cluster.method="kmeans"}. Number of
 #'   pixels to be randomly sampled from filtered pixel array for performing fit.
@@ -86,6 +92,13 @@
 #' @param save.distance.matrix Either logical or filepath for saving distance
 #'   matrix; default if set to \code{TRUE} is to save in current working
 #'   directory as "ColorDistanceMatrix.csv"
+#' @param a.bounds,b.bounds Passed to \code{\link{getLabHistList}}.Numeric
+#'   ranges for the a (green-red) and b (blue-yellow) channels of Lab color
+#'   space. Technically, a and b have infinite range, but in practice nearly all
+#'   values fall between -128 and 127 (the default). Many images will have an
+#'   even narrower range than this, depending on the lighting conditions and
+#'   conversion; setting narrower ranges will result in finer-scale binning,
+#'   without generating empty bins at the edges of the channels.
 #'
 #' @return Color distance matrix, heatmap, and saved distance matrix and tree
 #'   files if saving is \code{TRUE}.
@@ -101,7 +114,7 @@
 #' @examples
 #' \dontrun{
 #' colordistance::imageClusterPipeline(dir(system.file("extdata", "Heliconius/",
-#' package="colordistance"), full.names=TRUE), hsv=TRUE, lower=rep(0.8,
+#' package="colordistance"), full.names=TRUE), color.space="hsv", lower=rep(0.8,
 #' 3), upper=rep(1, 3), cluster.method="hist", distance.method="emd",
 #' hist.bins=3, plot.bins=TRUE, save.tree="example_tree.newick",
 #' save.distance.matrix="example_DM.csv")
@@ -117,14 +130,23 @@ imageClusterPipeline <- function(images, cluster.method = "hist",
                             distance.method = "emd", lower = c(0, 140 / 255, 0),
                             upper = c(60 / 255, 1, 60 / 255), hist.bins = 3,
                             kmeans.bins = 27, bin.avg = TRUE, norm.pix = FALSE,
-                            plot.bins = FALSE, pausing = TRUE, hsv = FALSE,
+                            plot.bins = FALSE, pausing = TRUE, 
+                            color.space = "rgb", ref.white, from = "sRGB",
                             bounds = c(0, 1), sample.size = 20000, 
                             iter.max = 50, nstart = 5, img.type = FALSE,
                             ordering = "default", size.weight = 0.5,
                             color.weight = 0.5, plot.heatmap = TRUE,
                             return.distance.matrix = TRUE,
-                            save.tree = FALSE, save.distance.matrix = FALSE) {
+                            save.tree = FALSE, save.distance.matrix = FALSE,
+                            a.bounds = c(-127, 128), b.bounds = c(-127, 128)) {
 
+  color.space <- tolower(color.space)
+  if (color.space == "hsv") {
+    hsv <- TRUE
+  } else {
+    hsv <- FALSE
+  }
+  # Get image paths ####
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
     stop("'images' argument must be a string (folder containing the images),", 
@@ -156,21 +178,32 @@ imageClusterPipeline <- function(images, cluster.method = "hist",
 
   message(paste(length(im.paths), "images"))
 
-  # Get cluster.list using either hist or kmeans
+  # Get cluster.list using either hist or kmeans ####
   if (cluster.method == "hist") {
     message("Pixel binning method: histogram (predetermined bins)")
     message("Binning images...")
-    cluster.list <- getHistList(im.paths, bins = hist.bins, 
-                                bin.avg = bin.avg, lower = lower,
-                                upper = upper, norm.pix = norm.pix,
-                                plotting = plot.bins, pausing = pausing,
-                                hsv = hsv, bounds = bounds, img.type = img.type)
+    
+    if (color.space == "lab") {
+      cluster.list <- getLabHistList(im.paths, bins = hist.bins,
+                        bin.avg = bin.avg, lower = lower, upper = upper,
+                        plotting = plot.bins, from = from,
+                        ref.white = ref.white, pausing = pausing,
+                        sample.size = sample.size,
+                        a.bounds = a.bounds, b.bounds = b.bounds)
+    } else {
+      cluster.list <- getHistList(im.paths, bins = hist.bins, 
+                                  bin.avg = bin.avg, lower = lower,
+                                  upper = upper, norm.pix = norm.pix,
+                                  plotting = plot.bins, pausing = pausing,
+                                  hsv = hsv, bounds = bounds, img.type = img.type)
+    }
   } else if (cluster.method == "kmeans") {
     message("Pixel binning method: kmeans (algorithmically determined bins)")
     message("Generating clusters...")
     cluster.list <- getKMeansList(im.paths, bins = kmeans.bins, 
                                   sample.size = sample.size, 
-                                  plotting = plot.bins, 
+                                  plotting = plot.bins,
+                                  color.space = color.space,
                                   lower = lower, upper = upper, 
                                   iter.max = iter.max, nstart = nstart,
                                   img.type = img.type)
@@ -181,14 +214,16 @@ imageClusterPipeline <- function(images, cluster.method = "hist",
     stop("cluster.method must be one of either 'hist' or 'kmeans'")
   }
 
-  # Get distance matrix using provided method
+  # Get distance matrix using provided method ####
   message(paste("\nComparison metric for distance matrix:", distance.method))
-  message("Calculating distance matrix...")
+  message("\nCalculating distance matrix...")
   distance.matrix <- getColorDistanceMatrix(cluster.list, 
                       method = distance.method, ordering = ordering, 
                       plotting = plot.heatmap, size.weight = size.weight,
                       color.weight = color.weight)
   message("Done")
+  
+  # Save output if relevant ####
   if (save.tree != FALSE) {
     # If save.tree is a path, save to that path
     if (is.character(save.tree)) {
@@ -242,7 +277,8 @@ imageClusterPipeline <- function(images, cluster.method = "hist",
                   normalizePath(save.distance.matrix)))
 
   }
-
+  
+  # Return distance matrix ####
   if (return.distance.matrix) {
     return(distance.matrix)
     }

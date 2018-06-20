@@ -4,19 +4,28 @@
 \alias{plotClustersMulti}
 \title{Plot several different cluster sets together}
 \usage{
-plotClustersMulti(clusterList, hsv = FALSE, p = "all", title = "")
+plotClustersMulti(cluster.list, color.space = "rgb", p = "all",
+  title = "", ref.white, to = "sRGB")
 }
 \arguments{
-\item{clusterList}{A list of identically sized dataframes with 4 columns each
+\item{cluster.list}{A list of identically sized dataframes with 4 columns each
 (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
 \code{getHistList}.}
 
-\item{hsv}{Logical. Should HSV axes be used instead of RGB?}
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) in which to plot pixels.}
 
 \item{p}{Numeric vector of indices for which elements to plot; otherwise all
 of the cluster sets provided will be plotted together.}
 
 \item{title}{Optional title for the plot.}
+
+\item{ref.white}{The reference white passed to
+\code{\link{convertColorSpace}}; must be specified if using
+\code{color.space = "lab"}.}
+
+\item{to}{Display color space of image if clustering in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
 }
 \value{
 A single \code{\link[plotly]{plot_ly}} plot of every cluster in a
@@ -36,14 +45,14 @@ labeled according to the image from which it originated.
 
 \dontrun{
 # Takes >10 seconds
-clusterList <- colordistance::getHistList(dir(system.file("extdata",
+cluster.list <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 lower=rep(0.8, 3), upper=rep(1, 3))
 
-colordistance::plotClustersMulti(clusterList, p=c(1:4), title="Orange and
+colordistance::plotClustersMulti(cluster.list, p=c(1:4), title="Orange and
 black Heliconius")
 
-colordistance::plotClustersMulti(clusterList, p=c(5:8), title="Black, yellow,
+colordistance::plotClustersMulti(cluster.list, p=c(5:8), title="Black, yellow,
 and red Heliconius")
 
 clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",

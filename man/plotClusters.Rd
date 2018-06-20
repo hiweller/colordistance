@@ -4,20 +4,29 @@
 \alias{plotClusters}
 \title{Plot clusters in 3D color space}
 \usage{
-plotClusters(clusterList, hsv = FALSE, p = "all", pausing = TRUE)
+plotClusters(cluster.list, color.space = "rgb", p = "all", pausing = TRUE,
+  ref.white, to = "sRGB")
 }
 \arguments{
-\item{clusterList}{A list of identically sized dataframes with 4 columns each
+\item{cluster.list}{A list of identically sized dataframes with 4 columns each
 (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
 \code{getHistList}.}
 
-\item{hsv}{Logical. Should HSV axes be used instead of RGB?}
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) in which to plot pixels.}
 
 \item{p}{Numeric vector of indices for which elements to plot; otherwise each
 set of clusters is plotted in succession.}
 
 \item{pausing}{Logical. Should the function pause and wait for user keystroke
 before plotting the next plot?}
+
+\item{ref.white}{The reference white passed to
+\code{\link{convertColorSpace}}; must be specified if using
+\code{color.space = "lab"}.}
+
+\item{to}{Display color space of image if clustering in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
 }
 \value{
 A 3D \code{\link[plotly]{plot_ly}} plot of cluster sizes in the
@@ -31,11 +40,11 @@ cluster output.
 \examples{
 \dontrun{
 # Takes >10 seconds
-clusterList <- colordistance::getHistList(dir(system.file("extdata",
+cluster.list <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 lower=rep(0.8, 3), upper=rep(1, 3))
 
-colordistance::plotClusters(clusterList, p=c(1:3, 7:8), pausing=FALSE)
+colordistance::plotClusters(cluster.list, p=c(1:3, 7:8), pausing=FALSE)
 
 clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,

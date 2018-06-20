@@ -4,14 +4,21 @@
 #' colors for each image in a list of cluster dataframes in order to visualize
 #' cluster output.
 #'
-#' @param clusterList A list of identically sized dataframes with 4 columns each
+#' @param cluster.list A list of identically sized dataframes with 4 columns each
 #'   (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
 #'   \code{getHistList}.
-#' @param hsv Logical. Should HSV axes be used instead of RGB?
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to plot pixels.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using
+#'   \code{color.space = "lab"}.
+#' @param to Display color space of image if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
 #' @param p Numeric vector of indices for which elements to plot; otherwise each
 #'   set of clusters is plotted in succession.
 #' @param pausing Logical. Should the function pause and wait for user keystroke
 #'   before plotting the next plot?
+#' 
 #'
 #' @return A 3D \code{\link[plotly]{plot_ly}} plot of cluster sizes in the
 #'   specified colorspace for each cluster dataframe provided.
@@ -19,11 +26,11 @@
 #' @examples
 #' \dontrun{
 #' # Takes >10 seconds
-#' clusterList <- colordistance::getHistList(dir(system.file("extdata",
+#' cluster.list <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 #' lower=rep(0.8, 3), upper=rep(1, 3))
 #'
-#' colordistance::plotClusters(clusterList, p=c(1:3, 7:8), pausing=FALSE)
+#' colordistance::plotClusters(cluster.list, p=c(1:3, 7:8), pausing=FALSE)
 #'
 #' clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), hsv=TRUE,
@@ -33,14 +40,24 @@
 #' pausing=FALSE)
 #' }
 #' @export
-plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
-
+plotClusters <- function(cluster.list, color.space = "rgb",
+                         p = "all", pausing = TRUE, 
+                         ref.white, to = "sRGB") {
+  
+  color.space <- tolower(color.space)
   # Set plotting parameters
-  if (hsv) {
+  if (color.space == "hsv") {
     scene <- list(xaxis = list(title = "Hue", range = c(0, 1)),
                   yaxis = list(title = "Saturation", range = c(0, 1)),
                   zaxis = list(title = "Value", range = c(0, 1)), 
                   camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+  } else if (color.space == "lab") {
+    scene <- list(xaxis = list(title = "Luminance", 
+                               range = c(0, 100)),
+                  yaxis = list(title = "a (green-red)", 
+                               range = c(-127, 128)),
+                  zaxis = list(title = "b (blue-yellow)", 
+                               range = c(-127, 128)))
   } else {
     scene <- list(xaxis = list(title = "Red", 
                              linecolor = plotly::toRGB("red"),
@@ -57,13 +74,13 @@ plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
 
   # If p is all just create vector for cycling through every element
   if (p[1] == "all") {
-    p <- c(1:length(clusterList))
+    p <- c(1:length(cluster.list))
   }
 
-  if (is.data.frame(clusterList)) {
+  if (is.data.frame(cluster.list)) {
     temp <- vector("list", 1)
-    temp[[1]] <- clusterList
-    clusterList <- temp
+    temp[[1]] <- cluster.list
+    cluster.list <- temp
     p <- 1
   }
 
@@ -73,27 +90,39 @@ plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
   # Plot clusters for each cluster element
   if (is.numeric(p)) {
     for (i in p) {
-      if (hsv) {
-        colExp <- apply(clusterList[[i]], 1, function(x) hsv(x[1],
+      if (color.space == "hsv") {
+        colExp <- apply(cluster.list[[i]], 1, function(x) hsv(x[1],
                                                              x[2],
                                                              x[3]))
         } else {
-          colExp <- apply(clusterList[[i]], 1, function(x) rgb(x[1],
-                                                               x[2],
-                                                               x[3]))
+          if (color.space == "lab") {
+            temp <- cluster.list
+            cluster.list <- lapply(cluster.list,
+              function(i) suppressMessages(convertColorSpace(i,
+              from = "Lab", to = "sRGB", sample.size = "all", 
+              from.ref.white = ref.white)))
+            colExp <- apply(cluster.list[[i]], 1, function(x) rgb(x[1],
+                                                                  x[2],
+                                                                  x[3]))
+            cluster.list <- temp
+          } else {
+            colExp <- apply(cluster.list[[i]], 1, function(x) rgb(x[1],
+                                                                  x[2],
+                                                                  x[3]))
+          }
       }
 
-      pl <- plotly::plot_ly(clusterList[[i]], 
-                            x = ~clusterList[[i]][, 1], 
-                            y = ~clusterList[[i]][, 2], 
-                            z = ~clusterList[[i]][, 3], 
-                            size = ~clusterList[[i]][, 4], 
-                            color = ~clusterList[[i]][, 4])
+      pl <- plotly::plot_ly(cluster.list[[i]], 
+                            x = ~cluster.list[[i]][, 1], 
+                            y = ~cluster.list[[i]][, 2], 
+                            z = ~cluster.list[[i]][, 3], 
+                            size = ~cluster.list[[i]][, 4], 
+                            color = ~cluster.list[[i]][, 4])
       pl <- plotly::add_markers(pl, color = I(colExp), 
-                                size = ~clusterList[[i]][, 4], 
+                                size = ~cluster.list[[i]][, 4], 
                                 sizes = c(10, 5000))
       pl <- plotly::layout(pl, scene = scene, 
-                           title = names(clusterList)[i])
+                           title = names(cluster.list)[i])
 
       print(pl)
 
@@ -113,12 +142,18 @@ plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
 #' Plots cluster sets from several different dataframes on a single plot for
 #' easy comparison.
 #'
-#' @param clusterList A list of identically sized dataframes with 4 columns each
+#' @param cluster.list A list of identically sized dataframes with 4 columns each
 #'   (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
 #'   \code{getHistList}.
-#' @param hsv Logical. Should HSV axes be used instead of RGB?
 #' @param p Numeric vector of indices for which elements to plot; otherwise all
 #'   of the cluster sets provided will be plotted together.
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to plot pixels.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using
+#'   \code{color.space = "lab"}.
+#' @param to Display color space of image if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
 #' @param title Optional title for the plot.
 #'
 #' @return A single \code{\link[plotly]{plot_ly}} plot of every cluster in a
@@ -133,14 +168,14 @@ plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
 #'
 #' \dontrun{
 #' # Takes >10 seconds
-#' clusterList <- colordistance::getHistList(dir(system.file("extdata",
+#' cluster.list <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), plotting=FALSE,
 #' lower=rep(0.8, 3), upper=rep(1, 3))
 #'
-#' colordistance::plotClustersMulti(clusterList, p=c(1:4), title="Orange and
+#' colordistance::plotClustersMulti(cluster.list, p=c(1:4), title="Orange and
 #' black Heliconius")
 #'
-#' colordistance::plotClustersMulti(clusterList, p=c(5:8), title="Black, yellow,
+#' colordistance::plotClustersMulti(cluster.list, p=c(5:8), title="Black, yellow,
 #' and red Heliconius")
 #'
 #' clusterListHSV <- colordistance::getHistList(dir(system.file("extdata",
@@ -150,39 +185,49 @@ plotClusters <- function(clusterList, hsv = FALSE, p = "all", pausing = TRUE) {
 #' colordistance::plotClustersMulti(clusterListHSV, p=c(1:3, 7:8), hsv=TRUE)
 #' }
 #' @export
-plotClustersMulti <- function(clusterList, hsv = FALSE, 
-                              p = "all", title = "") {
+plotClustersMulti <- function(cluster.list, color.space = "rgb", 
+                              p = "all", title = "",
+                              ref.white, to = "sRGB") {
 
+  color.space <- tolower(color.space)
   # Set plotting parameters
-  if (hsv) {
+  if (color.space == "hsv") {
     scene <- list(xaxis = list(title = "Hue", range = c(0, 1)),
                   yaxis = list(title = "Saturation", range = c(0, 1)),
-                  zaxis = list(title = "Value", range = c(0, 1)),
+                  zaxis = list(title = "Value", range = c(0, 1)), 
                   camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
+  } else if (color.space == "lab") {
+    scene <- list(xaxis = list(title = "Luminance", 
+                               range = c(0, 100)),
+                  yaxis = list(title = "a (green-red)", 
+                               range = c(-127, 128)),
+                  zaxis = list(title = "b (blue-yellow)", 
+                               range = c(-127, 128)))
   } else {
     scene <- list(xaxis = list(title = "Red", 
-                               linecolor = plotly::toRGB("red"), 
-                               linewidth = 6, range = c(0, 1)), 
+                               linecolor = plotly::toRGB("red"),
+                               linewidth = 6, range = c(0, 1)),
                   yaxis = list(title = "Green", 
-                             linecolor = plotly::toRGB("green"),
-                             linewidth = 6, range = c(0, 1)), 
+                               linecolor = plotly::toRGB("green"),
+                               linewidth = 6,
+                               range = c(0, 1)), 
                   zaxis = list(title = "Blue", 
-                             linecolor = plotly::toRGB("blue"),
-                             linewidth = 6, range = c(0, 1)),
+                               linecolor = plotly::toRGB("blue"),
+                               linewidth = 6, range = c(0, 1)),
                   camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   }
-
+  
   # If p is set to "all" then use entire list
   if (p[1] == "all") {
-    p <- c(1:length(clusterList))
+    p <- c(1:length(cluster.list))
   }
 
   # Make new list of just specified values and flatten it
   newList <- vector("list", length(p))
 
   for (i in c(1:length(p))) {
-    newList[[i]] <- clusterList[[p[i]]]
-    names(newList)[i] <- names(clusterList)[p[i]]
+    newList[[i]] <- cluster.list[[p[i]]]
+    names(newList)[i] <- names(cluster.list)[p[i]]
   }
 
   newDF <- newList[[1]]
@@ -195,11 +240,17 @@ plotClustersMulti <- function(clusterList, hsv = FALSE,
     newDF <- rbind(newDF, tempDF)
   }
 
-  if (hsv) {
+  if (color.space == "hsv") {
     colExp <- apply(newDF[, 1:3], 1, function(x) hsv(x[1], x[2], x[3]))
-    } else {
-      colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
-  }
+  } else if (color.space == "lab") {
+      colDF <- suppressMessages(convertColorSpace(newDF[, 1:3],
+                 from = "Lab", to = "sRGB", sample.size = "all",
+                 from.ref.white = ref.white))
+      colExp <- apply(colDF, 1, function(x) rgb(x[1], x[2], x[3]))
+  } else {
+    colExp <- apply(newDF[, 1:3], 1, function(x) rgb(x[1], x[2], x[3]))
+    }
+  
   pl <- plotly::plot_ly(newDF, x = ~newDF[, 1],
                         y = ~newDF[, 2],
                         z = ~newDF[, 3],
@@ -234,14 +285,14 @@ plotClustersMulti <- function(clusterList, hsv = FALSE,
 #' @examples
 #' \dontrun{
 #' # Takes a few seconds to run
-#' clusterList <- colordistance::getHistList(dir(system.file("extdata",
+#' cluster.list <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
 #' upper=rep(1, 3))
 #'
-#' CDM <- colordistance::getColorDistanceMatrix(clusterList, plotting=FALSE)
+#' CDM <- colordistance::getColorDistanceMatrix(cluster.list, plotting=FALSE)
 #'
 #' colordistance::heatmapColorDistance(CDM, main="Heliconius color similarity")
-#' colordistance::heatmapColorDistance(clusterList,
+#' colordistance::heatmapColorDistance(cluster.list,
 #' col=colorRampPalette(c("red", "cyan", "blue"))(n=299))
 #' }
 #'
@@ -253,7 +304,7 @@ heatmapColorDistance <- function(clusterList_or_matrixObject,
   # Shorter handle
   obj <- clusterList_or_matrixObject
 
-  # If a clusterList was provided, get the distance matrix; if it"s a matrix,
+  # If a cluster.list was provided, get the distance matrix; if it"s a matrix,
   # just make the heatmap; if neither, throw an error
   if (is.list(obj)) {
     obj <- getColorDistanceMatrix(obj)

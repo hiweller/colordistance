@@ -41,8 +41,8 @@ not already contain CIE Lab pixels. See \link{convertColorSpace}.}
 
 \item{main}{Plot title. If left as "default", image name is used.}
 
-\item{from}{Original color space of image, probably either "sRGB" or "Apple
-RGB", depending on your computer.}
+\item{from}{Original color space of image if plotting in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
 
 \item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
 }

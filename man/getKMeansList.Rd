@@ -6,7 +6,8 @@
 \usage{
 getKMeansList(images, bins = 10, sample.size = 20000, plotting = FALSE,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, img.type = FALSE)
+  nstart = 5, img.type = FALSE, color.space = "rgb", from = "sRGB",
+  ref.white)
 }
 \arguments{
 \item{images}{A character vector of directories, image paths, or a
@@ -23,11 +24,11 @@ this can be time-consuming, especially for large images.}
 \item{plotting}{Logical. Should the results of the KMeans fit (original image
 + histogram of colors and bin sizes) be plotted for each image?}
 
-\item{lower}{RGB or HSV triplet specifying the lower bounds for background
+\item{lower}{RGB triplet specifying the lower bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]).}
 
-\item{upper}{RGB or HSV triplet specifying the upper bounds for background
+\item{upper}{RGB triplet specifying the upper bounds for background
 pixels. Default upper and lower bounds are set to values that work well for
 a bright green background (RGB [0, 1, 0]). Determining these bounds may
 take some trial and error, but the following bounds may work for certain
@@ -46,6 +47,16 @@ sets should be chosen?}
 
 \item{img.type}{Logical. Should the image extension (.PNG or .JPG) be retained
 in the list names?}
+
+\item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or
+\code{"lab"}) in which to cluster pixels.}
+
+\item{from}{Original color space of images if clustering in CIE Lab space,
+probably either "sRGB" or "Apple RGB", depending on your computer.}
+
+\item{ref.white}{The reference white passed to
+\code{\link{convertColorSpace}}; must be specified if using CIE
+Lab space. See \link{convertColorSpace}.}
 }
 \value{
 A list of kmeans fit objects, where the list element names are the

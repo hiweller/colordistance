@@ -70,15 +70,15 @@
 #' "Heliconius/Heliconius_B/Heliconius_07.jpeg", package="colordistance"),
 #' upper=rep(1, 3), lower=rep(0.8, 3), bins=2)
 #' @export
-getImageHist <- function(image, bins=3, bin.avg=TRUE,
-                         defaultClusters=NULL, lower=c(0, 0.55, 0),
-                         upper=c(0.24, 1, 0.24), as.vec=FALSE,
-                         norm.pix=FALSE, plotting=TRUE, hsv=FALSE,
-                         title="path", bounds=c(0, 1), ...) {
+getImageHist <- function(image, bins = 3, bin.avg = TRUE,
+                         defaultClusters = NULL, lower = c(0, 0.55, 0),
+                         upper = c(0.24, 1, 0.24), as.vec = FALSE,
+                         norm.pix = FALSE, plotting = TRUE, hsv = FALSE,
+                         title = "path", bounds = c(0, 1), ...) {
   
   message("RGB and HSV are device-dependent,", 
           " perceptually non-uniform color spaces.",
-          " See 'Color spaces' vignette for more information.")
+          " See 'Color spaces' vignette for more information.\n")
 
   # If filepath was provided, check to make sure it exists or throw an error
   if (is.character(image)) {
@@ -104,11 +104,11 @@ getImageHist <- function(image, bins=3, bin.avg=TRUE,
   # Create vector of bins
   if (length(bins) == 1 | length(bins) == 3) {
     if (length(bins) == 1) {
-      message(paste("Using ", bins, "^3 = ", 
+      message(paste("\nUsing ", bins, "^3 = ", 
                     paste(bins ^ 3), " total bins", sep = ""))
       bins <- rep(bins, 3)
     } else {
-      message(paste("Using ", bins[1], "*", bins[2], "*", bins[3],
+      message(paste("\nUsing ", bins[1], "*", bins[2], "*", bins[3],
                     " = ", bins[1] * bins[2] * bins[3], " bins", sep = ""))
     }
     breaks <- lapply(bins + 1, 
@@ -363,7 +363,7 @@ getHistList <- function(images, bins = 3, bin.avg = TRUE,
                         bounds = c(0, 1)) {
   
   warning("RGB and HSV are device-dependent, perceptually non-uniform color", 
-          " spaces. See 'Color spaces' vignette for more information.")
+          " spaces. See 'Color spaces' vignette for more information.\n")
   
   # If argument isn't a string/vector of strings, throw an error
   if (!is.character(images)) {
