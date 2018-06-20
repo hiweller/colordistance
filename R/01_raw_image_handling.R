@@ -324,7 +324,8 @@ plotImage <- function(img) {
 #' @param xlim,ylim,zlim Ranges for the X, Y, and Z axes. If "default", the
 #'   widest ranges for each axis according to the specified color space (0-1 for
 #'   RGB and HSV, 0-100 for L of Lab, -128-127 for a and b of Lab) are used.
-#' @param ... Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.
+#' @param ... Optional parameters passed to
+#'   \code{\link[scatterplot3d]{scatterplot3d}}.
 #'
 #' @return 3D plot of pixels in either RGB or HSV color space, colored according
 #'   to their color in the image. Uses
@@ -427,15 +428,15 @@ plotPixels <- function(img, n = 10000, lower = c(0, 0.55, 0),
     }
   }
   
-  if (xlim == "default") {
+  if (xlim[1] == "default") {
     xlim <- xb
   }
   
-  if (ylim == "default") {
+  if (ylim[1] == "default") {
     ylim <- yb
   }
   
-  if (zlim == "default") {
+  if (zlim[1] == "default") {
     zlim <- zb
   }
   
