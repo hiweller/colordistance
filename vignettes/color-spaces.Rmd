@@ -1,0 +1,197 @@
+---
+title: "Color Spaces"
+author: "Hannah Weller"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Color Spaces}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+```{r, echo=F}
+knitr::opts_chunk$set(
+  fig.align="center"
+)
+```
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+* [Introduction to `colordistance`](colordistance-introduction.html)
+* Color Spaces
+* [Pixel Binning Methods](binning-methods.html)
+* [Color Distance Metrics](color-metrics.html)
+* [CIELab Analyses](lab-analyses.html)
+
+## Introduction
+
+Color is a notoriously cotentious subject, partly because it is the end result of a huge number of interacting components. For the purposes of this package, color is the way that some detector -- a camera, a computer, or a brain -- perceives the light reflected, emitted, or transmitted from objects in an environment. A comprehensive discussion of color theory is well beyond the scope of this package, but luckily the major factors that contribute to this perception are fairly uncontroversial. Color perception usually relies on four things:
+
+1. **The available light in the environment.** Objects can only reflect wavelengths of light that are originating from somewhere in the environment, whether the source is the sun, a lamp, or a bioluminescent jellyfish. For example, many deep sea fishes appear red in full-spectrum daylight, because red light is filtered out at relatively shallow depths in the ocean, making the fishes effectively black at their native depths.
+
+2. **The way that objects in the scene reflect light.** A yellow flower is reflecting "yellow" (~570-590 nm) wavelengths of light in the environment, and absorbing most other wavelengths without reflecting them.
+
+3. **The way light reacts with an animal's eyes.** The rod and cone cells of animal eyes, including human eyes, react with this light and transmit that information to a processing center. Different species' eyes vary in these sensitivies; most animals are sensitive to different parts of the spectrum (most birds can see UV light, for example).
+
+4. **The way received light is processed.** This is where your brain classifies a flower reflecting 580 nm wavelength light as "yellow". Because arguments about color perception and classification and what things like "yellow" even mean usually devolve into existential absurdity, scientific color comparisons (including `colordistance`) usually try to bypass this step entirely by classifying colors in a mathematically defined *color space*.
+
+A mathematically defined color space maps perceived colors onto a system of coordinates. Because human beings have trichromatic color vision (cone cells that have peak sensitivities at red, green, and blue wavelengths), most color spaces are three-dimensional. The most familiar of these is probably RGB, or red-green-blue, the tri-channel system that most computers use to store and display color images; other common ones include HSV (hue, saturation, and value) and CMYK (cyan, magenta, yellow, and key).
+
+No color space is a perfect representation of color, and most of the existing ones are tuned specifically for standard human color vision. Different color spaces are usually designed to address some issues more than others. For example, RGB provides a computationally tractable storage format for images and is a decent representation of human color vision; this comes at the cost of displaying a smaller range of colors than human eyes can perceive. Color spaces that attempt to more closely mimic human color perception require additional information about lighting in a scene, and are shaped irregularly. 
+
+A meaningful analysis of the color differences among images therefore depends which aspects of color are most relevant for a research question. This vignette will explain the available color spaces that `colordistance` can use to perform analyses, their advantages and disadvantages, and provide rough guidelines on how to choose one.
+
+## Color spaces in `colordistance`
+
+`colordistance` has built-in functions for analyzing images in RGB, HSV, and CIELab color spaces. These color spaces are visualized below by plotting 10,000 randomly selected RGB pixels.
+
+### RGB
+
+Most digital images are stored as RGB images, and have to be converted to other color spaces. A color in RGB space is specified with a red, green, and blue coordinate, and each channel is 8-bit, meaning it has $2^8 = 256$ possible values. For simplicity, we can bound each of these channels between 0 and 1, with 0 being the no contribution from that color channel, and 1 being the maximum. So pure blue, for example, has an RGB triplet of red = 0, green = 0, and blue = 1, or [0, 0, 1]. Yellow is [1, 1, 0], meaning that blue and yellow are on opposite ends of RGB color space: 
+```{r, echo = FALSE, fig.show='hold', fig.align="center", fig.width=4, fig.height=4, results=F}
+rgb.10000 <- cbind(runif(10000, min = 0, max = 1),
+                   runif(10000, min = 0, max = 1),
+                   runif(10000, min = 0, max = 1))
+scatterplot3d::scatterplot3d(rgb.10000,
+              color = rgb(rgb.10000), pch = 19,
+              main = "RGB", 
+              xlab = "Red", 
+              ylab = "Green", 
+              zlab = "Blue",
+              angle = 45)
+
+scatterplot3d::scatterplot3d(rgb.10000,
+                             color = rgb(rgb.10000), pch = 19,
+                             main = "RGB", 
+                             xlab = "Red", 
+                             ylab = "Green", 
+                             zlab = "Blue",
+                             angle = -45)
+```
+
+RGB color space nicely fills out a 1-by-1-by-1 cube, which is helpful in that all RGB pixels from digital images will map to somewhere in the cube, allowing us to easily measure the distances between those pixels. Because RGB space is neatly bounded, we have known upper and lower limits for the distances between two pixels: two identically colored pixels will be separated by a distance of 0, and two pixels on opposite corners of the cube (such as blue and yellow or black and white) will have a distance of $\sqrt{3}$. And because this is the default color space for digital image storage, working in RGB space is usually faster compared to using more complex color spaces.
+
+RGB space, however, takes the pixels in a digital image completely at face value, and makes no attempt to correct for the variables described above -- namely, the available light in the environment or the sensitivity of the camera. This is fine if all the images in your dataset were taken under identical lighting conditions with the same camera, and those lighting conditions adequately mimic the relevant lighting conditions for the research question, but this isn't always necessarily the case.
+
+Another major criticism of RGB space is that it is device-dependent, meaning that the same RGB triplet will be displayed slightly differently on different monitors.
+
+### HSV
+
+Like RGB, hue-saturation-value color space relies on three channels, all of which range from 0 to 1. But while RGB color space is modeled on the peak color sensitivities of the human eye, HSV is modeled on the ways that people consciously break down colors. You probably don't think of sunflower yellow as equal parts red-cone and green-cone stimulation, for example, but you think of it as a bright, saturated yellow color, whereas beige or tan would be desaturated pale yellows. 
+
+```{r, echo = FALSE, fig.show='hold', fig.align="center", fig.width=4, fig.height=4, results=F}
+hsv.10000 <- t(rgb2hsv(t(rgb.10000), maxColorValue = 1))
+
+scatterplot3d::scatterplot3d(hsv.10000,
+                             color = apply(hsv.10000, 1, function(i) hsv(h=i[1], s=i[2], v=i[3])),
+                             pch = 19, main = "HSV", angle = -45,
+                             xlab = "Hue", ylab = "Saturation", zlab = "Value")
+scatterplot3d::scatterplot3d(hsv.10000,
+                             color = apply(hsv.10000, 1, function(i) hsv(h=i[1], s=i[2], v=i[3])),
+                             pch = 19, main = "HSV", angle = 45,
+                             xlab = "Hue", ylab = "Saturation", zlab = "Value")
+
+```
+
+HSV color space tends to be fast and intuitive, but it's also a poor proxy for color complexity as perceived by most organisms. This doesn't necessarily make it irrelevant for analyses, especially if your goal is to quantify image similarity or dissimilarity for some reason other than trying to mimic organismal color perception, but it does make this color space a relatively unpopular choice in biological research.
+
+### CIELAB
+
+Of the spaces that `colordistance` can use, CIELab (or CIELAB, or CIE L\*a\*b) color space is both the most complex and the most robust for quantitative comparisons. CIELab space is defined by the [International Commission on Illumination](http://www.cie.co.at/) (CIE) with the intent of being a perceptually uniform color space, meaning that sets of colors separated by the same distance in CIELab space will seem about equally different. 
+
+The three channels of Lab space are luminance (black to white), a (green to red) and b (blue to yellow). This is a convenient and fairly intuitive way to organize a color space, but because the boundaries human color vision don't fall neatly within a perfect cube, neither does CIELab:
+
+```{r, echo = FALSE, fig.show='hold', fig.align="center", fig.width=4, fig.height=4, results=F}
+plotLab <- function(pix, title, ref.white, angle = -45,
+                    xlim = c(0, 100), 
+                    ylim = c(-128, 127),
+                    zlim = c(-128, 127)) {
+  
+  colExp <- rgb(suppressMessages(colordistance::convertColorSpace(pix, from = "Lab", to = "sRGB", 
+                                                   sample.size = "all", 
+                                                   from.ref.white = ref.white)))
+  
+  scatterplot3d::scatterplot3d(pix, color = colExp, pch = 19, 
+                               main = title, xlab = "Luminance", angle = angle,
+                               ylab = "a (green-red)", zlab = "b (blue-yellow)",
+                               xlim = xlim, ylim = ylim, zlim = zlim)
+  
+}
+
+lab.10000 <- suppressMessages(colordistance::convertColorSpace(rgb.10000,
+                              sample.size = "all", to.ref.white = "D65"))
+
+plotLab(lab.10000, title = "CIELab", ref.white = "D65", angle = 45,
+        ylim = range(lab.10000[,2]), zlim=c(-100, 90))
+plotLab(lab.10000, title = "CIELab", ref.white = "D65", angle = -45,
+        ylim = range(lab.10000[,2]), zlim=c(-100, 90))
+
+```
+
+CIELab has two other major advantages: it is device-independent, meaning its appearance does not depend on the type of screen; and it allows the specification of a *white reference*, which provides information about the light available in the scene. The standard white references correspond to the most common lighting settings, including direct and indirect sunlight ("D50" and "D65" white references, respectively), incandescent lamps ("A" series), and a theoretical equal-energy light source ("E"). You can also transform RGB coordinates into CIELab coordinates usually virtually any non-standard white reference by first [translating the RGB pixels into XYZ color space](http://www.brucelindbloom.com/index.html?Eqn_RGB_to_XYZ.html) and then from XYZ into CIELab by [calculating a chromatic adaptation matrix](http://www.brucelindbloom.com/index.html?Eqn_RGB_to_XYZ.html), but realistically, if you need to do things like that, `colordistance` is beneath you and you shouldn't be using R for this anyways.
+
+Working in CIELab space is computationally more costly, and the color space explicitly prioritizes uniform color distrubtion for human vision, which may not be relevant if human color vision isn't your goal. However, since most digital cameras are designed to mimic the tri-stimulus model of human color vision anyways, this is kind of a moot point.
+
+The real danger of CIELab space is that, from a color science perspective, it gives you enough rope to hang yourself with. RGB space is a nice cube of equal sides and has rigidly defined ranges, making comparisons more straightforwar. CIELab space is wonky, irregular, and dependent on the reference white. If you use an inappropriate reference white, the conversion algorithm will interpret the same set of RGB coordinates as wrong colors, or collapse dissimilar colors into a single region. In other words, CIELab makes assumptions about the colors in the environment based on the lighting conditions you specify, so if you specify inaccurate conditions, your colors will be inaccurate and you'll have no indication of the problem. 
+
+The disadvantages of RGB space are exactly the opposite: it treats all color coordinates as equal in the same space, with no consideration for the fact that objects can have different colors under different lighting conditions, and the color distances aren't necessarily intuitive.
+
+## Why does the choice of color space matter?
+
+The color space chosen for an analysis will inform the color distances calculated in the analysis. The results will almost certainly be similar across multiple color spaces, but depending on the degree and kinds of color differences in your images, choosing an appropriate color space can provide a more robust analysis (in addition to making reviewers happy). 
+
+```{r, fig.show='hold', fig.align="center", fig.width=4, fig.height=4, results=F}
+path <- system.file("extdata", "Heliconius/Heliconius_B/Heliconius_08.jpeg", package="colordistance")
+img <- colordistance::loadImage(path, lower = rep(0.8, 3), upper = rep(1, 3),
+                                CIELab = TRUE, ref.white = "D65", sample.size = 10000)
+colordistance::plotPixels(img, color.space = "rgb", main = "RGB", n = 10000)
+colordistance::plotPixels(img, color.space = "lab", ref.white = "D65", n = 10000,
+                          main = "CIELab", ylim = c(-100, 100), zlim = c(-50, 100))
+```
+
+As outlined above, different color spaces prioritize different aspects of color perception. The CIELab model tries to mimic perceived differences in color as closely as possible; the HSV model is friendly for intuitive color picking; and the RGB model tries to find a happy medium between the tristimulus model of human color vision and the limits of digital screen displays. The best choice of color space will therefore depend on:
+
+1. The research question;
+2. The quality of the images;
+3. The types of expected differences; and 
+4. Available computing power.
+
+## Choosing a color space for analysis
+
+### Scientific merit
+
+There is an approximate hierarchy of color spaces when considering biological questions, with the best options typically requiring more expertise, expensive equipment, and specialized data collecting conditions in exchange for more precise results. Briefly:
+
+1. Reflectance data as measured with a hyperspectral (i.e. more than just 3-channel) camera, combined with spectrophotometric measurements of available light in the scene. Requires highly specialized equipment.
+
+2. Perceptually uniform color spaces like CIE XYZ and CIELab/Luv. Requires some knowledge of available light in the scene.
+
+3. "Computer-friendly" coordinate models like RGB, HSV, or CMYK. Requires a commercial digital camera and little finessing.
+
+In general, you trade biological relevance for ease-of-use in choosing a color space. Spectral reflectance data is the gold standard, but if your research question does not necessarily hinge on organismal color vision, then the computer-friendly models may be the best choice.
+
+### Type of comparison
+
+If your research question depends on how other organisms will perceive the color differences in images, then the third category of color spaces listed above (RGB and HSV) may not be appropriate. For example, say you're trying to determine how well different color variants of a lizard are camouflaged against the same patch of forest floor. The efficacy of their camouflage will depend on how a predator would perceive the color mismatches between the lizard and the background. Using HSV color space, which has no real basis in organismal color vision, won't accurately reflect the predator's perception of the color mismatch. RGB is somewhat more appropriate because it is roughly based on the tristimulus model of human color vision, so the distances approximately reflect perceived distances, but it was not designed to be perceptually uniform, so be cautious when interpreting the results.
+
+It should be noted that perceptually uniform color spaces like CIELab are designed *specifically for human vision*. The distances it provides are not necessarily perceptually uniform for other organisms, even those with trichromatic vision, because they may have peak visual sensitivities in other parts of the light spectrum. However, CIELab will still provide a closer approximation than a color space that doesn't even attempt perceptual uniformity.
+
+If your research question does not explicitly hinge on biological color perception, however, these color spaces may be no more or less appropriate than a perceptually uniform color space like CIELab. For example, say you want to know what percentage of a plant leaf is infected with a virus that kills the surrounding tissue, so you're mostly working with a green, yellow, and brown color palette. You don't necessarily care how an herbivore would see this plant leaf; you just want to quantify that some plants are more infected than others. RGB and HSV would be perfectly fine for answering this question, since you're not trying to interpret your results through the lens of animal vision.
+
+To summarize:
+
+1. **Research questions about organismal color perception**: CIELab if reference white is known or can be estimated; RGB if not (and proceed with caution).
+2. **Research questions quantifying color differences regardless of organismal perception**: RGB, HSV, or CIELab.
+
+### Ease-of-use
+
+When working with digital images, CIELab is often your best option. But converting from RGB to CIELab is slow, can be misleading if the wrong reference white is used, and may not necessarily provide a better answer to a research question. If you have no idea what the lighting conditions were for your image set (maybe the images are from an old dataset or collected from several sources), want to do a quick preliminary analysis on a large dataset, or your analysis doesn't hinge on organismal color vision, RGB may be the safer and quicker option.
+
+## Further reading
+
+* [CIELab Analysis vignette](lab-analyses.html)
+* [CIELab computation by Ocean Optics](https://oceanoptics.com/faq/cielab-color-computed/)
+* [Introduction to Colour Spaces](https://www.colourphil.co.uk/lab_lch_colour_space.shtml) (very little math)
+* [Hill, B., Roger, T., & Vorhagen, F. W. (1997). Comparative analysis of the quantization of color spaces on the basis of the CIELAB color-difference formula. *ACM Transactions on Graphics (TOG), 16*(2), 109-154.](https://dl.acm.org/citation.cfm?id=248212)

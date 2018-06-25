@@ -13,8 +13,10 @@ vignette: >
 ---
 
 * Introduction to `colordistance`
+* [Color Spaces](color-spaces.html)
 * [Pixel Binning Methods](binning-methods.html)
 * [Color Distance Metrics](color-metrics.html)
+* [CIELab Analyses](lab-analyses.html)
 
 The `colordistance` package contains functions for quantifying the differences between colorful objects. It was originally written for comparing coral reef fishes, but is appropriate for any question that requires objectively measuring the color similarity of two or more objects. For example, say you find three flowers -- a red one, an orange one, and a blue one. Based just on their colors, you could safely say that the red and orange flowers are more similar to each other than either one is to the blue flower. But what if the orange flower has blue spots? Obviously it's more like the blue flower than the solid orange flower would be, but by how much? What if the blue flower also has red spots? What was an obvious comparison previously now becomes more of a judgment call if we really entirely on human classification.
 
@@ -116,7 +118,7 @@ Now that we have a list of pixels, we need to bin them in order to make comparis
 
 The differences between the two methods can be pretty dramatic, but I strongly recommend the first method: if your images contain accent colors or small details, k-means can end up muting those differences since those pixels don't contribute much to the overall pixel-center distances.
 
-The differences in binning methods are explained in the [binning vignette](binning-methods.html), but the short explanation for the histogram method is that the color space cube we've been plotting is divided up into a set number of smaller cubes, with pixels in the same cube counting toward that cube's total. For example, if we divided each of the red, green, and blue channels into 2 bins each, we'd have a total of $2^{3}=8$ possible cubes for the pixels to fall into.
+The differences in binning methods are explained in the [binning vignette](binning-methods.html), but the short explanation for the histogram method is that the color space cube we've been plotting is divided up into a set number of smaller cubes, with pixels in the same cube counting toward that cube's total. For example, if we divided each of the red, green, and blue channels into 2 bins each, we'd have a total of $2^{3} = 8$ possible cubes for the pixels to fall into.
 
 ```{r, fig.width=5, fig.height=4, fig.align="center", echo=F, fig.cap=""}
 pix <- H8$filtered.rgb.2d[sample(nrow(H8$filtered.rgb.2d), 10000), ]

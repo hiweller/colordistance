@@ -17,9 +17,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+* [Color Spaces](color-spaces.html)
 * [Introduction to `colordistance`](colordistance-introduction.html)
 * [Pixel Binning Methods](binning-methods.html)
 * Color Distance Metrics
+* [CIELab Analyses](lab-analyses.html)
 
 ## Introduction
 
