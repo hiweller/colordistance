@@ -4,7 +4,7 @@
 
 
 ## R CMD check results
-* local check: there were no ERRORs, WARNINGs, or NOTEs
+* local check: there were no ERRORs, WARNINGs, or NOTEs.
 * win-builder: there were no ERRORS or WARNINGS.
 
 There was 1 NOTE:
@@ -12,11 +12,12 @@ There was 1 NOTE:
 * checking CRAN incoming feasibility ... NOTE
 	Maintainer: 'Hannah Weller <hannahiweller@gmail.com>'
 
-	New submission
+	Possibly mis-spelled words in DESCRIPTION:
+  	CIELAB (11:22)
 
-  First submission of package, so ‘new submission’ NOTE is unavoidable.
+This is a standard accepted spelling for the CIELAB (or CIELab or CIE L*a*b) color space.
 
 
 ## Downstream dependencies
 R CMD check on all downstream dependencies performed using devtools::revdep.
-All packages passed.
+No ERRORs or WARNINGs found.
