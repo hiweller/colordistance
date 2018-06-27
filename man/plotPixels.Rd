@@ -49,7 +49,8 @@ probably either "sRGB" or "Apple RGB", depending on your computer.}
 widest ranges for each axis according to the specified color space (0-1 for
 RGB and HSV, 0-100 for L of Lab, -128-127 for a and b of Lab) are used.}
 
-\item{...}{Optional parameters passed to \code{\link[scatterplot3d]{scatterplot3d}}.}
+\item{...}{Optional parameters passed to
+\code{\link[scatterplot3d]{scatterplot3d}}.}
 }
 \value{
 3D plot of pixels in either RGB or HSV color space, colored according
