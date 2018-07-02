@@ -206,7 +206,8 @@ imageClusterPipeline <- function(images, cluster.method = "hist",
                                   color.space = color.space,
                                   lower = lower, upper = upper, 
                                   iter.max = iter.max, nstart = nstart,
-                                  img.type = img.type)
+                                  img.type = img.type,
+                                  ref.white = ref.white)
     cluster.list <- extractClusters(cluster.list, 
                                     ordering = FALSE, 
                                     normalize = norm.pix)
