@@ -8,9 +8,9 @@ An R package with functions for quantifying the differences between colorful obj
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 
-April 19, 2018: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
+**April 19, 2018**: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
 
-June 26, 2018: Added option to perform analyses CIELAB color space, as well as warnings about perceptual non-uniformity of RGB space. RGB (with warning) is still the default in order to prompt users to read up on CIELAB before using it. See "Color Spaces" and "CIELab Analyses" vignettes.
+**June 26, 2018**: Added option to perform analyses CIELAB color space, as well as warnings about perceptual non-uniformity of RGB space. RGB (with warning) is still the default in order to prompt users to read up on CIELAB before using it. See "Color Spaces" and "CIELab Analyses" vignettes.
 
 **Input**: Set(s) of JPEG or PNG images of colorful objects, optionally with backgrounds masked out.
 
