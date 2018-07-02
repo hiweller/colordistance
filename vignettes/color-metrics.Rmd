@@ -105,7 +105,7 @@ chisq_CDM <- colordistance::getColorDistanceMatrix(clusters, method="chisq")
 color_CDM <- colordistance::getColorDistanceMatrix(clusters, method="color.dist")
 
 # Using weighted pairs with uneven weights and ordering off
-weighted_CDM <- colordistance::getColorDistanceMatrix(clusters, method="weighted.pairs", ordering=FALSE, sizeWeight=0.7, colorWeight=0.3)
+weighted_CDM <- colordistance::getColorDistanceMatrix(clusters, method="weighted.pairs", ordering=FALSE, size.weight=0.7, color.weight=0.3)
 
 ```
 
