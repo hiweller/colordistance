@@ -119,8 +119,9 @@ plotClusters <- function(cluster.list, color.space = "rgb",
                             size = ~cluster.list[[i]][, 4], 
                             color = ~cluster.list[[i]][, 4])
       pl <- plotly::add_markers(pl, color = I(colExp), 
-                                size = ~cluster.list[[i]][, 4], 
-                                sizes = c(10, 5000))
+            size = ~cluster.list[[i]][, 4], 
+            sizes = c(5000*min(cluster.list[[i]][,4]) / 
+                        max(cluster.list[[i]][,4]), 5000))
       pl <- plotly::layout(pl, scene = scene, 
                            title = names(cluster.list)[i])
 
