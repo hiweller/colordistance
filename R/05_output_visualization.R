@@ -347,10 +347,15 @@ heatmapColorDistance <- function(clusterList_or_matrixObject,
 #'   coordinates and fourth column must be cluster size.
 #' @param pausing Logical. Pause and wait for keystroke before plotting the next
 #'   histogram?
-#' @param hsv Logical. Should provided color coordinates be interpreted as HSV?
-#'   If \code{FALSE}, RGB is assumed.
+#' @param color.space The color space (\code{"rgb"}, \code{"hsv"}, or
+#'   \code{"lab"}) in which to plot cluster histogram.
+#' @param ref.white The reference white passed to
+#'   \code{\link{convertColorSpace}}; must be specified if using CIE
+#'   Lab space. See \link{convertColorSpace}.
 #' @param main Title for plot. If \code{"default"}, the name of the cluster
 #'   histogram is used.
+#' @param from  Display color space of image if clustering in CIE Lab space,
+#'   probably either "sRGB" or "Apple RGB", depending on your computer.
 #' @param ... Optional arguments passed to the \code{\link[graphics]{barplot}} function.
 #'
 #' @examples
@@ -362,12 +367,23 @@ heatmapColorDistance <- function(clusterList_or_matrixObject,
 #' colordistance::plotHist(color_df, main="Example plot")
 #' @export
 plotHist <- function(histogram, pausing = TRUE, 
-                     hsv = FALSE, main = "default", ...) {
+                     color.space = "rgb", ref.white, 
+                     from = "sRGB", main = "default", ...) {
+  
+  color.space <- tolower(color.space)
+  
   if (is.null(dim(histogram))) {
 
     for (i in 1:length(histogram)) {
       clusters <- histogram[[i]]
-      if (hsv) {
+      
+      if (color.space == "lab") {
+        suppressMessages(convertColorSpace(histogram[, 1:3], 
+                                           from = "Lab", to = from, 
+                                           to.ref.white = ref.white))
+      }
+      
+      if (color.space == "hsv") {
         colExp <- apply(clusters, 1, function(x) hsv(h = x[1],
                                                      s = x[2],
                                                      v = x[3]))
@@ -390,7 +406,13 @@ plotHist <- function(histogram, pausing = TRUE,
 
     clusters <- histogram
 
-    if (hsv) {
+    if (color.space == "lab") {
+      suppressMessages(convertColorSpace(histogram[, 1:3], 
+                                         from = "Lab", to = from, 
+                                         to.ref.white = ref.white))
+    }
+    
+    if (color.space == "hsv") {
       colExp <- apply(clusters, 1, function(x) hsv(h = x[1],
                                                    s = x[2],
                                                    v = x[3]))
