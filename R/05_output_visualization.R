@@ -378,9 +378,9 @@ plotHist <- function(histogram, pausing = TRUE,
       clusters <- histogram[[i]]
       
       if (color.space == "lab") {
-        suppressMessages(convertColorSpace(histogram[, 1:3], 
-                                           from = "Lab", to = from, 
-                                           to.ref.white = ref.white))
+        clusters[, 1:3] <- suppressMessages(
+          convertColorSpace(histogram[, 1:3], 
+          from = "Lab", to = from, to.ref.white = ref.white))
       }
       
       if (color.space == "hsv") {
@@ -407,9 +407,10 @@ plotHist <- function(histogram, pausing = TRUE,
     clusters <- histogram
 
     if (color.space == "lab") {
-      suppressMessages(convertColorSpace(histogram[, 1:3], 
-                                         from = "Lab", to = from, 
-                                         to.ref.white = ref.white))
+      clusters[, 1:3] <- suppressMessages(
+        convertColorSpace(clusters[ , 1:3], 
+        from = "Lab", to = from, 
+        to.ref.white = ref.white))
     }
     
     if (color.space == "hsv") {
