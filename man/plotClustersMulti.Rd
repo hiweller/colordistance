@@ -8,8 +8,8 @@ plotClustersMulti(cluster.list, color.space = "rgb", p = "all",
   title = "", ref.white, to = "sRGB")
 }
 \arguments{
-\item{cluster.list}{A list of identically sized dataframes with 4 columns each
-(R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
+\item{cluster.list}{A list of identically sized dataframes with 4 columns
+each as output by \code{extractClusters}, \code{getLabHistList}, or
 \code{getHistList}.}
 
 \item{color.space}{The color space (\code{"rgb"}, \code{"hsv"}, or

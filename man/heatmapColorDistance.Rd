@@ -17,9 +17,8 @@ symmetrical distance matrix as output by
 \item{main}{Title for heatmap plot.}
 
 \item{col}{Color scale for heatmap from low to high. Default is
-\code{colorRampPalette(c("0735b2", "#eee5f9",
-"#c500f2"))(n=299)}, where pink is more dissimilar and blue is more
-similar.}
+\code{colorRampPalette(c("royalblue4", "ghostwhite", "violetred2"))(299)},
+where pink is more dissimilar and blue is more similar.}
 
 \item{margins}{Margins for column and row labels.}
 

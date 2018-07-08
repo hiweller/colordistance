@@ -143,8 +143,8 @@ plotClusters <- function(cluster.list, color.space = "rgb",
 #' Plots cluster sets from several different dataframes on a single plot for
 #' easy comparison.
 #'
-#' @param cluster.list A list of identically sized dataframes with 4 columns each
-#'   (R, G, B, Pct or H, S, V, Pct) as output by \code{extractClusters} or
+#' @param cluster.list A list of identically sized dataframes with 4 columns
+#'   each as output by \code{extractClusters}, \code{getLabHistList}, or
 #'   \code{getHistList}.
 #' @param p Numeric vector of indices for which elements to plot; otherwise all
 #'   of the cluster sets provided will be plotted together.
@@ -275,9 +275,8 @@ plotClustersMulti <- function(cluster.list, color.space = "rgb",
 #'   \code{\link{getColorDistanceMatrix}}.
 #' @param main Title for heatmap plot.
 #' @param col Color scale for heatmap from low to high. Default is
-#'   \code{colorRampPalette(c("0735b2", "#eee5f9",
-#'   "#c500f2"))(n=299)}, where pink is more dissimilar and blue is more
-#'   similar.
+#'   \code{colorRampPalette(c("royalblue4", "ghostwhite", "violetred2"))(299)},
+#'   where pink is more dissimilar and blue is more similar.
 #' @param margins Margins for column and row labels.
 #' @param ... Additional arguments passed on to \code{\link[gplots]{heatmap.2}}.
 #'
@@ -317,9 +316,9 @@ heatmapColorDistance <- function(clusterList_or_matrixObject,
   # The default heatmap colors are genuinely offensive to the eyes so make the
   # default something more palatable; otherwise use user-provided vector
   if (col[1] == "default") {
-    col <- colorRampPalette(c("#0735b2", 
-                              "#eee5f9", 
-                              "#c500f2"))(n=299)
+    col <- colorRampPalette(c("royalblue4", 
+                              "ghostwhite", 
+                              "violetred2"))(n=299)
     
   }
 
