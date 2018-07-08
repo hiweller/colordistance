@@ -269,14 +269,14 @@ plotClustersMulti <- function(cluster.list, color.space = "rgb",
 #' \code{\link[stats]{hclust}}.
 #'
 #' @param clusterList_or_matrixObject Either a list of identically sized
-#'   dataframes with 4 columns each (R, G, B, Pct or H, S, V, Pct) as output by
+#'   dataframes with 4 columns each (3 color channels + Pct) as output by
 #'   \code{\link{extractClusters}} or \code{\link{getHistList}}, or a
 #'   symmetrical distance matrix as output by
 #'   \code{\link{getColorDistanceMatrix}}.
 #' @param main Title for heatmap plot.
 #' @param col Color scale for heatmap from low to high. Default is
-#'   \code{colorRampPalette(c("royalblue4", "ghostwhite",
-#'   "goldenrod2"))(n=299)}, where yellow is more dissimilar and blue is more
+#'   \code{colorRampPalette(c("0735b2", "#eee5f9",
+#'   "#c500f2"))(n=299)}, where pink is more dissimilar and blue is more
 #'   similar.
 #' @param margins Margins for column and row labels.
 #' @param ... Additional arguments passed on to \code{\link[gplots]{heatmap.2}}.
@@ -317,9 +317,10 @@ heatmapColorDistance <- function(clusterList_or_matrixObject,
   # The default heatmap colors are genuinely offensive to the eyes so make the
   # default something more palatable; otherwise use user-provided vector
   if (col[1] == "default") {
-    col <- colorRampPalette(c("royalblue4", 
-                              "ghostwhite", 
-                              "goldenrod2"))(n = 299)
+    col <- colorRampPalette(c("#0735b2", 
+                              "#eee5f9", 
+                              "#c500f2"))(n=299)
+    
   }
 
   # Convert to "dist" object for hclust method and plot heatmap
