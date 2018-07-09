@@ -9,7 +9,7 @@ plotHist(histogram, pausing = TRUE, color.space = "rgb", ref.white,
 }
 \arguments{
 \item{histogram}{A single dataframe or a list of dataframes as returned by
-\code{\link{getImageHist}}, \code{\link{getHistList}}, or
+\code{\link{getLabHist}}, \code{\link{getLabHistList}}, or
 \code{\link{extractClusters}}. First three columns must be color
 coordinates and fourth column must be cluster size.}
 
