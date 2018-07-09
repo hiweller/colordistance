@@ -447,7 +447,7 @@ plotHist <- function(histogram, pausing = TRUE,
 #'   for a and b channels of CIE Lab space.
 #' @param main Title for the plot.
 #' @param scaling Scaling factor for size of clusters.
-#' @param alpha Transparency value for plotting; must be between 0 and 1.
+#' @param opacity Transparency value for plotting; must be between 0 and 1.
 #' @param plus Amount to add to percent column for plotting; can help to make
 #'   very small (or 0) clusters visible.
 #' @param ... Additional parameters passed to
@@ -469,7 +469,7 @@ scatter3dclusters <- function(clusters, color.space,
                               ref.white = "D65",
                               xlim = "default", ylim = "default", zlim = "default",
                               main = "Color clusters", scaling = 10, 
-                              alpha = 0.9, plus = 0.01, ...) {
+                              opacity = 0.9, plus = 0.01, ...) {
   
   # Store locations in a separate object
   pix <- clusters[, 1:3]
@@ -525,7 +525,7 @@ scatter3dclusters <- function(clusters, color.space,
   
   # Plot 3d scatterplot
   scatterplot3d::scatterplot3d(pix, pch = 20, main = main,
-                 color = scales::alpha(colExp, alpha),
+                 color = scales::alpha(colExp, opacity),
                  xlab = xlab, ylab = ylab, zlab = zlab,
                  xlim = xlim, ylim = ylim, zlim = zlim,
                  cex.symbols = (scaling * (clusters$Pct + plus)), 

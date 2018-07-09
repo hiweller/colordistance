@@ -11,7 +11,7 @@ Description: Loads and displays images, selectively masks specified background
     similarity. Uses CIELAB, RGB, or HSV color spaces. Originally written
     for use with organism coloration (reef fish color diversity, butterfly
     mimicry, etc), but easily applicable for any image set.
-Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d, plotly, gplots, abind, magrittr
+Imports: jpeg, png, stats, clue, spatstat, ape, mgcv, emdist, scatterplot3d, plotly, gplots, abind, magrittr, scales
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8

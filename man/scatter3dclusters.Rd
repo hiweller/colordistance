@@ -6,7 +6,8 @@
 \usage{
 scatter3dclusters(clusters, color.space, ref.white = "D65",
   xlim = "default", ylim = "default", zlim = "default",
-  main = "Color clusters", scaling = 10, alpha = 0.9, plus = 0.01, ...)
+  main = "Color clusters", scaling = 10, opacity = 0.9, plus = 0.01,
+  ...)
 }
 \arguments{
 \item{clusters}{A single dataframe or a list of dataframes as returned by
@@ -30,7 +31,7 @@ for a and b channels of CIE Lab space.}
 
 \item{scaling}{Scaling factor for size of clusters.}
 
-\item{alpha}{Transparency value for plotting; must be between 0 and 1.}
+\item{opacity}{Transparency value for plotting; must be between 0 and 1.}
 
 \item{plus}{Amount to add to percent column for plotting; can help to make
 very small (or 0) clusters visible.}
