@@ -1,4 +1,4 @@
-# colordistance 1.0.0
+# colordistance 1.0.1
 
 An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
   colors, bins pixels by color using either data-dependent or automatically
@@ -8,9 +8,11 @@ An R package with functions for quantifying the differences between colorful obj
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 
-**April 19, 2018**: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
+**July 10, 2018**: Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color. This is helpful for visualizing the distributions that `colordistance` actually compares to come up with a distance matrix, since the histograms can give the misleading impression that the clusters are treated as one-dimensional after binning. Also tweaked some compatibilities.
 
 **June 26, 2018**: Added option to perform analyses CIELAB color space, as well as warnings about perceptual non-uniformity of RGB space. RGB (with warning) is still the default in order to prompt users to read up on CIELAB before using it. See "Color Spaces" and "CIELab Analyses" vignettes.
+
+**April 19, 2018**: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
 
 **Input**: Set(s) of JPEG or PNG images of colorful objects, optionally with backgrounds masked out.
 
@@ -51,7 +53,7 @@ All of the `colordistance` vignettes that (optionally) come with the package are
 
 * [Introduction to `colordistance`](https://hiweller.github.io/colordistance/colordistance-introduction.html)
 
-* [Explanation of color spaces](https://hiweller.github.io/colordistance/colordistance-spaces.html)
+* [Explanation of color spaces](https://hiweller.github.io/colordistance/color-spaces.html)
 
 * [Explanation of pixel binning methods](https://hiweller.github.io/colordistance/binning-methods.html)
 
