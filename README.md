@@ -1,4 +1,4 @@
-# colordistance 1.0.0
+# colordistance 1.0.1
 
 An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
   colors, bins pixels by color using either data-dependent or automatically
@@ -8,9 +8,11 @@ An R package with functions for quantifying the differences between colorful obj
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 
-**April 19, 2018**: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
+**July 10, 2018**: Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color. This is helpful for visualizing the distributions that `colordistance` actually compares to come up with a distance matrix, since the histograms can give the misleading impression that the clusters are treated as one-dimensional after binning. Also tweaked some compatibilities.
 
 **June 26, 2018**: Added option to perform analyses CIELAB color space, as well as warnings about perceptual non-uniformity of RGB space. RGB (with warning) is still the default in order to prompt users to read up on CIELAB before using it. See "Color Spaces" and "CIELab Analyses" vignettes.
+
+**April 19, 2018**: Functions for combining data across a set of images (`combineClusters` and `combineList`) added. Useful for pooling multiple images of the same individual, species, etc before analysis.
 
 **Input**: Set(s) of JPEG or PNG images of colorful objects, optionally with backgrounds masked out.
 
@@ -77,6 +79,12 @@ colordistance::imageClusterPipeline("path/to/images/folder")
 
 You'll get a blue and yellow heatmap with a cluster dendrogram and labels taken from the image names. Yellow cells correspond to *dissimilar* images; blue cells correspond to more *similar* images. If those scores don't look right, try changing the number of bins (`bins` argument), the distance metric (`distanceMethod` argument), and making sure you're masking out the right background color.
 
+## Contributions and bug reports
+
+If something is wrong or confusing, or if you'd like to see a change, please create an issue on [the issues page of the GitHub repository](https://github.com/hiweller/colordistance/issues), as it allows other people to see it. You can also email me at <hannahiweller@gmail.com>.
+
+If you would like to contribute, feel free to make a pull request or email me with your thoughts.
+
 ## Questions?
 
-Email me: hannahiweller@gmail.com
+Email me: <hannahiweller@gmail.com>
