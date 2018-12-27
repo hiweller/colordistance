@@ -1,5 +1,8 @@
+# colordistance 1.1.0
+Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color.
+
 # colordistance 1.0.1
-Minor fixes. Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color.
+Minor fixes. Patched a bug in convertColorSpace.
 
 
 # colordistance 1.0.0

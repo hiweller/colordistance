@@ -97,6 +97,7 @@ convertColorSpace <- function(color.coordinate.matrix, from="sRGB",
     # that one and print message
     Pct <- color.coordinate.matrix$Pct
     color.coordinate.matrix$Pct <- NULL
+    color.coordinate.matrix <- as.matrix(color.coordinate.matrix)
     message("Ignoring 'Pct' column and treating remaining",
             " columns as color coordinates")
     

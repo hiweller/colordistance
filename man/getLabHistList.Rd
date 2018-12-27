@@ -7,7 +7,8 @@
 getLabHistList(images, bins = 3, sample.size = 10000, ref.white,
   from = "sRGB", bin.avg = TRUE, as.vec = FALSE, plotting = FALSE,
   pausing = TRUE, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24),
-  title = "path", a.bounds = c(-128, 127), b.bounds = c(-128, 127), ...)
+  title = "path", a.bounds = c(-128, 127), b.bounds = c(-128, 127),
+  ...)
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}

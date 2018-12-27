@@ -1,4 +1,4 @@
-# colordistance 1.0.1
+# colordistance 1.1.0
 
 An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
   colors, bins pixels by color using either data-dependent or automatically
@@ -7,6 +7,8 @@ An R package with functions for quantifying the differences between colorful obj
   clusters images by object color similarity. Originally written for use with
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
+
+**December 27, 2018**: Fixed a bug when converting color clusters using convertColorSpace.
 
 **July 10, 2018**: Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color. This is helpful for visualizing the distributions that `colordistance` actually compares to come up with a distance matrix, since the histograms can give the misleading impression that the clusters are treated as one-dimensional after binning. Also tweaked some compatibilities.
 

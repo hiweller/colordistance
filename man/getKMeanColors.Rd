@@ -6,8 +6,8 @@
 \usage{
 getKMeanColors(path, n = 10, sample.size = 20000, plotting = TRUE,
   lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, return.clust = TRUE, color.space = "rgb", from = "sRGB",
-  ref.white)
+  nstart = 5, return.clust = TRUE, color.space = "rgb",
+  from = "sRGB", ref.white)
 }
 \arguments{
 \item{path}{Path to an image (JPG or PNG).}

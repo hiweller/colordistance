@@ -426,7 +426,7 @@ plotHist <- function(histogram, pausing = TRUE,
   }
 }
 
-#' Plot clusters in a 2D plot
+#' Plot 3D clusters in a 2D plot
 #'
 #' Uses \code{\link[scatterplot3d]{scatterplot3d}} to plot clusters in color
 #' space.

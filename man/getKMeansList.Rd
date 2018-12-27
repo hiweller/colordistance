@@ -4,10 +4,10 @@
 \alias{getKMeansList}
 \title{Get KMeans clusters for every image in a set}
 \usage{
-getKMeansList(images, bins = 10, sample.size = 20000, plotting = FALSE,
-  lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), iter.max = 50,
-  nstart = 5, img.type = FALSE, color.space = "rgb", from = "sRGB",
-  ref.white)
+getKMeansList(images, bins = 10, sample.size = 20000,
+  plotting = FALSE, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24),
+  iter.max = 50, nstart = 5, img.type = FALSE, color.space = "rgb",
+  from = "sRGB", ref.white)
 }
 \arguments{
 \item{images}{A character vector of directories, image paths, or a

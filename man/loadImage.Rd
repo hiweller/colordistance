@@ -5,7 +5,8 @@
 \title{Import image and generate filtered 2D pixel array(s)}
 \usage{
 loadImage(path, lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24),
-  hsv = TRUE, CIELab = FALSE, sample.size = 1e+05, ref.white = NULL)
+  hsv = TRUE, CIELab = FALSE, sample.size = 1e+05,
+  ref.white = NULL)
 }
 \arguments{
 \item{path}{Path to image (a string).}

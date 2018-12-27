@@ -4,7 +4,8 @@
 \alias{extractClusters}
 \title{Extract cluster values and sizes from kmeans fit objects}
 \usage{
-extractClusters(getKMeansListObject, ordering = TRUE, normalize = FALSE)
+extractClusters(getKMeansListObject, ordering = TRUE,
+  normalize = FALSE)
 }
 \arguments{
 \item{getKMeansListObject}{A list of \code{\link[stats]{kmeans}} fit objects
