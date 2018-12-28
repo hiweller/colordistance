@@ -19,5 +19,5 @@ This is a standard accepted spelling for the CIELAB (or CIELab or CIE L*a*b) col
 
 
 ## Downstream dependencies
-R CMD check on all downstream dependencies performed using devtools::revdep.
+R CMD check on all downstream dependencies performed using revdepcheck.
 No ERRORs or WARNINGs found.
