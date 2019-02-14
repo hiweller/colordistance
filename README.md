@@ -8,6 +8,10 @@ An R package with functions for quantifying the differences between colorful obj
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 
+# News
+
+**February 6, 2019**: Our methods paper for `colordistance` is out in PeerJ! Find it here: <https://peerj.com/articles/6398/>. 
+
 **December 27, 2018**: Fixed a bug when converting color clusters using convertColorSpace.
 
 **July 10, 2018**: Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color. This is helpful for visualizing the distributions that `colordistance` actually compares to come up with a distance matrix, since the histograms can give the misleading impression that the clusters are treated as one-dimensional after binning. Also tweaked some compatibilities.
@@ -81,6 +85,10 @@ colordistance::imageClusterPipeline("path/to/images/folder")
 
 You'll get a blue and yellow heatmap with a cluster dendrogram and labels taken from the image names. Yellow cells correspond to *dissimilar* images; blue cells correspond to more *similar* images. If those scores don't look right, try changing the number of bins (`bins` argument), the distance metric (`distanceMethod` argument), and making sure you're masking out the right background color.
 
+## Citing `colordistance`
+
+Our methods paper describing `colordistance` is now [out in PeerJ](https://peerj.com/articles/6398/)! Please cite the package as: Weller HI, Westneat MW. 2019. Quantitative color profiling of digital images with earth mover’s distance using the R package colordistance. PeerJ 7:e6398 https://doi.org/10.7717/peerj.6398
+
 ## Contributions and bug reports
 
 If something is wrong or confusing, or if you'd like to see a change, please create an issue on [the issues page of the GitHub repository](https://github.com/hiweller/colordistance/issues), as it allows other people to see it. You can also email me at <hannahiweller@gmail.com>.
@@ -89,4 +97,4 @@ If you would like to contribute, feel free to make a pull request or email me wi
 
 ## Questions?
 
-Email me: <hannahiweller@gmail.com>
+Email me at <hannahiweller@gmail.com>. I generally respond within 48 hours.
