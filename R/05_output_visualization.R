@@ -45,6 +45,7 @@ plotClusters <- function(cluster.list, color.space = "rgb",
                          ref.white, to = "sRGB") {
   
   color.space <- tolower(color.space)
+  
   # Set plotting parameters
   if (color.space == "hsv") {
     scene <- list(xaxis = list(title = "Hue", range = c(0, 1)),
@@ -61,14 +62,13 @@ plotClusters <- function(cluster.list, color.space = "rgb",
   } else {
     scene <- list(xaxis = list(title = "Red", 
                              linecolor = plotly::toRGB("red"),
-                             linewidth = 6, range = c(0, 1)),
+                             range = c(0, 1)),
                   yaxis = list(title = "Green", 
                                linecolor = plotly::toRGB("green"),
-                               linewidth = 6,
                                range = c(0, 1)), 
                   zaxis = list(title = "Blue", 
                                linecolor = plotly::toRGB("blue"),
-                               linewidth = 6, range = c(0, 1)),
+                               range = c(0, 1)),
                   camera = list(eye = list(x = 0.9, y = -1.5, z = 0.8)))
   }
 
@@ -110,22 +110,22 @@ plotClusters <- function(cluster.list, color.space = "rgb",
                                                                   x[2],
                                                                   x[3]))
           }
-      }
+        }
 
-      pl <- plotly::plot_ly(cluster.list[[i]], 
-                            x = ~cluster.list[[i]][, 1], 
-                            y = ~cluster.list[[i]][, 2], 
-                            z = ~cluster.list[[i]][, 3], 
-                            size = ~cluster.list[[i]][, 4], 
+      pl <- plotly::plot_ly(cluster.list[[i]],
+                            x = ~cluster.list[[i]][, 1],
+                            y = ~cluster.list[[i]][, 2],
+                            z = ~cluster.list[[i]][, 3],
+                            size = ~cluster.list[[i]][, 4],
                             color = ~cluster.list[[i]][, 4])
-      pl <- plotly::add_markers(pl, color = I(colExp), 
-            size = ~cluster.list[[i]][, 4], 
-            sizes = c(5000*min(cluster.list[[i]][,4]) / 
+      pl <- plotly::add_markers(pl, color = I(colExp),
+            size = ~cluster.list[[i]][, 4],
+            sizes = c(5000*min(cluster.list[[i]][,4]) /
                         max(cluster.list[[i]][,4]), 5000))
-      pl <- plotly::layout(pl, scene = scene, 
+      pl <- plotly::layout(pl, scene = scene,
                            title = names(cluster.list)[i])
 
-      print(pl)
+      suppressWarnings(print(pl))
 
       if (pausing & i < tail(p, 1)) {
         pause()
@@ -259,7 +259,7 @@ plotClustersMulti <- function(cluster.list, color.space = "rgb",
   pl <- plotly::add_markers(pl, color = I(colExp), 
                             size = ~Pct, sizes = c(10, 5000))
   pl <- plotly::layout(pl, scene = scene, title = title)
-  print(pl)
+  suppressWarnings(print(pl))
 }
 
 #' Plot a heatmap of a distance matrix
