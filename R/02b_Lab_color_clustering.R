@@ -142,6 +142,33 @@ getLabHist <- function(image, bins = 3, sample.size = 10000,
     
   }
   
+  # Check if all of the pixels fall within the a/b boundaries
+  a_range_check <- pix$a < a.bounds[1] | pix$a > a.bounds[2]
+  b_range_check <- pix$b < b.bounds[1] | pix$b > b.bounds[2]
+  
+  # if any of them are outside of 0, throw a warning and remove them from pix
+  if ((sum(a_range_check) | sum(b_range_check)) > 0) {
+    
+    # get the actual range
+    ab_range <- round(apply(pix[ , 2:3], 2, range), digits = 2)
+    
+    # Be nice and provide real ranges
+    warning("The specified a and/or b boundaries have removed",
+    " some non-background pixels from the analysis. \nMinimum ",
+    "ranges to include all pixels are:\n",
+    paste0("a: [", ab_range[1, 1], ", ", ab_range[2, 1]), "]\n",
+    paste0("b: [", ab_range[1, 2], ", ", ab_range[2, 2], "]"))
+    
+    # Remove the pixels that were cut off to avoid NA bins
+    # Find pixel indices
+    cutoff_idx <- unique(c(which(a_range_check), 
+                           which(b_range_check)))
+    
+    # Remove those pixels from the total
+    pix <- pix[-cutoff_idx, ]
+    
+  }
+  
   # Bin all the channels
   binnedImage <- data.frame(
     L = cut(pix[, 1], breaks = breaks$L, include.lowest = T, labels = F),
