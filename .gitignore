@@ -4,3 +4,4 @@
 inst/doc
 /revdep/.cache.rds
 R/doodling.R
+inst/etc

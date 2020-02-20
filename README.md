@@ -8,7 +8,11 @@ An R package with functions for quantifying the differences between colorful obj
   organism coloration (reef fish color diversity, butterfly mimicry, etc), but
   easily applicable for any image set.
 
+![Image](https://pbs.twimg.com/media/Dyv14UUW0AIbmJ8?format=jpg&name=large)
+
 # News
+
+**February 19, 2020**: Thanks to Evelyn Taylor-Cox for pointing out a bug with `getLabHist` when specifying `a.bounds` and `b.bounds`, resulting in bins that did not sum to 1. The bug should now be fixed in the development version!
 
 **February 6, 2019**: Our methods paper for `colordistance` is out in PeerJ! Find it here: <https://peerj.com/articles/6398/>. 
 
