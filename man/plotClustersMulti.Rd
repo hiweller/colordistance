@@ -4,8 +4,14 @@
 \alias{plotClustersMulti}
 \title{Plot several different cluster sets together}
 \usage{
-plotClustersMulti(cluster.list, color.space = "rgb", p = "all",
-  title = "", ref.white, to = "sRGB")
+plotClustersMulti(
+  cluster.list,
+  color.space = "rgb",
+  p = "all",
+  title = "",
+  ref.white,
+  to = "sRGB"
+)
 }
 \arguments{
 \item{cluster.list}{A list of identically sized dataframes with 4 columns

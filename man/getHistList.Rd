@@ -4,10 +4,20 @@
 \alias{getHistList}
 \title{Generate a list of cluster sets for multiple images}
 \usage{
-getHistList(images, bins = 3, bin.avg = TRUE, lower = c(0, 0.55, 0),
-  upper = c(0.24, 1, 0.24), norm.pix = FALSE, plotting = FALSE,
-  pausing = TRUE, hsv = FALSE, title = "path", img.type = FALSE,
-  bounds = c(0, 1))
+getHistList(
+  images,
+  bins = 3,
+  bin.avg = TRUE,
+  lower = c(0, 0.55, 0),
+  upper = c(0.24, 1, 0.24),
+  norm.pix = FALSE,
+  plotting = FALSE,
+  pausing = TRUE,
+  hsv = FALSE,
+  title = "path",
+  img.type = FALSE,
+  bounds = c(0, 1)
+)
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}

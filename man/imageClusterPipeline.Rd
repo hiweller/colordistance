@@ -4,17 +4,36 @@
 \alias{imageClusterPipeline}
 \title{Generate and plot a color distance matrix from a set of images}
 \usage{
-imageClusterPipeline(images, cluster.method = "hist",
-  distance.method = "emd", lower = c(0, 140/255, 0),
-  upper = c(60/255, 1, 60/255), hist.bins = 3, kmeans.bins = 27,
-  bin.avg = TRUE, norm.pix = FALSE, plot.bins = FALSE,
-  pausing = TRUE, color.space = "rgb", ref.white, from = "sRGB",
-  bounds = c(0, 1), sample.size = 20000, iter.max = 50, nstart = 5,
-  img.type = FALSE, ordering = "default", size.weight = 0.5,
-  color.weight = 0.5, plot.heatmap = TRUE,
-  return.distance.matrix = TRUE, save.tree = FALSE,
-  save.distance.matrix = FALSE, a.bounds = c(-127, 128),
-  b.bounds = c(-127, 128))
+imageClusterPipeline(
+  images,
+  cluster.method = "hist",
+  distance.method = "emd",
+  lower = c(0, 140/255, 0),
+  upper = c(60/255, 1, 60/255),
+  hist.bins = 3,
+  kmeans.bins = 27,
+  bin.avg = TRUE,
+  norm.pix = FALSE,
+  plot.bins = FALSE,
+  pausing = TRUE,
+  color.space = "rgb",
+  ref.white,
+  from = "sRGB",
+  bounds = c(0, 1),
+  sample.size = 20000,
+  iter.max = 50,
+  nstart = 5,
+  img.type = FALSE,
+  ordering = "default",
+  size.weight = 0.5,
+  color.weight = 0.5,
+  plot.heatmap = TRUE,
+  return.distance.matrix = TRUE,
+  save.tree = FALSE,
+  save.distance.matrix = FALSE,
+  a.bounds = c(-127, 128),
+  b.bounds = c(-127, 128)
+)
 }
 \arguments{
 \item{images}{Character vector of directories, image paths, or both.}

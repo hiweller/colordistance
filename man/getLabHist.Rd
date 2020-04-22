@@ -4,10 +4,22 @@
 \alias{getLabHist}
 \title{Generate a 3D histogram based on CIE Lab color coordinates in an image}
 \usage{
-getLabHist(image, bins = 3, sample.size = 10000, ref.white,
-  from = "sRGB", bin.avg = TRUE, as.vec = FALSE, plotting = TRUE,
-  lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), title = "path",
-  a.bounds = c(-128, 127), b.bounds = c(-128, 127), ...)
+getLabHist(
+  image,
+  bins = 3,
+  sample.size = 10000,
+  ref.white,
+  from = "sRGB",
+  bin.avg = TRUE,
+  as.vec = FALSE,
+  plotting = TRUE,
+  lower = c(0, 0.55, 0),
+  upper = c(0.24, 1, 0.24),
+  title = "path",
+  a.bounds = c(-128, 127),
+  b.bounds = c(-128, 127),
+  ...
+)
 }
 \arguments{
 \item{image}{Path to a valid image (PNG or JPG) or a \code{\link{loadImage}}

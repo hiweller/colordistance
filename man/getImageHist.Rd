@@ -4,10 +4,21 @@
 \alias{getImageHist}
 \title{Generate a 3D histogram based on color distribution in an image}
 \usage{
-getImageHist(image, bins = 3, bin.avg = TRUE, defaultClusters = NULL,
-  lower = c(0, 0.55, 0), upper = c(0.24, 1, 0.24), as.vec = FALSE,
-  norm.pix = FALSE, plotting = TRUE, hsv = FALSE, title = "path",
-  bounds = c(0, 1), ...)
+getImageHist(
+  image,
+  bins = 3,
+  bin.avg = TRUE,
+  defaultClusters = NULL,
+  lower = c(0, 0.55, 0),
+  upper = c(0.24, 1, 0.24),
+  as.vec = FALSE,
+  norm.pix = FALSE,
+  plotting = TRUE,
+  hsv = FALSE,
+  title = "path",
+  bounds = c(0, 1),
+  ...
+)
 }
 \arguments{
 \item{image}{Path to a valid image (PNG or JPG) or a \code{\link{loadImage}}

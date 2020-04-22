@@ -4,8 +4,14 @@
 \alias{convertColorSpace}
 \title{Convert between color spaces}
 \usage{
-convertColorSpace(color.coordinate.matrix, from = "sRGB", to = "Lab",
-  sample.size = 1e+05, from.ref.white, to.ref.white)
+convertColorSpace(
+  color.coordinate.matrix,
+  from = "sRGB",
+  to = "Lab",
+  sample.size = 1e+05,
+  from.ref.white,
+  to.ref.white
+)
 }
 \arguments{
 \item{color.coordinate.matrix}{A color coordinate matrix with rows as colors

@@ -4,8 +4,15 @@
 \alias{plotHist}
 \title{Color histogram of binned image}
 \usage{
-plotHist(histogram, pausing = TRUE, color.space = "rgb", ref.white,
-  from = "sRGB", main = "default", ...)
+plotHist(
+  histogram,
+  pausing = TRUE,
+  color.space = "rgb",
+  ref.white,
+  from = "sRGB",
+  main = "default",
+  ...
+)
 }
 \arguments{
 \item{histogram}{A single dataframe or a list of dataframes as returned by

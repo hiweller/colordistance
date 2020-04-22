@@ -4,9 +4,15 @@
 \alias{getColorDistanceMatrix}
 \title{Distance matrix for a list of color cluster sets}
 \usage{
-getColorDistanceMatrix(cluster.list, method = "emd",
-  ordering = "default", size.weight = 0.5, color.weight = 0.5,
-  plotting = TRUE, ...)
+getColorDistanceMatrix(
+  cluster.list,
+  method = "emd",
+  ordering = "default",
+  size.weight = 0.5,
+  color.weight = 0.5,
+  plotting = TRUE,
+  ...
+)
 }
 \arguments{
 \item{cluster.list}{A list of identically sized dataframes with 4 columns each

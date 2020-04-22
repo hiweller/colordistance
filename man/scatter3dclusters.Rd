@@ -4,10 +4,19 @@
 \alias{scatter3dclusters}
 \title{Plot 3D clusters in a 2D plot}
 \usage{
-scatter3dclusters(clusters, color.space, ref.white = "D65",
-  xlim = "default", ylim = "default", zlim = "default",
-  main = "Color clusters", scaling = 10, opacity = 0.9,
-  plus = 0.01, ...)
+scatter3dclusters(
+  clusters,
+  color.space,
+  ref.white = "D65",
+  xlim = "default",
+  ylim = "default",
+  zlim = "default",
+  main = "Color clusters",
+  scaling = 10,
+  opacity = 0.9,
+  plus = 0.01,
+  ...
+)
 }
 \arguments{
 \item{clusters}{A single dataframe or a list of dataframes as returned by

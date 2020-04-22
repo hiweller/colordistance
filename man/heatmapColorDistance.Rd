@@ -4,8 +4,13 @@
 \alias{heatmapColorDistance}
 \title{Plot a heatmap of a distance matrix}
 \usage{
-heatmapColorDistance(clusterList_or_matrixObject, main = NULL,
-  col = "default", margins = c(6, 8), ...)
+heatmapColorDistance(
+  clusterList_or_matrixObject,
+  main = NULL,
+  col = "default",
+  margins = c(6, 8),
+  ...
+)
 }
 \arguments{
 \item{clusterList_or_matrixObject}{Either a list of identically sized

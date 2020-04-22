@@ -82,6 +82,11 @@ getImagePaths <- function(path) {
 #' @param ref.white String; white reference for converting from RGB to CIEL*a*b
 #'   color space. Accepts any of the standard white references for
 #'   \code{\link[grDevices]{convertColor}} (see details).
+#' @param alpha.channel Logical. If available, should alpha channel transparency be
+#'   used to mask background? See \code{\link{removeBackground}} for more
+#'   details.
+#' @param alpha.message Logical. Output a message if using alpha channel
+#'   transparency to mask background?
 #'
 #' @return A list with original image ($original.rgb, 3D array), 2D matrix with
 #'   background pixels removed ($filtered.rgb.2d and $filtered.hsv.2d), and path
@@ -137,7 +142,8 @@ getImagePaths <- function(path) {
 loadImage <- function(path, lower = c(0, 0.55, 0),
                       upper = c(0.24, 1, 0.24), hsv = TRUE,
                       CIELab = FALSE, sample.size = 100000,
-                      ref.white=NULL) {
+                      ref.white = NULL, alpha.channel = TRUE,
+                      alpha.message = FALSE) {
 
   # Read in the file as either JPG or PNG (or, if neither, stop execution and
   # return error message)
@@ -154,9 +160,6 @@ loadImage <- function(path, lower = c(0, 0.55, 0),
 
   if (filetype %in% "png") {
     img <- png::readPNG(path)
-    if (dim(img)[3] == 4) {
-      img <- img[, , 1:3] # remove alpha channel if present
-    }
   } else if (filetype %in% c("jpg", "jpeg")) {
     img <- jpeg::readJPEG(path)
   } else {
@@ -165,25 +168,10 @@ loadImage <- function(path, lower = c(0, 0.55, 0),
 
   # Once the file is read in, eliminate pixels that fall between lower and upper
   # bounds (background)
-  if (is.numeric(upper) & is.numeric(lower)) {
-    idx <- which((lower[1] <= img[, , 1] &
-                    img[, , 1] <= upper[1]) &
-                   (lower[2] <= img[, , 2] &
-                      img[, , 2] <= upper[2]) &
-                   (lower[3] <= img[, , 3] &
-                      img[, , 3] <= upper[3]))
-  } else {
-    idx <- NULL
-  }
-
-  # Reshape image matrix into 2-dimensional pixel matrix (3 columns, each row =
-  # 1 pixel with RGB values)
-  pix <- img
-  dim(pix) <- c(dim(img)[1] * dim(img)[2], 3)
-  colnames(pix) <- c("r", "g", "b")
-  if (length(idx) != 0) {
-    pix <- pix[-idx, ] # remove background pixels
-  }
+  filtered.img <- colordistance::removeBackground(img,
+                                                  lower = lower,
+                                                  upper = upper,
+                                                  quietly = alpha.message)
 
   # Initialize and name empty list depending on flagged color spaces At minimum,
   # includes original image path, 3D RGB array, 2D RGB array with background
@@ -201,7 +189,10 @@ loadImage <- function(path, lower = c(0, 0.55, 0),
 
   names(end.list) <- endList_names
 
-  end.list[1:3] <- list(path, img, pix)
+  end.list[1:3] <- list(path,
+                        filtered.img$original.rgb, 
+                        filtered.img$filtered.rgb.2d)
+  pix <- filtered.img$filtered.rgb.2d
 
   # Return a list with the path to the image, the original RGB image (3d array),
   # and the reshaped matrix with background pixels removed (for clustering

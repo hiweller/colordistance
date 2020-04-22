@@ -4,8 +4,13 @@
 \alias{weightedPairsDistance}
 \title{Distance between color clusters with user-specified color/size weights}
 \usage{
-weightedPairsDistance(T1, T2, ordering = FALSE, size.weight = 0.5,
-  color.weight = 0.5)
+weightedPairsDistance(
+  T1,
+  T2,
+  ordering = FALSE,
+  size.weight = 0.5,
+  color.weight = 0.5
+)
 }
 \arguments{
 \item{T1}{Dataframe (especially a dataframe as returned by

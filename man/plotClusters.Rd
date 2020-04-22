@@ -4,8 +4,14 @@
 \alias{plotClusters}
 \title{Plot clusters in 3D color space}
 \usage{
-plotClusters(cluster.list, color.space = "rgb", p = "all",
-  pausing = TRUE, ref.white, to = "sRGB")
+plotClusters(
+  cluster.list,
+  color.space = "rgb",
+  p = "all",
+  pausing = TRUE,
+  ref.white,
+  to = "sRGB"
+)
 }
 \arguments{
 \item{cluster.list}{A list of identically sized dataframes with 4 columns each
