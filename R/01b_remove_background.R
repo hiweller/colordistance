@@ -55,7 +55,7 @@ removeBackground <- function(img,
   
   # if there's transparency, use that for background indexing
   # set transparent pixels to white
-  if (dim(img)[3] == 4) {
+  if (dim(img)[3] == 4 & alpha.channel == TRUE) {
     
     if (min(img[ , , 4]) < 1) {
       
@@ -72,6 +72,10 @@ removeBackground <- function(img,
         channel[idx] <- 1
         original.rgb[ , , i] <- channel
       }
+    } else {
+      
+      warning("No transparent pixels in image")
+      
     }
     
   }
