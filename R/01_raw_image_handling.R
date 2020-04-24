@@ -86,7 +86,7 @@ getImagePaths <- function(path) {
 #'   used to mask background? See \code{\link{removeBackground}} for more
 #'   details.
 #' @param alpha.message Logical. Output a message if using alpha channel
-#'   transparency to mask background?
+#'   transparency to mask background? Helpful for troubleshooting with PNGs.
 #'
 #' @return A list with original image ($original.rgb, 3D array), 2D matrix with
 #'   background pixels removed ($filtered.rgb.2d and $filtered.hsv.2d), and path
@@ -171,7 +171,8 @@ loadImage <- function(path, lower = c(0, 0.55, 0),
   filtered.img <- colordistance::removeBackground(img,
                                                   lower = lower,
                                                   upper = upper,
-                                                  quietly = alpha.message)
+                                                  quietly = alpha.message,
+                                                  alpha.channel = alpha.channel)
 
   # Initialize and name empty list depending on flagged color spaces At minimum,
   # includes original image path, 3D RGB array, 2D RGB array with background
