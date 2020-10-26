@@ -219,12 +219,6 @@ Once you're happy with your distance matrix, you can export it in your favorite 
 write.csv(CDM, file = "Heliconius_color_distance_matrix.csv")
 ```
 
-If you also want to save the dendrogram that the heatmap plots, you can use the `exportTree()` function:
-
-```{r, eval=FALSE}
-colordistance::exportTree(CDM, file = "Heliconius_color_tree.newick", return.tree = F)
-```
-
 ## Shortcut
 
 The above explanation might be kind of wordy, but the actual pipeline is pretty quick once you decide what you want to do. To get the results above, this is all you have to run:

@@ -12,6 +12,7 @@ getImageHist(
   lower = c(0, 0.55, 0),
   upper = c(0.24, 1, 0.24),
   as.vec = FALSE,
+  alpha.channel = TRUE,
   norm.pix = FALSE,
   plotting = TRUE,
   hsv = FALSE,
@@ -54,6 +55,10 @@ needed, set bounds to some non-numeric value (\code{NULL}, \code{FALSE},
 
 \item{as.vec}{Logical. Should the bin sizes just be returned as a vector?
 Much faster if only using \code{\link{chisqDistance}} for comparison metric.}
+
+\item{alpha.channel}{Logical. If available, should alpha channel transparency be
+used to mask background? See \code{\link{removeBackground}} for more
+details.}
 
 \item{norm.pix}{Logical. Should RGB or HSV cluster values be normalized using
 \code{\link{normalizeRGB}}?}

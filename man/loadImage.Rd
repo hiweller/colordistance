@@ -42,8 +42,7 @@ microseconds per image).}
 RGB? Requires specification of a reference white (see details).}
 
 \item{sample.size}{Number of pixels to be randomly sampled from filtered pixel
-array for conversion. If not numeric, all pixels are converted, but this
-can be time-consuming, especially for large images. See details for speed.}
+array for conversion. If not numeric, all pixels are converted.}
 
 \item{ref.white}{String; white reference for converting from RGB to CIEL*a*b
 color space. Accepts any of the standard white references for
@@ -54,7 +53,7 @@ used to mask background? See \code{\link{removeBackground}} for more
 details.}
 
 \item{alpha.message}{Logical. Output a message if using alpha channel
-transparency to mask background?}
+transparency to mask background? Helpful for troubleshooting with PNGs.}
 }
 \value{
 A list with original image ($original.rgb, 3D array), 2D matrix with

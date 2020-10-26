@@ -60,7 +60,11 @@ This vignette is intended to explain the implications of different binning metho
     As you might expect, although we can see black, red, and yellow pixels, they're not all centered in a single place because of noise, lighting variation, and of course actual minor color differences in the animal itself when it was photographed. But if we define a certain range for black pixels in RGB color space, we can just count the proportion of pixels in that range:
 
     ```{r, fig.cap="(For more information in `getImageHist()`, see the 'Histogram method' section.)"}
-    binnedButterfly <- colordistance::getImageHist(Heliconius_08, bins = 2, lower = rep(0.8, 3), upper = rep(1, 3), plotting = TRUE)
+    binnedButterfly <- colordistance::getImageHist(Heliconius_08, 
+                                                   bins = 2, 
+                                                   lower = rep(0.8, 3),
+                                                   upper = rep(1, 3),
+                                                   plotting = TRUE)
     ```
 
     And we can confidently say that 75% of the pixels in the butterfly were in the "black" range we defined. We're treating all pixels in that bin as if they're the same color, but in this case we can say that the simplification doesn't sacrifice important information. It's pretty accurate to say that the majority of the butterfly is black; that some of the pixels in the black regions are dark brown or dark grey is not meaningful biological variation for this image. Of course, there are situations where those more subtle color variations *do* matter, in which case you'd need smaller bins to break those pixels up into tighter ranges.

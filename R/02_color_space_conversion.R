@@ -192,11 +192,6 @@ convertColorSpace <- function(color.coordinate.matrix, from="sRGB",
     }
   } else {
     
-    message(paste("Converting all rows from", from, 
-                  "color space to", to, "color space \n Estimated time: ",
-                  round( (5.054e-05 * nrow(color.coordinate.matrix) ), 0), 
-                  "seconds"))
-    
     output.colormatrix <- as.data.frame(convertColor(color.coordinate.matrix,
                                        from = from, to = to, 
                                        from.ref.white = from.ref.white, 

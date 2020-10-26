@@ -16,6 +16,7 @@ getLabHistList(
   pausing = TRUE,
   lower = c(0, 0.55, 0),
   upper = c(0.24, 1, 0.24),
+  alpha.channel = TRUE,
   title = "path",
   a.bounds = c(-128, 127),
   b.bounds = c(-128, 127),
@@ -67,6 +68,10 @@ lower=c(0, 0, 0); upper=c(0.1, 0.1, 0.1) \item White: lower=c(0.8, 0.8,
 background filtering is needed, set bounds to some non-numeric value
 (\code{NULL}, \code{FALSE}, \code{"off"}, etc); any non-numeric value is
 interpreted as \code{NULL}.}
+
+\item{alpha.channel}{Logical. If available, should alpha channel transparency be
+used to mask background? See \code{\link{removeBackground}} for more
+details.}
 
 \item{title}{String for what the title the plot if plotting is on; defaults
 to the image name.}

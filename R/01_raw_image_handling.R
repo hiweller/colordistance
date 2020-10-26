@@ -77,8 +77,7 @@ getImagePaths <- function(path) {
 #' @param CIELab Logical. Should CIEL*a*b color space pixels be calculated from
 #'   RGB? Requires specification of a reference white (see details).
 #' @param sample.size Number of pixels to be randomly sampled from filtered pixel
-#'   array for conversion. If not numeric, all pixels are converted, but this
-#'   can be time-consuming, especially for large images. See details for speed.
+#'   array for conversion. If not numeric, all pixels are converted.
 #' @param ref.white String; white reference for converting from RGB to CIEL*a*b
 #'   color space. Accepts any of the standard white references for
 #'   \code{\link[grDevices]{convertColor}} (see details).
@@ -168,12 +167,12 @@ loadImage <- function(path, lower = c(0, 0.55, 0),
 
   # Once the file is read in, eliminate pixels that fall between lower and upper
   # bounds (background)
-  filtered.img <- colordistance::removeBackground(img,
-                                                  lower = lower,
-                                                  upper = upper,
-                                                  quietly = alpha.message,
-                                                  alpha.channel = alpha.channel)
-
+  filtered.img <- removeBackground(img,
+                                   lower = lower,
+                                   upper = upper,
+                                   quietly = alpha.message,
+                                   alpha.channel = alpha.channel)
+  
   # Initialize and name empty list depending on flagged color spaces At minimum,
   # includes original image path, 3D RGB array, 2D RGB array with background
   # pixels removed 
