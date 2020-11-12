@@ -1,4 +1,4 @@
-# colordistance 1.1.0
+# colordistance 1.1.1
 
 An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
   colors, bins pixels by color using either data-dependent or automatically
@@ -10,7 +10,10 @@ An R package with functions for quantifying the differences between colorful obj
 
 ![Image](https://pbs.twimg.com/media/Dyv14UUW0AIbmJ8?format=jpg&name=large)
 
+Publication: <https://peerj.com/articles/6398/>
 # News
+
+**November 11, 2020**: Transparencies (alpha channel) can now be used to mask image backgrounds. By default, the presence of transparent pixels in a PNG overrides other background parameters, and the transparent pixels are ignored as background. This behavior can be disabled by setting `alpha.channel = FALSE` in any function that takes an image path as an argument. This allows users to specify the background in an image without having to decide on a background color that is sufficiently different from the object of interest. Backgrounds of uniform color can easily be rendered transparent using Photoshop, ImageJ, or GIMP.
 
 **February 19, 2020**: Thanks to Evelyn Taylor-Cox for pointing out a bug with `getLabHist` when specifying `a.bounds` and `b.bounds`, resulting in bins that did not sum to 1. The bug should now be fixed in the development version!
 

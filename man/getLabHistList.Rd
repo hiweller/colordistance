@@ -107,14 +107,6 @@ is why no default is provided. Users should look into
 \href{https://en.wikipedia.org/wiki/Standard_illuminant}{standard
 illuminants} to choose an appropriate reference for a dataset.
 
-The conversion from RGB to a standardized color space (XYZ, Lab, or Luv) is
-approximate, non-linear, and relatively time-consuming. Converting a large
-number of pixels can be computationally expensive, so
-\code{convertColorSpace} will randomly sample a specified number of rows to
-reduce the time. The default sample size, 10,000 rows, takes about 1 second to
-convert from sRGB to Lab space on an early 2015 Macbook with 8 GB of RAM.
-Time scales about linearly with number of rows converted.
-
 Unlike RGB or HSV color spaces, the three channels of CIE Lab color space do
 not all range between 0 and 1; instead, L (luminance) is always between 0 and
 100, and the a (green-red) and b (blue-yellow) channels generally vary

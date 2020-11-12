@@ -34,6 +34,7 @@ plotting=FALSE)
 
 # Tree is both saved in current working directory and stored in
 # heliconius_tree variable
+\dontrun{
 heliconius_tree <- colordistance::exportTree(CDM,
-"./HeliconiusColorTree.newick", return.tree=TRUE)
+"./HeliconiusColorTree.newick", return.tree=TRUE)}
 }

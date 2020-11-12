@@ -1,4 +1,10 @@
+# colordistance 1.1.1
+
+* Transparency (alpha channel) can now be used to mask image backgrounds. By default, the presence of transparent pixels in a PNG overrides other background parameters, and the transparent pixels are ignored as background. This behavior can be disabled by setting `alpha.channel = FALSE` in any function that takes an image path as an argument. 
+* Minor bug fixes with plotting 3D interactive plots.
+
 # colordistance 1.1.0
+
 Added `scatter3dclusters` function to plot clusters in color space, scaled according to their size and colored according to their color.
 
 # colordistance 1.0.1
