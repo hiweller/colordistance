@@ -1,6 +1,6 @@
 Package: colordistance
 Title: Distance Metrics for Image Color Similarity
-Date: 2018-12-27
+Date: 2020-11-11
 Version: 1.1.1
 Authors@R: person("Hannah", "Weller", email = "hannahiweller@gmail.com", role = c("aut", "cre"))
 Description: Loads and displays images, selectively masks specified background

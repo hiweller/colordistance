@@ -33,7 +33,7 @@ Publication: <https://peerj.com/articles/6398/>
 
 **Requirements**: R >= 3.3.2
 
-**Documentation**: <https://hiweller.github.io/colordistance>
+**Documentation**: <https://hiweller.github.io/colordistance/>
 
 **Author**: [Hannah Weller](https://scholar.google.com/citations?user=rjI5wpEAAAAJ&hl=en)
 
@@ -45,7 +45,7 @@ The development version of `colordistance` can be found at <https://github.com/h
 
 To install the development version of `colordistance` in R:
 
-1. Install the [`devtools`](https://github.com/hadley/devtools) package (`install.packages("devtools")`).
+1. Install the `devtools` package (`install.packages("devtools")`).
 
 2. Install `colordistance` *without* vignettes (long-form documentation) to save time and space or *with* vignettes for offline access to help documents.
 
@@ -78,7 +78,7 @@ All of the `colordistance` vignettes that (optionally) come with the package are
 
 To get started with `colordistance`, you'll need:
 
-1. A set of images of objects you want to compare, ideally as consistent with each other as possible in terms of lighting and angle, and with anything you want to ignore [masked out with a uniform background color](https://graphicdesign.stackexchange.com/questions/5446/making-the-background-of-an-image-transparent-in-gimp). Need something to get started? Try [these butterflyfish photos](https://github.com/hiweller/butterflyfish)! `colordistance` also comes with an example set of *Heliconius* butterfly pictures from [Meyer, 2006](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0040341), which you can access via `system.file("extdata", "Heliconius", package="colordistance")` in R.
+1. A set of images of objects you want to compare, ideally as consistent with each other as possible in terms of lighting and angle, and with anything you want to ignore [masked out with a uniform background color](https://graphicdesign.stackexchange.com/questions/5446/making-the-background-of-an-image-transparent-in-gimp). Need something to get started? Try [these butterflyfish photos](https://github.com/hiweller/butterflyfish)! `colordistance` also comes with an example set of *Heliconius* butterfly pictures from [Meyer, 2006](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0040341), which you can access via `system.file("extdata", "Heliconius", package="colordistance")` in R.
 
 2. R version 3.3.2 or later.
 
