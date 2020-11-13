@@ -40,10 +40,10 @@ chisqDistance <- function(a, b) {
 #' @return Sum of Euclidean distances between each pair of points (rows) in the
 #'   provided dataframes.
 #' @examples
-#' cluster.list <- colordistance::getHistList(system.file("extdata",
+#' \dontrun{cluster.list <- colordistance::getHistList(system.file("extdata",
 #' "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
 #' upper=rep(1, 3))
-#' colordistance:::colorDistance(cluster.list[[1]], cluster.list[[2]])
+#' colordistance:::colorDistance(cluster.list[[1]], cluster.list[[2]])}
 colorDistance <- function(T1, T2) {
   return(sum(sapply(1:dim(T1)[1], 
                     function(x) stats::dist(rbind(T1[x, 1:3],

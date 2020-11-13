@@ -202,5 +202,4 @@ When working with digital images, CIELab is often your best option. But converti
 
 * [CIELab Analysis vignette](lab-analyses.html)
 * [CIELab computation by Ocean Optics](https://oceanoptics.com/faq/cielab-color-computed/)
-* [Introduction to Colour Spaces](https://www.colourphil.co.uk/lab_lch_colour_space.shtml) (very little math)
-* [Hill, B., Roger, T., & Vorhagen, F. W. (1997). Comparative analysis of the quantization of color spaces on the basis of the CIELAB color-difference formula. *ACM Transactions on Graphics (TOG), 16*(2), 109-154.](https://dl.acm.org/citation.cfm?id=248212)
+* [Hill, B., Roger, T., & Vorhagen, F. W. (1997). Comparative analysis of the quantization of color spaces on the basis of the CIELAB color-difference formula. *ACM Transactions on Graphics (TOG), 16*(2), 109-154.](https://dl.acm.org/doi/10.1145/248210.248212)

@@ -32,6 +32,7 @@ pause <- function(){
 #'   object if \code{return.tree=TRUE}.
 #'
 #' @examples
+#' \dontrun{
 #' clusterList <- colordistance::getHistList(dir(system.file("extdata",
 #' "Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
 #' upper=rep(1, 3))
@@ -40,7 +41,7 @@ pause <- function(){
 #'
 #' # Tree is both saved in current working directory and stored in
 #' # heliconius_tree variable
-#' \dontrun{
+#' 
 #' heliconius_tree <- colordistance::exportTree(CDM,
 #' "./HeliconiusColorTree.newick", return.tree=TRUE)}
 #' @export

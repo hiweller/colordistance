@@ -26,6 +26,7 @@ Converts a symmetrical distance matrix to a tree and saves it in newick
 format. Uses \code{\link[stats]{hclust}} to form clusters.
 }
 \examples{
+\dontrun{
 clusterList <- colordistance::getHistList(dir(system.file("extdata",
 "Heliconius/", package="colordistance"), full.names=TRUE), lower=rep(0.8, 3),
 upper=rep(1, 3))
@@ -34,7 +35,7 @@ plotting=FALSE)
 
 # Tree is both saved in current working directory and stored in
 # heliconius_tree variable
-\dontrun{
+
 heliconius_tree <- colordistance::exportTree(CDM,
 "./HeliconiusColorTree.newick", return.tree=TRUE)}
 }

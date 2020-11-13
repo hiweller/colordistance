@@ -23,8 +23,8 @@ dataframes as returned by extractClusters or getImageHist and returns the sum
 of the distances.
 }
 \examples{
-cluster.list <- colordistance::getHistList(system.file("extdata",
+\dontrun{cluster.list <- colordistance::getHistList(system.file("extdata",
 "Heliconius/Heliconius_B", package="colordistance"), lower=rep(0.8, 3),
 upper=rep(1, 3))
-colordistance:::colorDistance(cluster.list[[1]], cluster.list[[2]])
+colordistance:::colorDistance(cluster.list[[1]], cluster.list[[2]])}
 }
