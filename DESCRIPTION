@@ -16,7 +16,6 @@ Imports:
     png,
     stats,
     clue,
-    spatstat,
     ape,
     mgcv,
     emdist,
@@ -26,7 +25,8 @@ Imports:
     abind,
     magrittr,
     scales,
-    qpdf
+    qpdf,
+    spatstat.geom
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8

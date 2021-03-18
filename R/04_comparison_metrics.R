@@ -118,13 +118,13 @@ weightedPairsDistance <- function(T1, T2, ordering=FALSE, size.weight=0.5,
                                   color.weight=0.5) {
   if (ordering) {
 
-    im1 <- spatstat::pp3(T1[, 1], T1[, 2], T1[, 3], 
-                         spatstat::box3(c(0, 1)))
-    im2 <- spatstat::pp3(T2[, 1], T2[, 2], T2[, 3], 
-                              spatstat::box3(c(0, 1)))
-    col.dist <- spatstat::crossdist(im1, im2) / sqrt(3)
-    size.dist <- spatstat::crossdist(spatstat::ppx(T1[, 4]),
-                  spatstat::ppx(T2[, 4])) / t(sapply(c(1:dim(T1)[1]),
+    im1 <- spatstat.geom::pp3(T1[, 1], T1[, 2], T1[, 3], 
+                         spatstat.geom::box3(c(0, 1)))
+    im2 <- spatstat.geom::pp3(T2[, 1], T2[, 2], T2[, 3], 
+                              spatstat.geom::box3(c(0, 1)))
+    col.dist <- spatstat.geom::crossdist(im1, im2) / sqrt(3)
+    size.dist <- spatstat.geom::crossdist(spatstat.geom::ppx(T1[, 4]),
+                  spatstat.geom::ppx(T2[, 4])) / t(sapply(c(1:dim(T1)[1]),
                                     function(x) T1[x, 4] + T2[, 4]))
     size.dist[is.nan(size.dist)] <- 0
 
@@ -353,22 +353,22 @@ orderClusters <- function(extractClustersObject) {
     box <- c(0, 255)
   }
 
-  # Use pp3 function from spatstat package to create 3D point pattern objects
+  # Use pp3 function from spatstat.geom package to create 3D point pattern objects
   # for use with solve_LSAP
-  imgA <- spatstat::pp3(extractClustersObject[[1]][, 1],
+  imgA <- spatstat.geom::pp3(extractClustersObject[[1]][, 1],
               extractClustersObject[[1]][, 2],
               extractClustersObject[[1]][, 3],
-              spatstat::box3(box))
+              spatstat.geom::box3(box))
 
   # Order each subsequent dataframe by the clusters in the first element
   for (i in 2:length(extractClustersObject)) {
-    imgB <- spatstat::pp3(extractClustersObject[[i]][, 1],
+    imgB <- spatstat.geom::pp3(extractClustersObject[[i]][, 1],
                 extractClustersObject[[i]][, 2],
                 extractClustersObject[[i]][, 3],
-                spatstat::box3(box))
+                spatstat.geom::box3(box))
 
     # Get distance matrix between the two
-    dist.matrix <- spatstat::crossdist(imgA, imgB)
+    dist.matrix <- spatstat.geom::crossdist(imgA, imgB)
 
     # Use solve_LSAP from clue package to get the minimum sum of distances
     # between point pairs (implements Hungarian Algorithm)
