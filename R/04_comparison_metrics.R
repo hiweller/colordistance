@@ -53,7 +53,7 @@ colorDistance <- function(T1, T2) {
 #' Earth mover's distance between two sets of color clusters
 #'
 #' Calculates the
-#' \href{http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
+#' \href{https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/RUBNER/emd.htm}{Earth
 #' mover's distance} (briefly, the amount of work required to move the data from
 #' one distribution to resemble the other distribution, or the amount of "dirt"
 #' you have to shovel weighted by how far you have to shovel it). Accounts for

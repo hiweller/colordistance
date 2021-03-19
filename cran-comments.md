@@ -1,6 +1,6 @@
 ## Test environments
 * local ubuntu 20.04 install, x86_64-pc-linux-gnu, R version 4.0.3 (2020-10-10)
-* win-builder
+* R-hub builder (Windows Server 2008 R2 SP1, R-devel, 32/64 bit)
 * ubuntu 16.04.6 LTS (travis-ci)
 
 

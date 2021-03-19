@@ -1,17 +1,21 @@
 # colordistance 1.1.1
 
-An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
-  colors, bins pixels by color using either data-dependent or automatically
-  generated color bins, quantitatively measures color similarity among images
-  using one of several distance metrics for comparing pixel color clusters, and
-  clusters images by object color similarity. Originally written for use with
-  organism coloration (reef fish color diversity, butterfly mimicry, etc), but
-  easily applicable for any image set.
-
-![Image](https://pbs.twimg.com/media/Dyv14UUW0AIbmJ8?format=jpg&name=large)
-
 Publication: <https://peerj.com/articles/6398/>
+
+An R package with functions for quantifying the differences between colorful objects. Loads and displays images, selectively masks specified background
+colors, bins pixels by color using either data-dependent or automatically
+generated color bins, quantitatively measures color similarity among images
+using one of several distance metrics for comparing pixel color clusters, and
+clusters images by object color similarity. Originally written for use with
+organism coloration (reef fish color diversity, butterfly mimicry, etc), but
+easily applicable for any image set.
+
+<img src="https://pbs.twimg.com/media/Dyv14UUW0AIbmJ8?format=jpg&name=large" alt="Image" style="zoom: 50%;" />
+
+
 # News
+
+**March 18, 2021**: Minor updates to do with `spatstat` package (a sub-package, `spatstat.geom`, is now required instead). This shouldn't affect installation or usage.
 
 **November 11, 2020**: Transparencies (alpha channel) can now be used to mask image backgrounds. By default, the presence of transparent pixels in a PNG overrides other background parameters, and the transparent pixels are ignored as background. This behavior can be disabled by setting `alpha.channel = FALSE` in any function that takes an image path as an argument. This allows users to specify the background in an image without having to decide on a background color that is sufficiently different from the object of interest. Backgrounds of uniform color can easily be rendered transparent using Photoshop, ImageJ, or GIMP.
 
