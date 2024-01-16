@@ -292,7 +292,7 @@ getKMeansList <- function(images, bins = 10, sample.size = 20000,
 extractClusters <- function(getKMeansListObject, 
                             ordering=TRUE, normalize=FALSE) {
 
-  if (class(getKMeansListObject) != "kmeans") {
+  if (!inherits(getKMeansListObject, "kmeans")) {
     # Extract cluster size and centers
     end.list <- lapply(getKMeansListObject, 
                        function(x) data.frame(R = x$centers[, 1], 

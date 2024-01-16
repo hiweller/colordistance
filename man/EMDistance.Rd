@@ -24,7 +24,9 @@ mover's distance} (briefly, the amount of work required to move the data from
 one distribution to resemble the other distribution, or the amount of "dirt"
 you have to shovel weighted by how far you have to shovel it). Accounts for
 both color disparity and size disparity. Recommended unless \code{binAvg} is
-off for histogram generation.
+off for histogram generation. Note: this function is not exported by the package,
+since it is fairly specific to the colordistance framework. For a more generic
+implementation of EMD, see the [emdist::emd] function in the emdist package.
 }
 \examples{
 \dontrun{
