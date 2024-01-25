@@ -186,6 +186,9 @@ getImageHist <- function(image, bins = 3, bin.avg = TRUE,
 
     # Count up pixels per bin without keeping track of which pixel was assigned
     # to which bin
+    for (i in 1:3) {
+      binnedImage[ , i] <- factor(binnedImage[ , i], levels = 1:bins[i])
+    }
     Pct <- as.vector(xtabs(~ ., binnedImage))
     clusters$Pct <- Pct / max(sum(Pct))
 
